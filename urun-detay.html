@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ürün Detayı — Başkent Av Galerisi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#ffffff;
+  --milk:#f8faf5;
+  --offwhite:#eef2e8;
+  --mist:#d6e4cc;
+  --sage:#8fad7a;
+  --green:#4a7a38;
+  --green2:#2e5c22;
+  --greenlt:#eef2e8;
+  --gold:#c8a832;
+  --dark:#1c3d13;
+  --grey:#4a6040;
+  --grey2:#7a9060;
+  --border:#d6e4cc;
+  --bg:#f8faf5;
+  --red:#c03030;
+}
+
+body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:14px;}
+
+/* ── NAV ── */
+.main-nav{
+  position:sticky;top:0;width:100%;z-index:100;
+  padding:18px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(28,61,19,.97);
+  box-shadow:0 2px 16px rgba(0,0,0,.15);
+}
+.nav-logo{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:.18em;color:#b8e08a;text-decoration:none;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{
+  font-family:'Lora',serif;font-size:.85rem;letter-spacing:.1em;color:#eef2e8;
+  text-decoration:none;text-transform:uppercase;transition:color .25s;
+  padding-bottom:3px;border-bottom:2px solid transparent;
+}
+.nav-links a:hover{color:#b8e08a;}
+.nav-links a.nav-active{color:#b8e08a;border-bottom-color:#b8e08a;}
+
+/* ── HAMBURGEr ── */
+.hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:40px;height:40px;background:none;border:none;cursor:pointer;padding:4px;z-index:200;}
+.hamburger span{display:block;width:24px;height:2px;background:#b8e08a;border-radius:2px;transition:all .3s ease;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(28,61,19,.97);z-index:150;flex-direction:column;align-items:center;justify-content:center;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:.18em;color:#eef2e8;text-decoration:none;text-transform:uppercase;padding:18px 60px;width:100%;text-align:center;border-bottom:1px solid rgba(184,224,138,.12);transition:all .2s;}
+.mobile-menu a:hover{background:rgba(184,224,138,.08);color:#b8e08a;}
+.mobile-menu-logo{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.25em;color:#b8e08a;margin-bottom:28px;}
+.mobile-menu-close{position:absolute;top:18px;right:20px;background:none;border:none;color:#b8e08a;font-size:2rem;cursor:pointer;line-height:1;}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{background:#f0f4ec;border-bottom:1px solid var(--border);padding:10px 48px;font-size:.8rem;color:#6a8060;font-family:'Lora',serif;}
+.breadcrumb a{color:var(--green);text-decoration:none;font-weight:600;}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* ── DETAY SAYFASI ── */
+.detail-wrap{
+  max-width:1080px;
+  margin:40px auto;
+  padding:0 32px;
+}
+
+/* ÜST: İKİ SÜTUN */
+.detail-top{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  align-items:start;
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.07);
+}
+
+/* SOL — FOTOĞRAF */
+.detail-img-side{
+  background:#f4f6f2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:32px;
+  min-height:420px;
+  border-right:1px solid var(--border);
+  position:relative;
+}
+.detail-img-box{
+  width:100%;
+  aspect-ratio:1/1;
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  cursor:zoom-in;
+  position:relative;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+.detail-img-box img{
+  width:100%;height:100%;
+  object-fit:contain;
+  transition:transform .4s ease;
+  padding:8px;
+}
+.detail-img-box:hover img{transform:scale(1.06);}
+.detail-no-img{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  color:var(--grey2);opacity:.35;
+}
+.detail-no-img span:first-child{font-size:4.5rem;}
+.detail-no-img span:last-child{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;}
+
+.zoom-hint{
+  position:absolute;bottom:10px;right:10px;
+  background:rgba(0,0,0,.38);color:#fff;
+  border-radius:12px;padding:4px 10px;
+  font-family:'Nunito',sans-serif;font-size:.68rem;
+  opacity:0;transition:opacity .25s;pointer-events:none;
+}
+.detail-img-box:hover .zoom-hint{opacity:1;}
+
+.detail-img-label{
+  margin-top:14px;
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--grey2);
+  opacity:.7;text-align:center;
+}
+
+/* SAĞ — BİLGİ */
+.detail-info-side{
+  padding:36px 36px 36px 28px;
+  display:flex;flex-direction:column;
+  gap:0;
+}
+
+.detail-category-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--green);font-weight:700;
+  margin-bottom:10px;
+}
+.detail-category-tag::before{
+  content:'';display:block;width:20px;height:1.5px;background:var(--green);opacity:.5;
+}
+
+.detail-brand{
+  font-family:'Cinzel',serif;font-size:.72rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--grey2);margin-bottom:4px;
+}
+
+.detail-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem;font-weight:900;
+  color:var(--dark);line-height:1.2;
+  margin-bottom:14px;
+}
+
+/* Rozetler */
+.detail-badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;}
+.badge{font-family:'Nunito',sans-serif;font-size:.67rem;font-weight:800;padding:4px 11px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;}
+.badge-new{background:var(--green);color:#fff;}
+.badge-second{background:#e07820;color:#fff;}
+.badge-cat{background:var(--offwhite);color:var(--grey);border:1px solid var(--border);}
+
+.detail-hr{border:none;border-top:1px solid var(--border);margin:18px 0;}
+
+/* FİYAT */
+.detail-price-block{
+  background:var(--greenlt);
+  border:1px solid var(--mist);
+  border-radius:8px;
+  padding:16px 18px;
+  margin-bottom:20px;
+}
+.detail-price-label{
+  font-family:'Cinzel',serif;font-size:.58rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--grey2);margin-bottom:6px;
+}
+.detail-price{
+  font-family:'Playfair Display',serif;
+  font-size:2rem;font-weight:900;color:var(--green);
+  line-height:1;
+}
+.detail-price-noinfo{
+  font-size:.85rem;color:var(--grey2);font-style:italic;
+}
+
+/* AÇIKLAMA */
+.detail-desc-label{
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--grey2);margin-bottom:8px;
+}
+.detail-desc{
+  font-family:'Lora',serif;font-size:.92rem;
+  line-height:1.8;color:var(--grey);
+  white-space:pre-wrap;margin-bottom:24px;
+}
+
+/* BUTONLAR */
+.detail-actions{
+  display:grid;
+  grid-template-columns:auto 1fr 1fr;
+  gap:8px;
+  align-items:stretch;
+}
+.btn-back{
+  padding:11px 16px;
+  background:var(--white);color:var(--green);
+  border:1.5px solid var(--border);border-radius:7px;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;
+  display:flex;align-items:center;gap:5px;
+  text-decoration:none;white-space:nowrap;
+  transition:all .2s;
+}
+.btn-back:hover{border-color:var(--green);background:var(--greenlt);}
+.btn-call{
+  padding:11px 16px;
+  background:var(--green);color:#fff;
+  border:none;border-radius:7px;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;transition:background .2s,transform .15s;
+}
+.btn-call:hover{background:var(--green2);transform:translateY(-2px);}
+.btn-wa{
+  padding:11px 16px;
+  background:#25d366;color:#fff;
+  border:none;border-radius:7px;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  text-decoration:none;transition:background .2s,transform .15s;
+}
+.btn-wa:hover{background:#1da851;transform:translateY(-2px);}
+
+/* ── ALT: İLETİŞİM KARTLARI ── */
+.detail-contact-row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:16px;
+  margin-top:20px;
+}
+.contact-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px 18px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:6px;
+  transition:box-shadow .2s,transform .2s;
+}
+.contact-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.09);transform:translateY(-3px);}
+.contact-card-icon{
+  width:44px;height:44px;
+  background:var(--greenlt);
+  border:1px solid var(--mist);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;margin-bottom:4px;
+}
+.contact-card-label{
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--grey2);
+}
+.contact-card-val{
+  font-family:'Playfair Display',serif;
+  font-size:1.05rem;font-weight:700;color:var(--dark);
+  text-decoration:none;transition:color .2s;
+  line-height:1.3;
+}
+a.contact-card-val:hover{color:var(--green);}
+.contact-card-sub{font-size:.73rem;color:var(--grey2);font-style:italic;}
+
+/* ── LIGHTBOX ── */
+#lightbox{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column;}
+#lightbox.open{display:flex;}
+#lightbox img{max-width:88vw;max-height:82vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 48px rgba(0,0,0,.6);animation:lbIn .22s ease;}
+@keyframes lbIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.lb-close{position:fixed;top:18px;right:24px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.4rem;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.25);}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:12px;padding:32px 28px;max-width:440px;width:92%;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.2);}
+.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.3rem;color:var(--grey2);cursor:pointer;}
+.modal-close:hover{color:var(--dark);}
+.contact-wrap{text-align:center;}
+.c-icon{font-size:2.2rem;margin-bottom:8px;}
+.c-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--dark);margin-bottom:16px;}
+.c-persons{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.c-person{background:var(--greenlt);border:1px solid var(--mist);border-radius:8px;padding:14px 16px;}
+.c-person-name{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey2);margin-bottom:4px;}
+.c-person-phone{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--green);text-decoration:none;display:block;}
+.c-person-phone:hover{color:var(--green2);}
+.c-wa-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#25d366;color:#fff;text-decoration:none;
+  padding:11px 28px;border-radius:8px;font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:.85rem;transition:background .2s;width:100%;justify-content:center;
+}
+.c-wa-btn:hover{background:#1da851;}
+
+/* ── WA FLOAT ── */
+.wa-float{position:fixed;bottom:20px;right:20px;z-index:300;width:52px;height:52px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,.4);text-decoration:none;animation:waPulse 2.5s infinite;}
+.wa-float svg{width:26px;height:26px;fill:#fff;}
+@keyframes waPulse{0%,100%{box-shadow:0 4px 16px rgba(37,211,102,.4),0 0 0 0 rgba(37,211,102,.4);}50%{box-shadow:0 4px 16px rgba(37,211,102,.4),0 0 0 10px rgba(37,211,102,0);}}
+
+/* ── STATE BOX ── */
+.state-box{max-width:520px;margin:80px auto;text-align:center;padding:56px 40px;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.06);}
+.state-icon{font-size:3.5rem;margin-bottom:14px;display:block;}
+.state-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--dark);margin-bottom:8px;}
+.state-msg{font-size:.9rem;color:var(--grey2);line-height:1.7;}
+
+/* ── FOOTER ── */
+footer{
+  background:#1c3d13;margin-top:48px;
+  padding:24px 48px;
+  display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
+  border-top:3px solid var(--green);
+}
+.footer-logo{font-family:'Cinzel',serif;color:#b8e08a;font-size:.9rem;letter-spacing:.2em;}
+.footer-addr{font-size:.75rem;color:rgba(180,220,160,.45);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:.75rem;color:rgba(180,220,160,.45);text-decoration:none;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;}
+.footer-links a:hover{color:#b8e08a;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .detail-top{grid-template-columns:1fr;}
+  .detail-img-side{border-right:none;border-bottom:1px solid var(--border);min-height:300px;padding:24px;}
+  .detail-info-side{padding:24px;}
+  .detail-contact-row{grid-template-columns:1fr 1fr;}
+  .detail-actions{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;}
+  .btn-back{grid-column:1/-1;}
+}
+@media(max-width:600px){
+  .main-nav{padding:14px 16px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex!important;}
+  .breadcrumb{padding:10px 16px;}
+  .detail-wrap{padding:0 12px;margin:20px auto;}
+  .detail-name{font-size:1.5rem;}
+  .detail-price{font-size:1.6rem;}
+  .detail-contact-row{grid-template-columns:1fr;}
+  .detail-actions{grid-template-columns:1fr;}
+  .btn-back{grid-column:auto;}
+  footer{padding:20px 16px;flex-direction:column;text-align:center;gap:10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="main-nav">
+  <a class="nav-logo" href="index.html">BAŞKENT AV GALERİSİ</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="tufekler.html">Av Tüfekleri</a></li>
+    <li><a href="giyim.html">Giyim & Ekipman</a></li>
+    <li><a href="aksesuar.html">Silah Aksesuarları</a></li>
+    <li><a href="balik.html">Balık Avı</a></li>
+    <li><a href="fisek.html">Av Fişekleri</a></li>
+    <li><a href="index.html#iletisim">İletişim</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBİL MENÜ -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMenu()">✕</button>
+  <div class="mobile-menu-logo">BAŞKENT AV GALERİSİ</div>
+  <a href="index.html" onclick="toggleMenu()">Ana Sayfa</a>
+  <a href="tufekler.html" onclick="toggleMenu()">Av Tüfekleri</a>
+  <a href="giyim.html" onclick="toggleMenu()">Giyim & Ekipman</a>
+  <a href="aksesuar.html" onclick="toggleMenu()">Silah Aksesuarları</a>
+  <a href="balik.html" onclick="toggleMenu()">Balık Avı</a>
+  <a href="fisek.html" onclick="toggleMenu()">Av Fişekleri</a>
+  <a href="index.html#iletisim" onclick="toggleMenu()">İletişim</a>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="index.html">Ana Sayfa</a> ›
+  <a href="#" id="bcCategory">Ürünler</a> ›
+  <span id="bcProduct">Yükleniyor…</span>
+</div>
+
+<!-- DETAY -->
+<div id="detailContainer">
+  <div class="state-box">
+    <span class="state-icon">⏳</span>
+    <div class="state-title">Yükleniyor</div>
+    <div class="state-msg">Ürün bilgileri getiriliyor…</div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" alt=""/>
+</div>
+
+<!-- İLETİŞİM MODAL -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('contactModal')">✕</button>
+    <div class="contact-wrap">
+      <div class="c-icon">📞</div>
+      <div class="c-title" id="c-title">Bilgi Al</div>
+      <div class="c-persons">
+        <div class="c-person">
+          <div class="c-person-name">Harun Öğütlü</div>
+          <a class="c-person-phone" href="tel:+905325625623">0532 562 56 23</a>
+        </div>
+        <div class="c-person">
+          <div class="c-person-name">Fatih Öğütlü</div>
+          <a class="c-person-phone" href="tel:+905354177744">0535 417 77 44</a>
+        </div>
+      </div>
+      <a class="c-wa-btn" id="modalWaLink" href="https://wa.me/905354177744" target="_blank">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.862L.057 23.486a.5.5 0 0 0 .616.612l5.758-1.51A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.93a9.925 9.925 0 0 1-5.062-1.378l-.363-.215-3.759.986 1.003-3.664-.236-.374A9.929 9.929 0 0 1 2.07 12C2.07 6.508 6.508 2.07 12 2.07c5.491 0 9.93 4.438 9.93 9.93 0 5.491-4.439 9.93-9.93 9.93z"/></svg>
+        WhatsApp ile Yaz
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BAŞKENT AV GALERİSİ</div>
+  <div class="footer-addr">Turunçova Mah. Cumhuriyet Cad. No:2/Y — Finike / Antalya</div>
+  <div class="footer-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="tufekler.html">Tüfekler</a>
+    <a href="index.html#iletisim">İletişim</a>
+  </div>
+</footer>
+
+<!-- WHATSAPP -->
+<a class="wa-float" href="https://wa.me/905354177744" target="_blank">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.862L.057 23.486a.5.5 0 0 0 .616.612l5.758-1.51A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.93a9.925 9.925 0 0 1-5.062-1.378l-.363-.215-3.759.986 1.003-3.664-.236-.374A9.929 9.929 0 0 1 2.07 12C2.07 6.508 6.508 2.07 12 2.07c5.491 0 9.93 4.438 9.93 9.93 0 5.491-4.439 9.93-9.93 9.93z"/></svg>
+</a>
+
+<script>
+function toggleMenu(){const m=document.getElementById('mobileMenu');const h=document.getElementById('hamburger');m.classList.toggle('open');h.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+function openLightbox(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+function openContact(name,waLink){
+  document.getElementById('c-title').textContent='"'+name+'" Hakkında Bilgi Al';
+  document.getElementById('modalWaLink').href=waLink||'https://wa.me/905354177744';
+  document.getElementById('contactModal').classList.add('open');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();document.getElementById('contactModal').classList.remove('open');}});
+document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
+</script>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getFirestore,doc,getDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",authDomain:"baskentavgalerisi.firebaseapp.com",projectId:"baskentavgalerisi",storageBucket:"baskentavgalerisi.firebasestorage.app",messagingSenderId:"248185539120",appId:"1:248185539120:web:cc66fbaf497fe47b13fbf5"};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+
+const colMeta={
+  tufekler:{label:'Av Tüfekleri',url:'tufekler.html',icon:'🔫'},
+  giyim:{label:'Giyim & Ekipman',url:'giyim.html',icon:'👕'},
+  aksesuar:{label:'Silah Aksesuarları',url:'aksesuar.html',icon:'🎯'},
+  balik:{label:'Balık Avı',url:'balik.html',icon:'🎣'},
+  fisek:{label:'Av Fişekleri',url:'fisek.html',icon:'💥'},
+};
+
+const params=new URLSearchParams(location.search);
+const colName=params.get('col');
+const docId=params.get('id');
+const meta=colMeta[colName]||{label:'Ürünler',url:'index.html',icon:'📦'};
+
+document.getElementById('bcCategory').href=meta.url;
+document.getElementById('bcCategory').textContent=meta.label;
+
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escJs(s){if(!s)return'';return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"');}
+
+function errBox(title,msg){
+  return`<div class="detail-wrap"><div class="state-box">
+    <span class="state-icon">⚠️</span>
+    <div class="state-title">${title}</div>
+    <div class="state-msg">${msg}</div>
+    <a href="${meta.url}" style="display:inline-block;margin-top:20px;padding:11px 28px;background:var(--green);color:#fff;border-radius:7px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;text-decoration:none;">← ${meta.label}</a>
+  </div></div>`;
+}
+
+async function loadProduct(){
+  const container=document.getElementById('detailContainer');
+  if(!colName||!docId){container.innerHTML=errBox('Geçersiz Bağlantı','Ürün bulunamadı. Lütfen kategori sayfasına dönün.');return;}
+  try{
+    const snap=await getDoc(doc(db,colName,docId));
+    if(!snap.exists()){container.innerHTML=errBox('Ürün Bulunamadı','Bu ürün kaldırılmış veya artık mevcut değil.');return;}
+    const p={id:snap.id,...snap.data()};
+
+    document.title=(p.name||'Ürün')+' — Başkent Av Galerisi';
+    document.getElementById('bcProduct').textContent=p.name||'Ürün Detayı';
+
+    const waMsg=encodeURIComponent('Merhaba, "'+p.name+'" ürünü hakkında bilgi almak istiyorum.');
+    const waLink='https://wa.me/905354177744?text='+waMsg;
+    const isSecond=(p.cat||'').toLowerCase().includes('ikinci');
+
+    container.innerHTML=`
+    <div class="detail-wrap">
+      <div class="detail-top">
+
+        <!-- SOL: FOTOĞRAF -->
+        <div class="detail-img-side">
+          <div class="detail-img-box" ${p.img?`onclick="openLightbox('${escJs(p.img)}')"`:''}>
+            ${p.img
+              ?`<img src="${esc(p.img)}" alt="${esc(p.name)}"/>
+                <div class="zoom-hint">🔍 Büyütmek için tıklayın</div>`
+              :`<div class="detail-no-img">
+                  <span>${meta.icon}</span>
+                  <span>Fotoğraf Yok</span>
+                </div>`
+            }
+          </div>
+          <div class="detail-img-label">${esc(p.name||'')}</div>
+        </div>
+
+        <!-- SAĞ: BİLGİ -->
+        <div class="detail-info-side">
+
+          <div class="detail-category-tag">${meta.label}</div>
+          ${p.brand?`<div class="detail-brand">${esc(p.brand)}</div>`:''}
+          <h1 class="detail-name">${esc(p.name||'İsimsiz Ürün')}</h1>
+
+          <div class="detail-badges">
+            ${isSecond
+              ?'<span class="badge badge-second">İkinci El</span>'
+              :'<span class="badge badge-new">Sıfır</span>'
+            }
+            ${p.cat?`<span class="badge badge-cat">${esc(p.cat)}</span>`:''}
+          </div>
+
+          <hr class="detail-hr"/>
+
+          <div class="detail-price-block">
+            <div class="detail-price-label">Satış Fiyatı</div>
+            ${p.price
+              ?`<div class="detail-price">${esc(p.price)}</div>`
+              :`<div class="detail-price-noinfo">Fiyat için lütfen bize ulaşın</div>`
+            }
+          </div>
+
+          ${p.desc?`
+          <div class="detail-desc-label">Ürün Açıklaması</div>
+          <div class="detail-desc">${esc(p.desc)}</div>
+          `:''}
+
+          <div class="detail-actions">
+            <a class="btn-back" href="${meta.url}">← Geri</a>
+            <button class="btn-call" onclick="openContact('${escJs(p.name||'')}','${escJs(waLink)}')">📞 Bilgi Al</button>
+            <a class="btn-wa" href="${waLink}" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.862L.057 23.486a.5.5 0 0 0 .616.612l5.758-1.51A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.93a9.925 9.925 0 0 1-5.062-1.378l-.363-.215-3.759.986 1.003-3.664-.236-.374A9.929 9.929 0 0 1 2.07 12C2.07 6.508 6.508 2.07 12 2.07c5.491 0 9.93 4.438 9.93 9.93 0 5.491-4.439 9.93-9.93 9.93z"/></svg>
+              WhatsApp
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ALT: İLETİŞİM KARTLARI -->
+      <div class="detail-contact-row">
+        <div class="contact-card">
+          <div class="contact-card-icon">📞</div>
+          <div class="contact-card-label">Harun Öğütlü</div>
+          <a class="contact-card-val" href="tel:+905325625623">0532 562 56 23</a>
+          <div class="contact-card-sub">Arayın, bilgi alalım</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📱</div>
+          <div class="contact-card-label">Fatih Öğütlü</div>
+          <a class="contact-card-val" href="tel:+905354177744">0535 417 77 44</a>
+          <div class="contact-card-sub">Arayın, bilgi alalım</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📍</div>
+          <div class="contact-card-label">Adresimiz</div>
+          <span class="contact-card-val" style="font-size:.9rem;">Finike / Antalya</span>
+          <div class="contact-card-sub">Turunçova Mah. Cumhuriyet Cad. No:2/Y</div>
+        </div>
+      </div>
+    </div>`;
+
+  }catch(e){
+    container.innerHTML=errBox('Bağlantı Hatası','Ürün yüklenirken bir sorun oluştu. Lütfen sayfayı yenileyin.');
+    console.error(e);
+  }
+}
+loadProduct();
+</script>
+</body>
+</html>
