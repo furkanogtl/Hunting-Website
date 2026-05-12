@@ -22,10 +22,9 @@
   --grey2:#7a9060;
   --border:#d6e4cc;
   --bg:#f8faf5;
-  --red:#c03030;
 }
 
-body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:14px;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);font-size:14px;}
 
 /* ── NAV ── */
 .main-nav{
@@ -43,245 +42,243 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   padding-bottom:3px;border-bottom:2px solid transparent;
 }
 .nav-links a:hover{color:#b8e08a;}
-.nav-links a.nav-active{color:#b8e08a;border-bottom-color:#b8e08a;}
-
-/* ── HAMBURGEr ── */
-.hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:40px;height:40px;background:none;border:none;cursor:pointer;padding:4px;z-index:200;}
-.hamburger span{display:block;width:24px;height:2px;background:#b8e08a;border-radius:2px;transition:all .3s ease;}
+.hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:40px;height:40px;background:none;border:none;cursor:pointer;}
+.hamburger span{display:block;width:24px;height:2px;background:#b8e08a;border-radius:2px;transition:all .3s;}
 .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
 .hamburger.open span:nth-child(2){opacity:0;}
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 .mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(28,61,19,.97);z-index:150;flex-direction:column;align-items:center;justify-content:center;}
 .mobile-menu.open{display:flex;}
-.mobile-menu a{font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:.18em;color:#eef2e8;text-decoration:none;text-transform:uppercase;padding:18px 60px;width:100%;text-align:center;border-bottom:1px solid rgba(184,224,138,.12);transition:all .2s;}
+.mobile-menu a{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:.18em;color:#eef2e8;text-decoration:none;text-transform:uppercase;padding:16px 60px;width:100%;text-align:center;border-bottom:1px solid rgba(184,224,138,.12);transition:all .2s;}
 .mobile-menu a:hover{background:rgba(184,224,138,.08);color:#b8e08a;}
 .mobile-menu-logo{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.25em;color:#b8e08a;margin-bottom:28px;}
-.mobile-menu-close{position:absolute;top:18px;right:20px;background:none;border:none;color:#b8e08a;font-size:2rem;cursor:pointer;line-height:1;}
+.mobile-menu-close{position:absolute;top:18px;right:20px;background:none;border:none;color:#b8e08a;font-size:2rem;cursor:pointer;}
 
 /* ── BREADCRUMB ── */
-.breadcrumb{background:#f0f4ec;border-bottom:1px solid var(--border);padding:10px 48px;font-size:.8rem;color:#6a8060;font-family:'Lora',serif;}
+.breadcrumb{background:#f0f4ec;border-bottom:1px solid var(--border);padding:10px 48px;font-size:.8rem;color:#6a8060;font-family:'Lora',serif;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .breadcrumb a{color:var(--green);text-decoration:none;font-weight:600;}
 .breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:var(--mist);}
 
-/* ── DETAY SAYFASI ── */
-.detail-wrap{
-  max-width:1080px;
-  margin:40px auto;
-  padding:0 32px;
-}
+/* ── SAYFA ── */
+.page-wrap{max-width:1200px;margin:28px auto;padding:0 32px;}
 
-/* ÜST: İKİ SÜTUN */
-.detail-top{
+/* ── ÜST BÖLÜM: Fotoğraf + Bilgi ── */
+.product-top{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:40px;
-  align-items:start;
-  background:var(--white);
-  border:1px solid var(--border);
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 4px 24px rgba(0,0,0,.07);
+  grid-template-columns:1fr 340px;
+  gap:24px;
+  margin-bottom:24px;
 }
 
-/* SOL — FOTOĞRAF */
-.detail-img-side{
-  background:#f4f6f2;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:32px;
-  min-height:420px;
-  border-right:1px solid var(--border);
-  position:relative;
-}
-.detail-img-box{
-  width:100%;
-  aspect-ratio:1/1;
+/* SOL: Fotoğraf */
+.photo-col{display:flex;flex-direction:column;gap:12px;}
+
+.main-photo{
   background:var(--white);
   border:1px solid var(--border);
-  border-radius:8px;
+  border-radius:10px;
   overflow:hidden;
+  aspect-ratio:4/3;
   display:flex;align-items:center;justify-content:center;
   cursor:zoom-in;
   position:relative;
-  box-shadow:0 2px 12px rgba(0,0,0,.08);
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
 }
-.detail-img-box img{
+.main-photo img{
   width:100%;height:100%;
   object-fit:contain;
-  transition:transform .4s ease;
-  padding:8px;
+  padding:20px;
+  transition:transform .45s ease;
 }
-.detail-img-box:hover img{transform:scale(1.06);}
-.detail-no-img{
+.main-photo:hover img{transform:scale(1.05);}
+.photo-no-img{
   display:flex;flex-direction:column;align-items:center;gap:10px;
-  color:var(--grey2);opacity:.35;
+  color:var(--grey2);
 }
-.detail-no-img span:first-child{font-size:4.5rem;}
-.detail-no-img span:last-child{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;}
+.photo-no-img .ni-icon{font-size:5rem;opacity:.18;}
+.photo-no-img span{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;opacity:.4;}
 
-.zoom-hint{
-  position:absolute;bottom:10px;right:10px;
-  background:rgba(0,0,0,.38);color:#fff;
-  border-radius:12px;padding:4px 10px;
-  font-family:'Nunito',sans-serif;font-size:.68rem;
+.zoom-badge{
+  position:absolute;bottom:12px;right:12px;
+  background:rgba(28,61,19,.55);color:#b8e08a;
+  border-radius:20px;padding:5px 13px;
+  font-size:.7rem;font-weight:700;letter-spacing:.06em;
   opacity:0;transition:opacity .25s;pointer-events:none;
 }
-.detail-img-box:hover .zoom-hint{opacity:1;}
+.main-photo:hover .zoom-badge{opacity:1;}
 
-.detail-img-label{
-  margin-top:14px;
-  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--grey2);
-  opacity:.7;text-align:center;
+/* Küçük fotoğraf şeridi (tek fotoğraf için marka etiketi) */
+.photo-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);border:1px solid var(--border);border-radius:8px;
+  padding:10px 16px;
 }
+.photo-meta-brand{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);font-weight:700;}
+.photo-meta-zoom{font-size:.72rem;color:var(--grey2);display:flex;align-items:center;gap:5px;cursor:pointer;transition:color .2s;}
+.photo-meta-zoom:hover{color:var(--green);}
 
-/* SAĞ — BİLGİ */
-.detail-info-side{
-  padding:36px 36px 36px 28px;
+/* SAĞ: Bilgi paneli */
+.info-col{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
   display:flex;flex-direction:column;
-  gap:0;
 }
 
-.detail-category-tag{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--green);font-weight:700;
-  margin-bottom:10px;
-}
-.detail-category-tag::before{
-  content:'';display:block;width:20px;height:1.5px;background:var(--green);opacity:.5;
-}
-
-.detail-brand{
-  font-family:'Cinzel',serif;font-size:.72rem;
-  letter-spacing:.14em;text-transform:uppercase;
-  color:var(--grey2);margin-bottom:4px;
-}
-
-.detail-name{
-  font-family:'Playfair Display',serif;
-  font-size:1.9rem;font-weight:900;
-  color:var(--dark);line-height:1.2;
-  margin-bottom:14px;
-}
-
-/* Rozetler */
-.detail-badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;}
-.badge{font-family:'Nunito',sans-serif;font-size:.67rem;font-weight:800;padding:4px 11px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;}
+.info-header{padding:16px 18px 0;}
+.info-badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px;}
+.badge{font-size:.63rem;font-weight:800;padding:3px 9px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;font-family:'Nunito',sans-serif;}
 .badge-new{background:var(--green);color:#fff;}
 .badge-second{background:#e07820;color:#fff;}
 .badge-cat{background:var(--offwhite);color:var(--grey);border:1px solid var(--border);}
 
-.detail-hr{border:none;border-top:1px solid var(--border);margin:18px 0;}
+.info-brand{font-family:'Cinzel',serif;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey2);margin-bottom:3px;}
+.info-name{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--dark);line-height:1.25;margin-bottom:14px;}
 
-/* FİYAT */
-.detail-price-block{
-  background:var(--greenlt);
-  border:1px solid var(--mist);
-  border-radius:8px;
-  padding:16px 18px;
-  margin-bottom:20px;
+/* Fiyat bandı */
+.price-band{
+  background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);
+  padding:14px 18px;
 }
-.detail-price-label{
-  font-family:'Cinzel',serif;font-size:.58rem;
-  letter-spacing:.16em;text-transform:uppercase;
-  color:var(--grey2);margin-bottom:6px;
+.price-band-label{
+  font-size:.63rem;font-weight:700;
+  color:rgba(255,255,255,.75);
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:4px;
 }
-.detail-price{
+.price-band-value{
   font-family:'Playfair Display',serif;
-  font-size:2rem;font-weight:900;color:var(--green);
+  font-size:2rem;font-weight:900;
+  color:#fff;
   line-height:1;
 }
-.detail-price-noinfo{
-  font-size:.85rem;color:var(--grey2);font-style:italic;
-}
+.price-band-note{font-size:.72rem;color:rgba(255,255,255,.65);margin-top:3px;font-style:italic;}
 
-/* AÇIKLAMA */
-.detail-desc-label{
-  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--grey2);margin-bottom:8px;
+/* Özellik satırları */
+.info-specs{padding:10px 18px;border-bottom:1px solid var(--border);flex:1;}
+.spec-row{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:6px 0;border-bottom:1px solid var(--offwhite);
+  font-size:.78rem;
 }
-.detail-desc{
-  font-family:'Lora',serif;font-size:.92rem;
-  line-height:1.8;color:var(--grey);
-  white-space:pre-wrap;margin-bottom:24px;
-}
+.spec-row:last-child{border-bottom:none;}
+.spec-icon{width:16px;flex-shrink:0;color:var(--green);font-size:.85rem;margin-top:1px;}
+.spec-label{width:100px;flex-shrink:0;color:var(--grey2);font-weight:600;}
+.spec-val{flex:1;color:var(--dark);font-weight:700;}
 
-/* BUTONLAR */
-.detail-actions{
-  display:grid;
-  grid-template-columns:auto 1fr 1fr;
-  gap:8px;
-  align-items:stretch;
-}
-.btn-back{
-  padding:11px 16px;
-  background:var(--white);color:var(--green);
-  border:1.5px solid var(--border);border-radius:7px;
-  font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;
-  display:flex;align-items:center;gap:5px;
-  text-decoration:none;white-space:nowrap;
-  transition:all .2s;
-}
-.btn-back:hover{border-color:var(--green);background:var(--greenlt);}
-.btn-call{
-  padding:11px 16px;
-  background:var(--green);color:#fff;
-  border:none;border-radius:7px;
-  font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  cursor:pointer;transition:background .2s,transform .15s;
-}
-.btn-call:hover{background:var(--green2);transform:translateY(-2px);}
-.btn-wa{
-  padding:11px 16px;
+/* Butonlar */
+.info-actions{padding:12px 18px;display:flex;flex-direction:column;gap:7px;}
+.btn-wa-main{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 20px;
   background:#25d366;color:#fff;
-  border:none;border-radius:7px;
-  font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;
-  display:flex;align-items:center;justify-content:center;gap:6px;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.92rem;
   text-decoration:none;transition:background .2s,transform .15s;
+  width:100%;
 }
-.btn-wa:hover{background:#1da851;transform:translateY(-2px);}
+.btn-wa-main:hover{background:#1da851;transform:translateY(-2px);}
+.btn-call-main{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 20px;
+  background:var(--white);color:var(--green);
+  border:2px solid var(--green);border-radius:8px;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.92rem;
+  transition:all .2s;width:100%;
+}
+.btn-call-main:hover{background:var(--greenlt);}
+.btn-back-main{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 20px;
+  background:var(--offwhite);color:var(--grey);
+  border:1px solid var(--border);border-radius:8px;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;
+  text-decoration:none;transition:all .2s;width:100%;
+}
+.btn-back-main:hover{background:var(--mist);color:var(--dark);}
 
-/* ── ALT: İLETİŞİM KARTLARI ── */
-.detail-contact-row{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:16px;
-  margin-top:20px;
+/* Mağaza bilgisi */
+.info-store{
+  padding:10px 18px;
+  background:var(--offwhite);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
 }
-.contact-card{
+.store-icon{font-size:1.2rem;}
+.store-text{font-size:.7rem;color:var(--grey2);line-height:1.4;}
+.store-text strong{color:var(--dark);display:block;font-size:.75rem;}
+
+/* ── ALT BÖLÜM: Sekmeler ── */
+.tabs-section{
   background:var(--white);
   border:1px solid var(--border);
   border-radius:10px;
-  padding:20px 18px;
-  display:flex;flex-direction:column;align-items:center;
-  text-align:center;gap:6px;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+  margin-bottom:28px;
+}
+.tabs-nav{
+  display:flex;border-bottom:2px solid var(--border);
+  background:var(--offwhite);
+}
+.tab-btn{
+  padding:14px 24px;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;
+  color:var(--grey2);border:none;background:none;cursor:pointer;
+  border-bottom:3px solid transparent;margin-bottom:-2px;
+  transition:all .2s;letter-spacing:.03em;
+}
+.tab-btn:hover{color:var(--green);}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);background:var(--white);}
+
+.tab-content{display:none;padding:28px 32px;}
+.tab-content.active{display:block;}
+
+/* Açıklama sekmesi */
+.desc-text{
+  font-family:'Lora',serif;font-size:.95rem;line-height:1.85;
+  color:var(--grey);white-space:pre-wrap;
+}
+.desc-empty{font-size:.9rem;color:var(--grey2);font-style:italic;}
+
+/* İletişim sekmesi */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.contact-card{
+  background:var(--offwhite);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:20px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;
   transition:box-shadow .2s,transform .2s;
 }
 .contact-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.09);transform:translateY(-3px);}
-.contact-card-icon{
-  width:44px;height:44px;
-  background:var(--greenlt);
-  border:1px solid var(--mist);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;margin-bottom:4px;
+.contact-icon{
+  width:48px;height:48px;
+  background:var(--white);border:1px solid var(--mist);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;
 }
-.contact-card-label{
-  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--grey2);
+.contact-label{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey2);}
+.contact-val{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--dark);text-decoration:none;}
+a.contact-val:hover{color:var(--green);}
+.contact-sub{font-size:.72rem;color:var(--grey2);}
+.contact-wa-row{margin-top:4px;display:flex;justify-content:center;}
+.contact-wa-row a{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 20px;background:#25d366;color:#fff;
+  border-radius:7px;font-weight:800;font-size:.8rem;text-decoration:none;transition:background .2s;
 }
-.contact-card-val{
-  font-family:'Playfair Display',serif;
-  font-size:1.05rem;font-weight:700;color:var(--dark);
-  text-decoration:none;transition:color .2s;
-  line-height:1.3;
+.contact-wa-row a:hover{background:#1da851;}
+.contact-addr{
+  grid-column:1/-1;
+  background:var(--white);border:1px solid var(--border);border-radius:9px;
+  padding:16px 20px;display:flex;align-items:center;gap:14px;
 }
-a.contact-card-val:hover{color:var(--green);}
-.contact-card-sub{font-size:.73rem;color:var(--grey2);font-style:italic;}
+.contact-addr-icon{font-size:1.6rem;flex-shrink:0;}
+.contact-addr-text{font-size:.85rem;color:var(--grey2);line-height:1.6;}
+.contact-addr-text strong{color:var(--dark);font-size:.9rem;}
 
 /* ── LIGHTBOX ── */
 #lightbox{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column;}
@@ -300,17 +297,12 @@ a.contact-card-val:hover{color:var(--green);}
 .contact-wrap{text-align:center;}
 .c-icon{font-size:2.2rem;margin-bottom:8px;}
 .c-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--dark);margin-bottom:16px;}
-.c-persons{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.c-persons{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
 .c-person{background:var(--greenlt);border:1px solid var(--mist);border-radius:8px;padding:14px 16px;}
 .c-person-name{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey2);margin-bottom:4px;}
 .c-person-phone{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--green);text-decoration:none;display:block;}
 .c-person-phone:hover{color:var(--green2);}
-.c-wa-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  background:#25d366;color:#fff;text-decoration:none;
-  padding:11px 28px;border-radius:8px;font-family:'Nunito',sans-serif;
-  font-weight:800;font-size:.85rem;transition:background .2s;width:100%;justify-content:center;
-}
+.c-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;padding:11px 28px;border-radius:8px;font-weight:800;font-size:.85rem;transition:background .2s;width:100%;}
 .c-wa-btn:hover{background:#1da851;}
 
 /* ── WA FLOAT ── */
@@ -318,50 +310,203 @@ a.contact-card-val:hover{color:var(--green);}
 .wa-float svg{width:26px;height:26px;fill:#fff;}
 @keyframes waPulse{0%,100%{box-shadow:0 4px 16px rgba(37,211,102,.4),0 0 0 0 rgba(37,211,102,.4);}50%{box-shadow:0 4px 16px rgba(37,211,102,.4),0 0 0 10px rgba(37,211,102,0);}}
 
-/* ── STATE BOX ── */
-.state-box{max-width:520px;margin:80px auto;text-align:center;padding:56px 40px;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.06);}
+/* ── YASAL UYARI ── */
+.legal-warning{
+  background:#c0392b;
+  border-radius:8px;
+  padding:16px 22px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  box-shadow:0 2px 10px rgba(192,57,43,.25);
+}
+.legal-warning-label{
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.25);
+  border-radius:5px;
+  padding:8px 12px;
+  min-width:62px;
+  text-align:center;
+}
+.legal-warning-label span{
+  font-family:'Nunito',sans-serif;
+  font-weight:900;
+  font-size:.9rem;
+  color:#fff;
+  line-height:1.2;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.legal-warning-text{
+  font-family:'Lora',serif;
+  font-size:.82rem;
+  color:rgba(255,255,255,.92);
+  line-height:1.75;
+  font-style:italic;
+}
+.legal-warning-text strong{
+  font-style:normal;
+  color:#fff;
+  font-weight:700;
+}
+
+/* ── TEKNİK ÖZELLİKLER TABLOSU ── */
+.tech-specs-section{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+  margin-bottom:20px;
+}
+.tech-specs-header{
+  background:linear-gradient(135deg,var(--dark) 0%,var(--green2) 100%);
+  padding:14px 24px;
+  display:flex;align-items:center;gap:10px;
+}
+.tech-specs-header-icon{font-size:1.1rem;}
+.tech-specs-header-title{
+  font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.15em;
+  text-transform:uppercase;color:#b8e08a;font-weight:700;
+}
+.tech-specs-table{width:100%;border-collapse:collapse;}
+.tech-specs-table tr:nth-child(odd){background:var(--offwhite);}
+.tech-specs-table tr:nth-child(even){background:var(--white);}
+.tech-specs-table tr:hover{background:var(--mist);transition:background .15s;}
+.tech-specs-table td{
+  padding:11px 20px;
+  border-bottom:1px solid var(--border);
+  font-size:.85rem;
+  vertical-align:middle;
+}
+.tech-specs-table tr:last-child td{border-bottom:none;}
+.tech-specs-table .ts-label{
+  font-weight:700;color:var(--dark);
+  width:42%;font-family:'Nunito',sans-serif;
+  border-right:2px solid var(--border);
+}
+.tech-specs-table .ts-val{
+  color:var(--grey);font-weight:600;
+  padding-left:24px;
+}
+
+/* ── STATE ── */
+.state-box{max-width:500px;margin:80px auto;text-align:center;padding:52px 40px;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.06);}
 .state-icon{font-size:3.5rem;margin-bottom:14px;display:block;}
 .state-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--dark);margin-bottom:8px;}
 .state-msg{font-size:.9rem;color:var(--grey2);line-height:1.7;}
 
 /* ── FOOTER ── */
-footer{
-  background:#1c3d13;margin-top:48px;
-  padding:24px 48px;
-  display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
-  border-top:3px solid var(--green);
-}
+footer{background:#1c3d13;padding:24px 48px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;border-top:3px solid var(--green);}
 .footer-logo{font-family:'Cinzel',serif;color:#b8e08a;font-size:.9rem;letter-spacing:.2em;}
 .footer-addr{font-size:.75rem;color:rgba(180,220,160,.45);}
 .footer-links{display:flex;gap:24px;}
-.footer-links a{font-size:.75rem;color:rgba(180,220,160,.45);text-decoration:none;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;}
+.footer-links a{font-size:.72rem;color:rgba(180,220,160,.45);text-decoration:none;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;}
 .footer-links a:hover{color:#b8e08a;}
 
 /* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .detail-top{grid-template-columns:1fr;}
-  .detail-img-side{border-right:none;border-bottom:1px solid var(--border);min-height:300px;padding:24px;}
-  .detail-info-side{padding:24px;}
-  .detail-contact-row{grid-template-columns:1fr 1fr;}
-  .detail-actions{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;}
-  .btn-back{grid-column:1/-1;}
+@media(max-width:960px){
+  .product-top{grid-template-columns:1fr;}
+  .info-col{order:-1;}
 }
-@media(max-width:600px){
+@media(max-width:640px){
   .main-nav{padding:14px 16px;}
   .nav-links{display:none;}
   .hamburger{display:flex!important;}
   .breadcrumb{padding:10px 16px;}
-  .detail-wrap{padding:0 12px;margin:20px auto;}
-  .detail-name{font-size:1.5rem;}
-  .detail-price{font-size:1.6rem;}
-  .detail-contact-row{grid-template-columns:1fr;}
-  .detail-actions{grid-template-columns:1fr;}
-  .btn-back{grid-column:auto;}
+  .page-wrap{padding:0 12px;margin:16px auto;}
+  .info-name{font-size:1.3rem;}
+  .price-band-value{font-size:1.6rem;}
+  .contact-grid{grid-template-columns:1fr;}
+  .tab-content{padding:20px 16px;}
+  .tabs-nav{overflow-x:auto;}
   footer{padding:20px 16px;flex-direction:column;text-align:center;gap:10px;}
 }
+
+/* ── SAYFA ARKA PLAN DESENI ── */
+.page-bg-pattern {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.page-bg-pattern svg {
+  width: 100%;
+  height: 100%;
+}
+body > *:not(.page-bg-pattern) {
+  position: relative;
+  z-index: 1;
+}
+
 </style>
 </head>
 <body>
+<div class="page-bg-pattern" aria-hidden="true">
+<svg viewBox="0 0 1080 990" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+<g transform="translate(90,47) rotate(25) scale(1.14)" opacity="0.048"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(284,46) rotate(15) scale(1.11)" opacity="0.081"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(443,44) rotate(-15) scale(1.05)" opacity="0.048"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(615,60) rotate(25) scale(0.88)" opacity="0.068"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(804,63) rotate(-25) scale(1.11)" opacity="0.061"><path d="M10,32 L20,8 L22,10 L14,34 Z M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(984,44) rotate(-8) scale(0.98)" opacity="0.051"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(77,171) rotate(8) scale(1.10)" opacity="0.072"><path d="M20,20 m-13,0 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 M20,10 L23,17 L20,20 L17,17 Z M20,30 L17,23 L20,20 L23,23 Z" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(256,171) rotate(0) scale(1.02)" opacity="0.067"><path d="M8,20 Q12,12 22,16 Q28,18 32,16 Q28,22 32,24 Q28,22 22,24 Q12,28 8,20 Z M8,17 L6,14 M8,23 L6,26" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(434,171) rotate(-25) scale(1.13)" opacity="0.065"><path d="M20,8 L24,12 L26,20 L20,34 L14,20 L16,12 Z M16,12 L24,12 M14,20 L26,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(644,166) rotate(15) scale(1.06)" opacity="0.082"><path d="M12,10 L8,14 L8,30 L32,30 L32,14 L28,10 M12,10 Q16,14 20,14 Q24,14 28,10 M14,30 L14,20 L26,20 L26,30" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(813,162) rotate(0) scale(1.21)" opacity="0.073"><path d="M12,10 L12,26 Q12,30 16,30 L28,30 L28,27 Q24,27 22,26 L22,10 Z" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(985,155) rotate(8) scale(1.09)" opacity="0.080"><path d="M14,12 Q14,8 20,8 Q26,8 26,12 L28,14 L28,30 L12,30 L12,14 Z M16,30 L16,26 L24,26 L24,30 M14,18 L26,18" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(98,272) rotate(-15) scale(0.90)" opacity="0.062"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(271,267) rotate(35) scale(1.04)" opacity="0.083"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(434,287) rotate(15) scale(1.00)" opacity="0.059"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(641,281) rotate(35) scale(0.88)" opacity="0.049"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(807,278) rotate(-15) scale(0.88)" opacity="0.073"><path d="M10,32 L20,8 L22,10 L14,34 Z M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(1006,284) rotate(35) scale(0.98)" opacity="0.060"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(92,373) rotate(35) scale(1.01)" opacity="0.069"><path d="M20,20 m-13,0 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 M20,10 L23,17 L20,20 L17,17 Z M20,30 L17,23 L20,20 L23,23 Z" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(281,374) rotate(0) scale(1.20)" opacity="0.050"><path d="M8,20 Q12,12 22,16 Q28,18 32,16 Q28,22 32,24 Q28,22 22,24 Q12,28 8,20 Z M8,17 L6,14 M8,23 L6,26" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(445,385) rotate(25) scale(1.26)" opacity="0.065"><path d="M20,8 L24,12 L26,20 L20,34 L14,20 L16,12 Z M16,12 L24,12 M14,20 L26,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(620,387) rotate(25) scale(1.10)" opacity="0.080"><path d="M12,10 L8,14 L8,30 L32,30 L32,14 L28,10 M12,10 Q16,14 20,14 Q24,14 28,10 M14,30 L14,20 L26,20 L26,30" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(817,390) rotate(8) scale(1.17)" opacity="0.084"><path d="M12,10 L12,26 Q12,30 16,30 L28,30 L28,27 Q24,27 22,26 L22,10 Z" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(994,380) rotate(-8) scale(0.89)" opacity="0.051"><path d="M14,12 Q14,8 20,8 Q26,8 26,12 L28,14 L28,30 L12,30 L12,14 Z M16,30 L16,26 L24,26 L24,30 M14,18 L26,18" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(84,483) rotate(35) scale(1.22)" opacity="0.052"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(268,483) rotate(-8) scale(1.04)" opacity="0.060"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(466,493) rotate(-8) scale(1.16)" opacity="0.066"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(649,503) rotate(-25) scale(1.06)" opacity="0.080"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(825,495) rotate(25) scale(1.03)" opacity="0.049"><path d="M10,32 L20,8 L22,10 L14,34 Z M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(1010,495) rotate(-25) scale(0.94)" opacity="0.084"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(98,598) rotate(-15) scale(1.00)" opacity="0.047"><path d="M20,20 m-13,0 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 M20,10 L23,17 L20,20 L17,17 Z M20,30 L17,23 L20,20 L23,23 Z" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(250,611) rotate(-8) scale(1.09)" opacity="0.083"><path d="M8,20 Q12,12 22,16 Q28,18 32,16 Q28,22 32,24 Q28,22 22,24 Q12,28 8,20 Z M8,17 L6,14 M8,23 L6,26" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(469,593) rotate(-15) scale(1.24)" opacity="0.070"><path d="M20,8 L24,12 L26,20 L20,34 L14,20 L16,12 Z M16,12 L24,12 M14,20 L26,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(619,613) rotate(8) scale(1.28)" opacity="0.069"><path d="M12,10 L8,14 L8,30 L32,30 L32,14 L28,10 M12,10 Q16,14 20,14 Q24,14 28,10 M14,30 L14,20 L26,20 L26,30" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(820,596) rotate(-15) scale(1.23)" opacity="0.085"><path d="M12,10 L12,26 Q12,30 16,30 L28,30 L28,27 Q24,27 22,26 L22,10 Z" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(999,608) rotate(35) scale(0.99)" opacity="0.051"><path d="M14,12 Q14,8 20,8 Q26,8 26,12 L28,14 L28,30 L12,30 L12,14 Z M16,30 L16,26 L24,26 L24,30 M14,18 L26,18" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(91,726) rotate(8) scale(1.07)" opacity="0.073"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(283,703) rotate(0) scale(1.28)" opacity="0.066"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(439,725) rotate(-25) scale(1.19)" opacity="0.057"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(615,725) rotate(8) scale(1.08)" opacity="0.081"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(812,727) rotate(0) scale(1.09)" opacity="0.076"><path d="M10,32 L20,8 L22,10 L14,34 Z M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(991,723) rotate(0) scale(1.13)" opacity="0.077"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(82,820) rotate(25) scale(1.18)" opacity="0.054"><path d="M20,20 m-13,0 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 M20,10 L23,17 L20,20 L17,17 Z M20,30 L17,23 L20,20 L23,23 Z" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(283,828) rotate(15) scale(1.18)" opacity="0.085"><path d="M8,20 Q12,12 22,16 Q28,18 32,16 Q28,22 32,24 Q28,22 22,24 Q12,28 8,20 Z M8,17 L6,14 M8,23 L6,26" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(447,828) rotate(8) scale(0.94)" opacity="0.069"><path d="M20,8 L24,12 L26,20 L20,34 L14,20 L16,12 Z M16,12 L24,12 M14,20 L26,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(632,827) rotate(15) scale(1.28)" opacity="0.060"><path d="M12,10 L8,14 L8,30 L32,30 L32,14 L28,10 M12,10 Q16,14 20,14 Q24,14 28,10 M14,30 L14,20 L26,20 L26,30" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(804,816) rotate(0) scale(1.06)" opacity="0.059"><path d="M12,10 L12,26 Q12,30 16,30 L28,30 L28,27 Q24,27 22,26 L22,10 Z" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(1000,832) rotate(-25) scale(1.07)" opacity="0.071"><path d="M14,12 Q14,8 20,8 Q26,8 26,12 L28,14 L28,30 L12,30 L12,14 Z M16,30 L16,26 L24,26 L24,30 M14,18 L26,18" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(75,944) rotate(-15) scale(1.26)" opacity="0.076"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(262,938) rotate(-8) scale(1.05)" opacity="0.070"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(435,946) rotate(25) scale(1.06)" opacity="0.075"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(615,946) rotate(-8) scale(0.93)" opacity="0.050"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(799,941) rotate(35) scale(1.21)" opacity="0.051"><path d="M10,32 L20,8 L22,10 L14,34 Z M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(1008,938) rotate(15) scale(0.92)" opacity="0.067"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>
+</div>
+
 
 <!-- NAV -->
 <nav class="main-nav">
@@ -377,8 +522,6 @@ footer{
   </ul>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
-
-<!-- MOBİL MENÜ -->
 <div class="mobile-menu" id="mobileMenu">
   <button class="mobile-menu-close" onclick="toggleMenu()">✕</button>
   <div class="mobile-menu-logo">BAŞKENT AV GALERİSİ</div>
@@ -393,17 +536,21 @@ footer{
 
 <!-- BREADCRUMB -->
 <div class="breadcrumb">
-  <a href="index.html">Ana Sayfa</a> ›
-  <a href="#" id="bcCategory">Ürünler</a> ›
-  <span id="bcProduct">Yükleniyor…</span>
+  <a href="index.html">Ana Sayfa</a>
+  <span class="breadcrumb-sep">›</span>
+  <a href="#" id="bcCategory">Ürünler</a>
+  <span class="breadcrumb-sep">›</span>
+  <span id="bcProduct" style="color:var(--grey);">Yükleniyor…</span>
 </div>
 
-<!-- DETAY -->
+<!-- İÇERİK -->
 <div id="detailContainer">
-  <div class="state-box">
-    <span class="state-icon">⏳</span>
-    <div class="state-title">Yükleniyor</div>
-    <div class="state-msg">Ürün bilgileri getiriliyor…</div>
+  <div class="page-wrap">
+    <div class="state-box">
+      <span class="state-icon">⏳</span>
+      <div class="state-title">Yükleniyor</div>
+      <div class="state-msg">Ürün bilgileri getiriliyor…</div>
+    </div>
   </div>
 </div>
 
@@ -449,7 +596,6 @@ footer{
   </div>
 </footer>
 
-<!-- WHATSAPP -->
 <a class="wa-float" href="https://wa.me/905354177744" target="_blank">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.862L.057 23.486a.5.5 0 0 0 .616.612l5.758-1.51A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.93a9.925 9.925 0 0 1-5.062-1.378l-.363-.215-3.759.986 1.003-3.664-.236-.374A9.929 9.929 0 0 1 2.07 12C2.07 6.508 6.508 2.07 12 2.07c5.491 0 9.93 4.438 9.93 9.93 0 5.491-4.439 9.93-9.93 9.93z"/></svg>
 </a>
@@ -464,6 +610,12 @@ function openContact(name,waLink){
   document.getElementById('contactModal').classList.add('open');
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.querySelector('[data-tab="'+id+'"]').classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();document.getElementById('contactModal').classList.remove('open');}});
 document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
 </script>
@@ -495,20 +647,20 @@ function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/<
 function escJs(s){if(!s)return'';return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"');}
 
 function errBox(title,msg){
-  return`<div class="detail-wrap"><div class="state-box">
+  return`<div class="page-wrap"><div class="state-box">
     <span class="state-icon">⚠️</span>
     <div class="state-title">${title}</div>
     <div class="state-msg">${msg}</div>
-    <a href="${meta.url}" style="display:inline-block;margin-top:20px;padding:11px 28px;background:var(--green);color:#fff;border-radius:7px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;text-decoration:none;">← ${meta.label}</a>
+    <a href="${meta.url}" style="display:inline-block;margin-top:20px;padding:11px 28px;background:var(--green);color:#fff;border-radius:7px;font-weight:800;font-size:.85rem;text-decoration:none;">← ${meta.label}</a>
   </div></div>`;
 }
 
-async function loadProduct(){
+async function load(){
   const container=document.getElementById('detailContainer');
-  if(!colName||!docId){container.innerHTML=errBox('Geçersiz Bağlantı','Ürün bulunamadı. Lütfen kategori sayfasına dönün.');return;}
+  if(!colName||!docId){container.innerHTML=errBox('Geçersiz Bağlantı','Ürün bulunamadı.');return;}
   try{
     const snap=await getDoc(doc(db,colName,docId));
-    if(!snap.exists()){container.innerHTML=errBox('Ürün Bulunamadı','Bu ürün kaldırılmış veya artık mevcut değil.');return;}
+    if(!snap.exists()){container.innerHTML=errBox('Ürün Bulunamadı','Bu ürün kaldırılmış veya mevcut değil.');return;}
     const p={id:snap.id,...snap.data()};
 
     document.title=(p.name||'Ürün')+' — Başkent Av Galerisi';
@@ -517,97 +669,218 @@ async function loadProduct(){
     const waMsg=encodeURIComponent('Merhaba, "'+p.name+'" ürünü hakkında bilgi almak istiyorum.');
     const waLink='https://wa.me/905354177744?text='+waMsg;
     const isSecond=(p.cat||'').toLowerCase().includes('ikinci');
+    const brandDisplay=p.brand?(p.brand.charAt(0).toUpperCase()+p.brand.slice(1).replace(/-/g,' ')):'';
+
+    // Spec satırları: sadece dolu olanları göster
+    const specs=[
+      {icon:'🏷️',label:'Marka',val:brandDisplay},
+      {icon:'📋',label:'Kategori',val:p.cat},
+      {icon:'🔖',label:'Durum',val:isSecond?'İkinci El':'Sıfır Ürün'},
+    ].filter(s=>s.val);
+
+    const specsHtml=specs.map(s=>`
+      <div class="spec-row">
+        <span class="spec-icon">${s.icon}</span>
+        <span class="spec-label">${s.label}</span>
+        <span class="spec-val">${esc(s.val)}</span>
+      </div>`).join('');
 
     container.innerHTML=`
-    <div class="detail-wrap">
-      <div class="detail-top">
+    <div class="page-wrap">
+
+      <!-- ÜST: FOTOĞRAF + BİLGİ -->
+      <div class="product-top">
 
         <!-- SOL: FOTOĞRAF -->
-        <div class="detail-img-side">
-          <div class="detail-img-box" ${p.img?`onclick="openLightbox('${escJs(p.img)}')"`:''}>
+        <div class="photo-col">
+          <div class="main-photo" ${p.img?`onclick="openLightbox('${escJs(p.img)}')"`:''}>
             ${p.img
               ?`<img src="${esc(p.img)}" alt="${esc(p.name)}"/>
-                <div class="zoom-hint">🔍 Büyütmek için tıklayın</div>`
-              :`<div class="detail-no-img">
-                  <span>${meta.icon}</span>
-                  <span>Fotoğraf Yok</span>
+                <div class="zoom-badge">🔍 Büyütmek için tıklayın</div>`
+              :`<div class="photo-no-img">
+                  <span class="ni-icon">${meta.icon}</span>
+                  <span>Fotoğraf Mevcut Değil</span>
                 </div>`
             }
           </div>
-          <div class="detail-img-label">${esc(p.name||'')}</div>
+          <div class="photo-meta">
+            <span class="photo-meta-brand">${esc(brandDisplay||meta.label)}</span>
+            ${p.img?`<span class="photo-meta-zoom" onclick="openLightbox('${escJs(p.img)}')">🔍 Tam ekran görüntüle</span>`:''}
+          </div>
         </div>
 
-        <!-- SAĞ: BİLGİ -->
-        <div class="detail-info-side">
-
-          <div class="detail-category-tag">${meta.label}</div>
-          ${p.brand?`<div class="detail-brand">${esc(p.brand)}</div>`:''}
-          <h1 class="detail-name">${esc(p.name||'İsimsiz Ürün')}</h1>
-
-          <div class="detail-badges">
-            ${isSecond
-              ?'<span class="badge badge-second">İkinci El</span>'
-              :'<span class="badge badge-new">Sıfır</span>'
-            }
-            ${p.cat?`<span class="badge badge-cat">${esc(p.cat)}</span>`:''}
+        <!-- SAĞ: BİLGİ PANELİ -->
+        <div class="info-col">
+          <div class="info-header">
+            <div class="info-badges">
+              ${isSecond?'<span class="badge badge-second">İkinci El</span>':'<span class="badge badge-new">Sıfır Ürün</span>'}
+              ${p.cat?`<span class="badge badge-cat">${esc(p.cat)}</span>`:''}
+            </div>
+            ${brandDisplay?`<div class="info-brand">${esc(brandDisplay)}</div>`:''}
+            <div class="info-name">${esc(p.name||'İsimsiz Ürün')}</div>
           </div>
 
-          <hr class="detail-hr"/>
-
-          <div class="detail-price-block">
-            <div class="detail-price-label">Satış Fiyatı</div>
+          <!-- FİYAT -->
+          <div class="price-band">
+            <div class="price-band-label">Satış Fiyatı</div>
             ${p.price
-              ?`<div class="detail-price">${esc(p.price)}</div>`
-              :`<div class="detail-price-noinfo">Fiyat için lütfen bize ulaşın</div>`
+              ?`<div class="price-band-value">${esc(p.price)}</div>`
+              :`<div class="price-band-note">Fiyat bilgisi için bizi arayın veya WhatsApp yazın</div>`
             }
           </div>
 
-          ${p.desc?`
-          <div class="detail-desc-label">Ürün Açıklaması</div>
-          <div class="detail-desc">${esc(p.desc)}</div>
-          `:''}
+          <!-- TEMEL ÖZELLİKLER -->
+          ${specsHtml?`<div class="info-specs">${specsHtml}</div>`:''}
 
-          <div class="detail-actions">
-            <a class="btn-back" href="${meta.url}">← Geri</a>
-            <button class="btn-call" onclick="openContact('${escJs(p.name||'')}','${escJs(waLink)}')">📞 Bilgi Al</button>
-            <a class="btn-wa" href="${waLink}" target="_blank">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.862L.057 23.486a.5.5 0 0 0 .616.612l5.758-1.51A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.93a9.925 9.925 0 0 1-5.062-1.378l-.363-.215-3.759.986 1.003-3.664-.236-.374A9.929 9.929 0 0 1 2.07 12C2.07 6.508 6.508 2.07 12 2.07c5.491 0 9.93 4.438 9.93 9.93 0 5.491-4.439 9.93-9.93 9.93z"/></svg>
-              WhatsApp
+          <!-- BUTONLAR -->
+          <div class="info-actions">
+            <a class="btn-wa-main" href="${waLink}" target="_blank">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.862L.057 23.486a.5.5 0 0 0 .616.612l5.758-1.51A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.93a9.925 9.925 0 0 1-5.062-1.378l-.363-.215-3.759.986 1.003-3.664-.236-.374A9.929 9.929 0 0 1 2.07 12C2.07 6.508 6.508 2.07 12 2.07c5.491 0 9.93 4.438 9.93 9.93 0 5.491-4.439 9.93-9.93 9.93z"/></svg>
+              WhatsApp ile Bilgi Al
             </a>
+            <button class="btn-call-main" onclick="openContact('${escJs(p.name||'')}','${escJs(waLink)}')">
+              📞 Telefonla Arayın
+            </button>
+            <a class="btn-back-main" href="${meta.url}">← ${meta.label} sayfasına dön</a>
           </div>
 
+          <!-- MAĞAZA -->
+          <div class="info-store">
+            <span class="store-icon">🏪</span>
+            <div class="store-text">
+              <strong>Başkent Av Galerisi</strong>
+              Finike / Antalya · 0532 562 56 23 · 0535 417 77 44
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- ALT: İLETİŞİM KARTLARI -->
-      <div class="detail-contact-row">
-        <div class="contact-card">
-          <div class="contact-card-icon">📞</div>
-          <div class="contact-card-label">Harun Öğütlü</div>
-          <a class="contact-card-val" href="tel:+905325625623">0532 562 56 23</a>
-          <div class="contact-card-sub">Arayın, bilgi alalım</div>
+      <!-- YASAL UYARI (sadece tüfekler) -->
+      ${colName==='tufekler'?`
+      <div class="legal-warning">
+        <div class="legal-warning-label">
+          <span>YASAL</span>
+          <span>UYARI</span>
         </div>
-        <div class="contact-card">
-          <div class="contact-card-icon">📱</div>
-          <div class="contact-card-label">Fatih Öğütlü</div>
-          <a class="contact-card-val" href="tel:+905354177744">0535 417 77 44</a>
-          <div class="contact-card-sub">Arayın, bilgi alalım</div>
+        <div class="legal-warning-text">
+          <strong>
+
+Türkiye’de yürürlükte olan yasalar gereği tüfek ve diğer ateşli silahların internet üzerinden doğrudan satışı yapılamamaktadır.
+
+Web sitemizde yer alan ürünler sizlere bilgi vermek amacıyla paylaşılmaktadır. Satın alma işlemleri, yasal zorunluluklar kapsamında yalnızca mağazamızda, gerekli kontroller ve resmi işlemler tamamlandıktan sonra gerçekleştirilmektedir.
+
+Detaylı bilgi almak veya satın alma süreci hakkında destek almak için bizimle iletişime geçebilirsiniz.
         </div>
-        <div class="contact-card">
-          <div class="contact-card-icon">📍</div>
-          <div class="contact-card-label">Adresimiz</div>
-          <span class="contact-card-val" style="font-size:.9rem;">Finike / Antalya</span>
-          <div class="contact-card-sub">Turunçova Mah. Cumhuriyet Cad. No:2/Y</div>
+      </div>`:''}
+
+      <!-- ALT: SEKMELER -->
+      <div class="tabs-section">
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="desc" onclick="switchTab('desc')">Ürün Açıklaması</button>
+          <button class="tab-btn" data-tab="contact" onclick="switchTab('contact')">İletişim & Konum</button>
+        </div>
+
+        <!-- Açıklama -->
+        <div class="tab-content active" id="tab-desc">
+          ${(()=>{
+            const specFields=[
+              {key:'brand',label:'Marka'},
+              {key:'model',label:'Model'},
+              {key:'sistem',label:'Sistem'},
+              {key:'kalibre',label:'Kalibre'},
+              {key:'sarjorKapasitesi',label:'Şarjör Kapasitesi'},
+              {key:'namluBoyu',label:'Namlu Boyu'},
+              {key:'agirlik',label:'Ağırlık'},
+              {key:'fisekYatagi',label:'Fişek Yatağı'},
+              {key:'mobilSok',label:'Mobil Şok'},
+              {key:'renk',label:'Renk'},
+              {key:'malzeme',label:'Malzeme'},
+              {key:'beden',label:'Beden'},
+              {key:'uzunluk',label:'Uzunluk'},
+              {key:'kapasite',label:'Kapasite'},
+              {key:'tip',label:'Tip'},
+              {key:'dolgu',label:'Dolgu'},
+              {key:'adet',label:'Paket Adedi'},
+              {key:'mensei',label:'Menşei'},
+              {key:'mevsim',label:'Mevsim'},
+              {key:'boyut',label:'Boyut'},
+            ];
+            let rows=[];
+            if(p.specs&&Array.isArray(p.specs)){
+              rows=p.specs.filter(s=>s.label&&s.val);
+            } else if(p.specs&&typeof p.specs==='object'){
+              rows=Object.entries(p.specs).filter(([k,v])=>v).map(([k,v])=>({label:k,val:v}));
+            }
+            if(rows.length===0){
+              specFields.forEach(f=>{
+                const v=p[f.key];
+                if(v&&String(v).trim()) rows.push({label:f.label,val:String(v)});
+              });
+              if(brandDisplay&&!rows.find(r=>r.label==='Marka')) rows.unshift({label:'Marka',val:brandDisplay});
+            }
+            if(rows.length===0) return '';
+            const rowsHtml=rows.map(r=>`
+              <tr>
+                <td class="ts-label">${esc(r.label)}</td>
+                <td class="ts-val">${esc(String(r.val))}</td>
+              </tr>`).join('');
+            return`<div class="tech-specs-section" style="margin-bottom:20px;">
+              <div class="tech-specs-header">
+                <span class="tech-specs-header-icon">⚙️</span>
+                <span class="tech-specs-header-title">Teknik Özellikler</span>
+              </div>
+              <table class="tech-specs-table"><tbody>${rowsHtml}</tbody></table>
+            </div>`;
+          })()}
+          ${p.desc
+            ?`<div class="desc-text">${esc(p.desc)}</div>`
+            :`<div class="desc-empty">Bu ürün için henüz açıklama eklenmemiş. Detaylı bilgi için bizi arayabilirsiniz.</div>`
+          }
+        </div>
+
+        <!-- İletişim -->
+        <div class="tab-content" id="tab-contact">
+          <div class="contact-grid">
+            <div class="contact-card">
+              <div class="contact-icon">📞</div>
+              <div class="contact-label">Harun Öğütlü</div>
+              <a class="contact-val" href="tel:+905325625623">0532 562 56 23</a>
+              <div class="contact-sub">Arayın, bilgi alalım</div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-icon">📱</div>
+              <div class="contact-label">Fatih Öğütlü</div>
+              <a class="contact-val" href="tel:+905354177744">0535 417 77 44</a>
+              <div class="contact-sub">Arayın, bilgi alalım</div>
+            </div>
+            <div class="contact-addr">
+              <span class="contact-addr-icon">📍</span>
+              <div class="contact-addr-text">
+                <strong>Başkent Av Galerisi</strong>
+                Turunçova Mah. Cumhuriyet Cad. No:2/Y — Finike / Antalya
+              </div>
+            </div>
+            <div class="contact-card" style="align-items:center;justify-content:center;">
+              <div class="contact-icon">💬</div>
+              <div class="contact-label">WhatsApp</div>
+              <div class="contact-wa-row">
+                <a href="${waLink}" target="_blank">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.862L.057 23.486a.5.5 0 0 0 .616.612l5.758-1.51A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.93a9.925 9.925 0 0 1-5.062-1.378l-.363-.215-3.759.986 1.003-3.664-.236-.374A9.929 9.929 0 0 1 2.07 12C2.07 6.508 6.508 2.07 12 2.07c5.491 0 9.93 4.438 9.93 9.93 0 5.491-4.439 9.93-9.93 9.93z"/></svg>
+                  Mesaj Gönder
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>`;
-
   }catch(e){
-    container.innerHTML=errBox('Bağlantı Hatası','Ürün yüklenirken bir sorun oluştu. Lütfen sayfayı yenileyin.');
+    document.getElementById('detailContainer').innerHTML=errBox('Bağlantı Hatası','Ürün yüklenirken sorun oluştu. Sayfayı yenileyin.');
     console.error(e);
   }
 }
-loadProduct();
+load();
 </script>
 </body>
 </html>

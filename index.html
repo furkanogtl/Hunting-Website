@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Başkent Av Galerisi</title>
+  <meta name="description" content="Başkent Av Galerisi — Finike/Antalya'da av tüfekleri, giyim, silah aksesuarları, balık avı ekipmanları ve av fişekleri. 25 yıllık deneyim, 500+ ürün çeşidi." />
+  <meta name="keywords" content="av tüfekleri, av malzemeleri, silah aksesuarları, balık avı, av fişekleri, Finike, Antalya, Başkent Av Galerisi" />
+  <meta property="og:title" content="Başkent Av Galerisi — Türkiye'nin Güvenilir Av Dünyası" />
+  <meta property="og:description" content="Tüfekten ekipmana, yemden aksesuara — avın her detayı burada. 500+ ürün, 50+ marka." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="tr_TR" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -59,7 +66,7 @@
     }
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
-      background: url('https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=1800&q=90') center 60%/cover no-repeat;
+      background: url('ilkfoto.png') center 60%/cover no-repeat;
     }
     .hero-bg::after {
       content: '';
@@ -181,10 +188,10 @@
     #kategoriler { background: var(--offwhite); }
     #kategoriler .inner { max-width: 1200px; margin-inline: auto; }
     .cat-header { text-align: center; margin-bottom: 56px; }
-    .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
     .cat-card {
       position: relative; border-radius: 4px; overflow: hidden;
-      aspect-ratio: 3/4; cursor: pointer;
+      aspect-ratio: 2/3; cursor: pointer;
       transition: transform .35s, box-shadow .35s;
       box-shadow: 0 8px 24px rgba(0,0,0,.1);
     }
@@ -195,29 +202,29 @@
       position: absolute; inset: 0;
       background: linear-gradient(to top, rgba(20,50,12,.88) 0%, rgba(20,50,12,.08) 55%);
     }
-    .cat-card-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 24px; }
-    .cat-icon { font-size: 2rem; margin-bottom: 8px; }
-    .cat-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #fff; }
-    .cat-card-body p { font-size: .85rem; color: #c8dfc0; margin-top: 6px; line-height: 1.5; }
+    .cat-card-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 18px 16px; }
+    .cat-icon { font-size: 1.5rem; margin-bottom: 6px; }
+    .cat-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #fff; }
+    .cat-card-body p { font-size: .76rem; color: #c8dfc0; margin-top: 4px; line-height: 1.45; }
     .cat-tag {
-      display: inline-block; margin-top: 12px;
-      padding: 4px 14px; border: 1px solid #b8e08a;
-      border-radius: 20px; font-size: .7rem;
-      color: #b8e08a; letter-spacing: .12em; text-transform: uppercase;
+      display: inline-block; margin-top: 8px;
+      padding: 3px 10px; border: 1px solid #b8e08a;
+      border-radius: 20px; font-size: .62rem;
+      color: #b8e08a; letter-spacing: .1em; text-transform: uppercase;
     }
 
     /* ── ÜRÜNLER ── */
     #urunler { background: var(--white); }
     #urunler .inner { max-width: 1200px; margin-inline: auto; }
     .prod-header { text-align: center; margin-bottom: 56px; }
-    .prod-grid-wrap { position: relative; overflow: hidden; }
+    .prod-grid-wrap { position: relative; padding: 0 48px; }
     .prod-grid {
-      display: flex; gap: 20px;
+      display: flex; gap: 20px; align-items: stretch;
       overflow-x: auto; scroll-behavior: smooth;
       scrollbar-width: none; padding-bottom: 8px;
     }
     .prod-grid::-webkit-scrollbar { display: none; }
-    .prod-grid .prod-card { min-width: 200px; flex-shrink: 0; }
+    .prod-grid .prod-card { min-width: 220px; max-width: 220px; flex-shrink: 0; align-self: stretch; }
     .slider-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 40px; height: 40px; border-radius: 50%;
@@ -228,8 +235,8 @@
       transition: all .2s; color: var(--forest);
     }
     .slider-btn:hover { background: var(--forest); color: #fff; border-color: var(--forest); }
-    .slider-btn.prev { left: -8px; }
-    .slider-btn.next { right: -8px; }
+    .slider-btn.prev { left: 0; }
+    .slider-btn.next { right: 0; }
     .slider-dot {
       width: 8px; height: 8px; border-radius: 50%;
       background: var(--mist); border: none; cursor: pointer;
@@ -241,16 +248,20 @@
       border-radius: 4px; overflow: hidden;
       transition: border-color .3s, transform .3s, box-shadow .3s;
       box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      display: flex; flex-direction: column;
     }
     .prod-card:hover { border-color: var(--sage); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(74,122,56,.15); }
     .prod-card-img { height: 150px; overflow: hidden; background: var(--offwhite); }
     .prod-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
     .prod-card:hover .prod-card-img img { transform: scale(1.08); }
-    .prod-card-info { padding: 12px 14px; }
+    .prod-card-info { padding: 12px 14px; flex: 1; }
     .prod-category { font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--forest); }
     .prod-card-info h4 { font-family: 'Playfair Display', serif; font-size: .92rem; color: var(--deep); margin-top: 4px; }
     .prod-card-info p { font-size: .76rem; color: #5a7050; margin-top: 4px; line-height: 1.45; }
     .prod-card-footer { padding: 0 14px 12px; display: flex; align-items: center; justify-content: space-between; }
+    .prod-card-price-row { padding: 4px 14px 8px; }
+    .prod-card-price { font-size: 1.05rem; font-weight: 900; color: var(--forest); font-family: 'Playfair Display', serif; }
+    .prod-card-price-note { font-size: .75rem; color: #7a9060; font-style: italic; }
     .prod-badge { font-size: .7rem; color: var(--forest); background: rgba(74,122,56,.1); padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(74,122,56,.3); }
     .prod-info-btn { font-size: .75rem; color: var(--forest); cursor: pointer; letter-spacing: .06em; font-weight: 600; }
     .prod-info-btn:hover { color: var(--pine); }
@@ -613,95 +624,6 @@
     .brand-empty { text-align: center; color: #7a9060; font-style: italic; margin-top: 32px; font-size: 1rem; }
 
 
-    /* ── HERO ARAMA ── */
-    .hero-search-wrap {
-      position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
-      z-index: 2; width: 100%; max-width: 580px; padding: 0 20px;
-    }
-    .hero-search-box {
-      display: flex; align-items: center;
-      background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
-      border-radius: 50px; overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0,0,0,.3);
-    }
-    .hero-search-icon { padding: 0 14px 0 20px; font-size: 1.1rem; color: var(--forest); }
-    .hero-search-box input {
-      flex: 1; border: none; background: transparent;
-      padding: 16px 8px; font-family: 'Lora', serif; font-size: .95rem;
-      color: var(--deep); outline: none;
-    }
-    .hero-search-box input::placeholder { color: #9aab8a; }
-    .hero-search-box button {
-      background: var(--forest); color: #fff; border: none;
-      padding: 16px 28px; font-family: 'Cinzel', serif;
-      font-size: .78rem; letter-spacing: .1em; cursor: pointer;
-      transition: background .2s; white-space: nowrap;
-    }
-    .hero-search-box button:hover { background: var(--pine); }
-    .hero-search-results {
-      background: rgba(255,255,255,.97); border-radius: 12px;
-      margin-top: 8px; overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,.18);
-      max-height: 260px; overflow-y: auto;
-    }
-    .hero-result-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 20px; cursor: pointer;
-      border-bottom: 1px solid var(--offwhite);
-      transition: background .2s;
-    }
-    .hero-result-item:last-child { border-bottom: none; }
-    .hero-result-item:hover { background: var(--offwhite); }
-    .hero-result-item .ri-flag { font-size: 1.4rem; }
-    .hero-result-item .ri-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--deep); }
-    .hero-result-item .ri-country { font-size: .78rem; color: #7a9060; }
-    .hero-result-goto { margin-left: auto; font-size: .72rem; color: var(--forest); font-weight: 600; }
-
-    /* ── TÜFEKler ── */
-    #tufekler { background: var(--milk); }
-    #tufekler .inner { max-width: 1200px; margin-inline: auto; }
-    .tuf-header { text-align: center; margin-bottom: 40px; }
-    .tuf-search-wrap { margin-top: 24px; display: flex; justify-content: center; }
-    #brandSearch {
-      width: 100%; max-width: 460px;
-      border: 2px solid var(--mist); border-radius: 50px;
-      padding: 13px 24px; font-family: 'Lora', serif; font-size: .95rem;
-      color: var(--deep); outline: none; background: var(--white);
-      transition: border-color .25s;
-      box-shadow: 0 4px 16px rgba(74,122,56,.08);
-    }
-    #brandSearch:focus { border-color: var(--sage); }
-
-    .brand-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 14px;
-    }
-    .brand-card {
-      background: var(--white);
-      border: 2px solid var(--mist);
-      border-radius: 10px;
-      padding: 20px 12px;
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-      text-align: center; cursor: pointer;
-      transition: border-color .2s, transform .2s, box-shadow .2s;
-      text-decoration: none;
-    }
-    .brand-card:hover {
-      border-color: var(--forest);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(74,122,56,.18);
-    }
-    .brand-flag { font-size: 1.8rem; }
-    .brand-name {
-      font-family: 'Playfair Display', serif;
-      font-size: .98rem; color: var(--deep); font-weight: 700;
-    }
-    .brand-country { font-size: .68rem; color: #7a9060; text-transform: uppercase; letter-spacing: .06em; }
-    .brand-arrow { font-size: .75rem; color: var(--forest); margin-top: 4px; font-weight: 600; }
-    .brand-empty { text-align: center; color: #7a9060; font-style: italic; margin-top: 32px; }
-
-
     /* ═══════════════════════════════════════════════════
        MOBİL UYUMLULUK
        ═══════════════════════════════════════════════════ */
@@ -772,6 +694,9 @@
       .cat-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
       .cat-card-body h3 { font-size: 1.05rem; }
       .cat-card-body p { display: none; }
+    }
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .cat-grid { grid-template-columns: repeat(3, 1fr) !important; }
 
       /* Features */
       .features { grid-template-columns: repeat(2, 1fr) !important; gap: 14px; margin-top: 32px; }
@@ -835,9 +760,9 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-inner">
-    <p class="hero-eyebrow">tÜ0'nin Güvenilir Av Dünyası</p>
+    <p class="hero-eyebrow">Türkiye'nin Güvenilir Av Dünyası</p>
     <h1>Başkent<span>Av Galerisi</span></h1>
-    <p class="hero-sub">Tüfekten ekipmana, yeinden aksesuara — avın her detayı burada.</p>
+    <p class="hero-sub">Tüfekten ekipmana, yemden aksesuara — avın her detayı burada.</p>
     <div class="hero-cta">
       <a href="#kategoriler" class="btn btn-primary">Ürünleri Keşfet</a>
       <a href="#iletisim" class="btn btn-outline">Bize Ulaşın</a>
@@ -877,6 +802,7 @@
           <span style="font-size:1.4rem;">⏳</span> Ürünler yükleniyor…
         </div>
       </div>
+      <button class="slider-btn next" onclick="slideProducts(1)">›</button>
     </div>
   </div>
 </section>
@@ -891,59 +817,56 @@
     </div>
     <div class="cat-grid">
       <a class="cat-card" href="tufekler.html" style="text-decoration:none;display:block;">
-        <img src="https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&q=80" alt="Tüfek" />
+        <img src="tufek.png" alt="Tüfek" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
-          <div class="cat-icon">🔫</div>
+          <div class="cat-icon"></div>
           <h3>Tüfek & Silahlar</h3>
           <p>Av tüfekleri, havalı tüfekler ve lisanslı ürün çeşitleri</p>
           <span class="cat-tag">Markalar için tıklayın →</span>
         </div>
       </a>
       <a class="cat-card" href="giyim.html" style="text-decoration:none;display:block;">
-        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80" alt="Giyim" />
+        <img src="giyim.png" alt="Giyim" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
-          <div class="cat-icon">🧥</div>
+          <div class="cat-icon"></div>
           <h3>Giyim & Ekipman</h3>
           <p>Kamuflaj kıyafetler, botlar, yelekler ve koruyucu donanım</p>
           <span class="cat-tag">Ürünler için tıklayın →</span>
         </div>
       </a>
       <a class="cat-card" href="aksesuar.html" style="text-decoration:none;display:block;">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Aksesuar" />
+        <img src="aksesuar.png" alt="Aksesuar" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
-          <div class="cat-icon">🔧</div>
+          <div class="cat-icon"></div>
           <h3>Silah Aksesuarları</h3>
           <p>Dürbünler, dipçikler, temizlik setleri ve yedek parçalar</p>
           <span class="cat-tag">Ürünler için tıklayın →</span>
         </div>
       </a>
       <a class="cat-card" href="balik.html" style="text-decoration:none;display:block;">
-        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80" alt="Balık Avı" />
+        <img src="balık.png" alt="Balık Avı" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
-          <div class="cat-icon">🎣</div>
+          <div class="cat-icon"></div>
           <h3>Balık Avı</h3>
           <p>Olta, makine, yem, misina ve tüm balıkçılık ekipmanları</p>
           <span class="cat-tag">Ürünler için tıklayın →</span>
         </div>
       </a>
       <a class="cat-card" href="fisek.html" style="text-decoration:none;display:block;">
-        <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80" alt="Av Fişekleri" />
+        <img src="fişek.png" alt="Av Fişekleri" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
-          <div class="cat-icon">🔴</div>
+          <div class="cat-icon"></div>
           <h3>Av Fişekleri</h3>
           <p>Farklı kalibrelerde yerli ve yabancı marka av fişekleri</p>
           <span class="cat-tag">Ürünler için tıklayın →</span>
         </div>
       </a>
     </div>
-      <button class="slider-btn next" onclick="slideProducts(1)">›</button>
-    </div>
-    <div id="sliderDots" style="display:flex;justify-content:center;gap:8px;margin-top:18px;"></div>
   </div>
 </section>
 <div class="divider"></div>
@@ -952,7 +875,7 @@
 <section id="hakkimizda">
   <div class="about reveal">
     <div class="about-img">
-      <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" alt="Doğa" />
+      <img src="nedenbiz.png" alt="Doğa" />
       <div class="about-badge">
         <strong>25+</strong>
         <span>Yıllık Deneyim</span>
@@ -1022,20 +945,25 @@
           </div>
         </div>
       </div>
+      <!-- Google Maps -->
+      <div style="margin-top:28px;border-radius:8px;overflow:hidden;border:1px solid var(--mist);box-shadow:0 4px 16px rgba(0,0,0,.08);">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3190.5!2d30.1488!3d36.3025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14c375!2sFinike%2C+Antalya!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str"
+          width="100%" height="220" style="border:0;display:block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
     </div>
     <div class="contact-form">
       <h3>Mesaj Gönderin</h3>
       <div class="form-group">
         <label>Adınız Soyadınız</label>
-        <input type="text" placeholder="Ahmet Yılmaz" />
+        <input type="text" id="cf-name" placeholder="Ahmet Yılmaz" />
       </div>
       <div class="form-group">
         <label>Telefon</label>
-        <input type="tel" placeholder="05XX XXX XX XX" />
+        <input type="tel" id="cf-phone" placeholder="05XX XXX XX XX" />
       </div>
       <div class="form-group">
         <label>Konu</label>
-        <select>
+        <select id="cf-subject">
           <option value="">Seçiniz…</option>
           <option>Ürün Bilgisi</option>
           <option>Fiyat Teklifi</option>
@@ -1045,9 +973,9 @@
       </div>
       <div class="form-group">
         <label>Mesajınız</label>
-        <textarea placeholder="Merhaba, … hakkında bilgi almak istiyorum."></textarea>
+        <textarea id="cf-message" placeholder="Merhaba, … hakkında bilgi almak istiyorum."></textarea>
       </div>
-      <button class="btn-submit" onclick="handleSubmit()">Gönder</button>
+      <button class="btn-submit" onclick="handleSubmit()">WhatsApp ile Gönder</button>
     </div>
   </div>
 </section>
@@ -1055,7 +983,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">BAŞKENT AV GALERİSİ</div>
-  <div class="footer-copy">© 2025 Başkent Av Galerisi. Tüm hakları saklıdır.</div>
+  <div class="footer-copy">© <script>document.write(new Date().getFullYear())</script> Başkent Av Galerisi. Tüm hakları saklıdır.</div>
   <div class="footer-links">
     <a href="#hakkimizda">Hakkımızda</a>
     <a href="#kategoriler">Kategoriler</a>
@@ -1089,7 +1017,8 @@
     <button class="admin-login-close" onclick="closeAdminLogin()">✕</button>
     <div style="font-size:2rem;margin-bottom:8px;">🔐</div>
     <h3>Yönetici Girişi</h3>
-    <input type="password" id="indexAdminPwd" placeholder="Şifre" onkeydown="if(event.key==='Enter')checkIndexAdmin()"/>
+    <input type="email" id="indexAdminEmail" placeholder="E-posta" onkeydown="if(event.key==='Enter')document.getElementById('indexAdminPwd').focus()" autocomplete="username"/>
+    <input type="password" id="indexAdminPwd" placeholder="Şifre" onkeydown="if(event.key==='Enter')checkIndexAdmin()" autocomplete="current-password"/>
     <button class="admin-login-btn" onclick="checkIndexAdmin()">Giriş Yap</button>
     <div class="admin-login-err" id="indexAdminErr"></div>
   </div>
@@ -1113,6 +1042,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, setDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",
@@ -1124,6 +1054,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 // Koleksiyonlar ve sayfa linkleri
 const COLLECTIONS = [
@@ -1159,10 +1090,14 @@ function makePopCard(id, p) {
   const card = document.createElement('div');
   card.className = 'prod-card';
   card.dataset.id = id;
-  const safeN = (p.name||'').replace(/'/g,"\'");
-  const safeD = (p.desc||'').replace(/'/g,"\'");
+  card.style.cursor = 'pointer';
+
+  const col    = p.col || id.split('_')[0];
+  const origId = p.id  || id.replace(/^[^_]+_/, '');
+  const detayUrl = 'urun-detay.html?col=' + encodeURIComponent(col) + '&id=' + encodeURIComponent(origId);
+
   card.innerHTML = `
-    <button class="prod-card-del" onclick="window.removePopular('${id}',this)" title="Kaldır">✕</button>
+    <button class="prod-card-del" onclick="event.stopPropagation();window.removePopular('${id}',this)" title="Kaldır">&#x2715;</button>
     <div class="prod-card-img">
       <img src="${p.img||'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&q=70'}" alt="${p.name||''}" loading="lazy"/>
     </div>
@@ -1171,11 +1106,19 @@ function makePopCard(id, p) {
       <h4>${p.name||''}</h4>
       <p>${p.desc||''}</p>
     </div>
+    <div class="prod-card-price-row">
+      ${p.price ? `<span class="prod-card-price">${p.price}</span>` : '<span class="prod-card-price-note">Fiyat için arayın</span>'}
+    </div>
     <div class="prod-card-footer">
-      <span class="prod-badge">✔ Stokta</span>
-      <span class="prod-info-btn" onclick="openModal('${safeN}','${safeD}')">Bilgi Al →</span>
+      <span class="prod-badge">&#x2714; Stokta</span>
+      <span class="prod-info-btn">Detaya Git &#x2192;</span>
     </div>
   `;
+
+  card.addEventListener('click', function() {
+    window.location.href = detayUrl;
+  });
+
   return card;
 }
 
@@ -1213,7 +1156,7 @@ function renderPicker(q) {
     return;
   }
   list.innerHTML = items.map(p => `
-    <div class="picker-item" onclick="window.addToPopular('${p.id}','${p.col}','${p.col_label}','${(p.name||'').replace(/'/g,"\'")}','${(p.desc||'').replace(/'/g,"\'")}','${(p.img||'')}')">
+    <div class="picker-item" onclick="window.addToPopular('${p.id}','${p.col}','${p.col_label}','${(p.name||'').replace(/'/g,"\'")}','${(p.desc||'').replace(/'/g,"\'")}','${(p.img||'')}','${(p.price||'').replace(/'/g,"\'")}')">
       <div class="picker-img">
         ${p.img ? `<img src="${p.img}" alt="${p.name}" loading="lazy"/>` : '<span style="font-size:1.4rem;">📦</span>'}
       </div>
@@ -1227,17 +1170,17 @@ function renderPicker(q) {
   `).join('');
 }
 
-window.addToPopular = async function(id, col, col_label, name, desc, img) {
+window.addToPopular = async function(id, col, col_label, name, desc, img, price) {
   const docId = col + '_' + id;
   try {
-    await setDoc(doc(db, 'populer', docId), { id, col, col_label, name, desc: desc||'', img: img||'', addedAt: Date.now() });
+    await setDoc(doc(db, 'populer', docId), { id, col, col_label, name, desc: desc||'', img: img||'', price: price||'', addedAt: Date.now() });
     // Add card to slider if not already there
     const slider = document.getElementById('prodSlider');
     if (!slider.querySelector(`[data-id="${docId}"]`)) {
       // Remove empty state message if present
       const empty = slider.querySelector('div:not(.prod-card)');
       if (empty) empty.remove();
-      slider.appendChild(makePopCard(docId, { col_label, name, desc, img }));
+      slider.appendChild(makePopCard(docId, { col, id, col_label, name, desc, img, price }));
       if (window.initSlider) window.initSlider();
     }
     // Visual feedback on picker item
@@ -1266,33 +1209,40 @@ window.removePopular = async function(docId, btn) {
   }
 };
 
-// ── ADMIN AUTH ──
-function hashPass(s){ return btoa(unescape(encodeURIComponent(s))).split('').reverse().join(''); }
-function isAdmin(){ return sessionStorage.getItem('bag_admin') === hashPass('furkan.0706'); }
+// ── ADMIN AUTH (Firebase Authentication) ──
+function isAdmin(){ return !!auth.currentUser; }
 
 window.openAdminLogin = function() {
   document.getElementById('indexAdminLoginOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('indexAdminPwd').focus(), 100);
+  setTimeout(() => document.getElementById('indexAdminEmail').focus(), 100);
 };
 window.closeAdminLogin = function() {
   document.getElementById('indexAdminLoginOverlay').classList.remove('open');
+  document.getElementById('indexAdminEmail').value = '';
   document.getElementById('indexAdminPwd').value = '';
   document.getElementById('indexAdminErr').textContent = '';
 };
-window.checkIndexAdmin = function() {
+window.checkIndexAdmin = async function() {
+  const email = document.getElementById('indexAdminEmail').value.trim();
   const pwd = document.getElementById('indexAdminPwd').value;
-  if (hashPass(pwd) === hashPass('furkan.0706')) {
-    sessionStorage.setItem('bag_admin', hashPass('furkan.0706'));
-    setAdminUI(true);
+  const btn = document.querySelector('.admin-login-btn');
+  const errEl = document.getElementById('indexAdminErr');
+  if (!email || !pwd) { errEl.textContent = '❌ E-posta ve şifre giriniz.'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Giriş yapılıyor…';
+  try {
+    await signInWithEmailAndPassword(auth, email, pwd);
     closeAdminLogin();
-  } else {
-    document.getElementById('indexAdminErr').textContent = '❌ Hatalı şifre!';
+  } catch(e) {
+    errEl.textContent = '❌ Hatalı e-posta veya şifre!';
     document.getElementById('indexAdminPwd').value = '';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Giriş Yap';
   }
 };
-window.logoutIndexAdmin = function() {
-  sessionStorage.removeItem('bag_admin');
-  setAdminUI(false);
+window.logoutIndexAdmin = async function() {
+  await signOut(auth);
 };
 
 function setAdminUI(on) {
@@ -1301,6 +1251,11 @@ function setAdminUI(on) {
   document.getElementById('prodAdminBar').classList.toggle('visible', on);
   document.body.classList.toggle('admin-mode', on);
 }
+
+// Auth durumunu dinle — sayfa yenilenince de oturumu koru
+onAuthStateChanged(auth, (user) => {
+  setAdminUI(!!user);
+});
 
 // Picker modal
 window.openPopModal = function() {
@@ -1315,8 +1270,6 @@ document.getElementById('pickerSearch').addEventListener('input', function() {
   renderPicker(this.value.toLowerCase().trim());
 });
 
-// Restore admin session
-setAdminUI(isAdmin());
 loadPopularProducts();
 </script>
 
@@ -1496,7 +1449,15 @@ loadPopularProducts();
   }
   function closeModal() { document.getElementById('modal').classList.remove('open'); }
   document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-  function handleSubmit() { alert('Mesajınız alındı! En kısa sürede sizi arayacağız. 🌿'); }
+  function handleSubmit() {
+    const name = document.getElementById('cf-name').value.trim();
+    const phone = document.getElementById('cf-phone').value.trim();
+    const subject = document.getElementById('cf-subject').value;
+    const message = document.getElementById('cf-message').value.trim();
+    if (!name || !message) { alert('Lütfen adınızı ve mesajınızı yazın.'); return; }
+    const text = `Merhaba, ben ${name}.${phone ? ' Tel: ' + phone + '.' : ''}${subject ? ' Konu: ' + subject + '.' : ''} ${message}`;
+    window.open('https://wa.me/905354177744?text=' + encodeURIComponent(text), '_blank');
+  }
   function toggleMenu() {
     const m = document.getElementById('mobileMenu');
     const h = document.getElementById('hamburger');

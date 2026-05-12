@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Av Fişekleri — Başkent Av Galerisi</title>
+<meta name="description" content="Farklı kalibrelerde yerli ve yabancı marka av fişekleri — Başkent Av Galerisi, Finike/Antalya." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -122,6 +124,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   border-radius:8px;overflow:hidden;
   transition:box-shadow .2s,transform .2s;
   position:relative;
+  display:flex;flex-direction:column;
 }
 .product-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.12);transform:translateY(-2px);}
 
@@ -147,7 +150,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 }
 .card-img:hover .zoom-btn{opacity:1;}
 
-.card-body{padding:10px 12px;}
+.card-body{padding:10px 12px;flex:1;}
 .card-brand{font-size:.68rem;color:#4a7a38;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:"Cinzel",serif;}
 .card-name{font-size:.95rem;font-weight:600;color:#1c3d13;margin-top:2px;line-height:1.35;font-family:"Playfair Display",serif;}
 .card-cat{font-size:.72rem;color:var(--grey2);margin-top:3px;}
@@ -171,6 +174,13 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 }
 .btn-del:hover{background:#fdd;}
 .btn-del.visible{display:block;}
+.btn-edit{
+  padding:8px 10px;background:#e8f4ff;color:#1a6bb5;
+  border:1px solid #c5dff8;border-radius:6px;cursor:pointer;
+  font-size:.8rem;display:none;transition:background .2s;
+}
+.btn-edit:hover{background:#c5dff8;}
+.btn-edit.visible{display:block;}
 
 /* Boş durum */
 .empty-state{grid-column:1/-1;text-align:center;padding:80px 20px;}
@@ -194,7 +204,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 /* ── MODAL ── */
 .modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--white);border-radius:12px;padding:28px;max-width:460px;width:92%;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.2);}
+.modal{background:var(--white);border-radius:12px;padding:28px;max-width:460px;width:92%;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto;}
 .modal h3{font-size:1.15rem;font-weight:900;color:var(--dark);margin-bottom:4px;}
 .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.3rem;color:var(--grey2);cursor:pointer;}
 .modal-close:hover{color:var(--dark);}
@@ -397,6 +407,15 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   .product-grid { grid-template-columns: 1fr !important; }
 }
 
+
+    /* Fişek accordion alt kategoriler */
+    .subcat-group { display: none; padding-left: 8px; }
+    .subcat-group.open { display: block; }
+    .sidebar-sub { padding-left: 32px !important; font-size: .78rem; }
+    .cat-parent { display: flex; align-items: center; gap: 6px; }
+    .cat-arrow { display: inline-block; transition: transform .2s; font-style: normal; width: 12px; }
+    .cat-arrow.open { transform: rotate(90deg); }
+
 </style>
 </head>
 <body>
@@ -406,7 +425,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   <a class="nav-logo" href="index.html">BAŞKENT AV GALERİSİ</a>
       <ul class="nav-links">
     <li><a href="index.html">Ana Sayfa</a></li>
-    <li><a href="fisek.html">Av Fişekleri</a></li>
+    <li><a href="tufekler.html">Av Tüfekleri</a></li>
     <li><a href="giyim.html">Giyim & Ekipman</a></li>
     <li><a href="aksesuar.html">Silah Aksesuarları</a></li>
     <li><a href="balik.html">Balık Avı</a></li>
@@ -453,13 +472,63 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
     <!-- Kategori filtresi -->
     <div class="sidebar-box">
       <div class="sidebar-title">Ürün Grupları</div>
-      <div class="sidebar-sub-title">Av Tüfekleri</div>
-      <a href="#" class="sidebar-link active" id="catAll" onclick="setCat('');return false;">Tüm Tüfekler</a>
-      <a href="#" class="sidebar-link" onclick="setCat('Sıfır Tüfek');return false;">› Sıfır Tüfekler</a>
-      <a href="#" class="sidebar-link" onclick="setCat('İkinci El');return false;">› İkinci El Tüfekler</a>
-      <a href="#" class="sidebar-link" onclick="setCat('Yarı Otomatik');return false;">› Yarı Otomatik</a>
-      <a href="#" class="sidebar-link" onclick="setCat('Çift Namlulu');return false;">› Çift Namlulu</a>
-      <a href="#" class="sidebar-link" onclick="setCat('Sürgülü');return false;">› Sürgülü</a>
+      <a href="#" class="sidebar-link active" id="catAll" onclick="setCat('','');return false;">Av Fişekleri</a>
+
+      <!-- 12 Kalibre accordion -->
+      <a href="#" class="sidebar-link cat-parent" onclick="toggleSubcat('sub12');setCat('12 Kalibre','');return false;">
+        <span class="cat-arrow" id="arrow12">›</span> 12 Kalibre
+      </a>
+      <div class="subcat-group" id="sub12">
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','24 Gram');return false;">› 24 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','28 Gram');return false;">› 28 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','30 Gram');return false;">› 30 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','31 Gram');return false;">› 31 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','32 Gram');return false;">› 32 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','33 Gram');return false;">› 33 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','34 Gram');return false;">› 34 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','35 Gram');return false;">› 35 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','36 Gram');return false;">› 36 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','38 Gram');return false;">› 38 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','40 Gram');return false;">› 40 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','50 Gram');return false;">› 50 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','64 Gram');return false;">› 64 Gram</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Özel Seri');return false;">› Özel Seri</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Tek Kurşun');return false;">› Tek Kurşun</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Sabot Kurşun');return false;">› Sabot Kurşun</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Buckshot');return false;">› Buckshot</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Trap / Skeet');return false;">› Trap / Skeet</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','İşaret');return false;">› İşaret</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Savunma');return false;">› Savunma</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Ses / Kurusıkı');return false;">› Ses / Kurusıkı</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Dispersante Tapa');return false;">› Dispersante Tapa</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Keçe Tapa');return false;">› Keçe Tapa</a>
+        <a href="#" class="sidebar-link sidebar-sub" onclick="setCat('12 Kalibre','Bior Tapa');return false;">› Bior Tapa</a>
+      </div>
+
+      <a href="#" class="sidebar-link cat-parent" onclick="toggleSubcat('sub16');setCat('16 Kalibre','');return false;"><span class="cat-arrow" id="arrow16">›</span> 16 Kalibre</a>
+      <div class="subcat-group" id="sub16"></div>
+
+      <a href="#" class="sidebar-link cat-parent" onclick="toggleSubcat('sub20');setCat('20 Kalibre','');return false;"><span class="cat-arrow" id="arrow20">›</span> 20 Kalibre</a>
+      <div class="subcat-group" id="sub20"></div>
+
+      <a href="#" class="sidebar-link cat-parent" onclick="toggleSubcat('sub24');setCat('24 Kalibre','');return false;"><span class="cat-arrow" id="arrow24">›</span> 24 Kalibre</a>
+      <div class="subcat-group" id="sub24"></div>
+
+      <a href="#" class="sidebar-link cat-parent" onclick="toggleSubcat('sub28');setCat('28 Kalibre','');return false;"><span class="cat-arrow" id="arrow28">›</span> 28 Kalibre</a>
+      <div class="subcat-group" id="sub28"></div>
+
+      <a href="#" class="sidebar-link cat-parent" onclick="toggleSubcat('sub32');setCat('32 Kalibre','');return false;"><span class="cat-arrow" id="arrow32">›</span> 32 Kalibre</a>
+      <div class="subcat-group" id="sub32"></div>
+
+      <a href="#" class="sidebar-link cat-parent" onclick="toggleSubcat('sub36');setCat('36 Kalibre','');return false;"><span class="cat-arrow" id="arrow36">›</span> 36 Kalibre</a>
+      <div class="subcat-group" id="sub36"></div>
+
+      <a href="#" class="sidebar-link" onclick="setCat('Trap & Skeet','');return false;">› Trap & Skeet</a>
+      <a href="#" class="sidebar-link" onclick="setCat('Ses Fişeği','');return false;">› Ses Fişeği</a>
+      <a href="#" class="sidebar-link" onclick="setCat('Savunma Fişeği','');return false;">› Savunma Fişeği</a>
+      <a href="#" class="sidebar-link" onclick="setCat('İşaret Fişeği','');return false;">› İşaret Fişeği</a>
+      <a href="#" class="sidebar-link" onclick="setCat('Manevra Fişeği','');return false;">› Manevra Fişeği</a>
+      <a href="#" class="sidebar-link" onclick="setCat('Kurusıkı Mermileri','');return false;">› Kurusıkı Mermileri</a>
     </div>
 
     <!-- Markalar -->
@@ -492,7 +561,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 
     <div class="toolbar">
       <div class="toolbar-left">
-        <div class="toolbar-title" id="toolbarTitle">Av Tüfekleri</div>
+        <div class="toolbar-title" id="toolbarTitle">Av Fişekleri</div>
         <div class="toolbar-count" id="toolbarCount"></div>
       </div>
       <div class="toolbar-right">
@@ -531,7 +600,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <button class="modal-close" onclick="closeAddModal()">✕</button>
-    <h3>Yeni Ürün Ekle</h3>
+    <h3 id="addModalTitle">Yeni Ürün Ekle</h3>
     <p style="font-size:.8rem;color:#888;margin-top:3px;">Marka: <strong id="addModalBrand" style="color:var(--green);">—</strong></p>
     <div class="form-row">
       <label>Model Adı *</label>
@@ -545,12 +614,19 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
       <div class="form-row" style="flex:1;">
         <label>Kategori</label>
         <select id="f-cat">
-          <option value="Sıfır Tüfek">Sıfır Tüfek</option>
-          <option value="İkinci El">İkinci El</option>
-          <option value="Yarı Otomatik">Yarı Otomatik</option>
-          <option value="Çift Namlulu">Çift Namlulu</option>
-          <option value="Sürgülü">Sürgülü</option>
-          <option value="Tek Namlulu">Tek Namlulu</option>
+          <option value="12 Kalibre">12 Kalibre</option>
+          <option value="16 Kalibre">16 Kalibre</option>
+          <option value="20 Kalibre">20 Kalibre</option>
+          <option value="24 Kalibre">24 Kalibre</option>
+          <option value="28 Kalibre">28 Kalibre</option>
+          <option value="32 Kalibre">32 Kalibre</option>
+          <option value="36 Kalibre">36 Kalibre</option>
+          <option value="Trap & Skeet">Trap & Skeet</option>
+          <option value="Ses Fişeği">Ses Fişeği</option>
+          <option value="Savunma Fişeği">Savunma Fişeği</option>
+          <option value="İşaret Fişeği">İşaret Fişeği</option>
+          <option value="Manevra Fişeği">Manevra Fişeği</option>
+          <option value="Kurusıkı Mermileri">Kurusıkı Mermileri</option>
         </select>
       </div>
       <div class="form-row" style="flex:1;">
@@ -588,21 +664,6 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   </div>
 </div>
 
-<!-- ADMİN GİRİŞ MODAL -->
-<div class="modal-overlay" id="adminModal">
-  <div class="modal admin-modal">
-    <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
-    <div class="a-icon">🔐</div>
-    <h3>Yönetici Girişi</h3>
-    <p style="font-size:.82rem;color:#888;margin-top:4px;">Şifrenizi girin</p>
-    <input class="admin-pwd" type="password" id="adminPwd" placeholder="••••••••"
-      onkeydown="if(event.key==='Enter')checkAdmin()"/>
-    <div class="admin-err" id="adminErr">❌ Hatalı şifre!</div>
-    <button class="btn-login" onclick="checkAdmin()">Giriş Yap</button>
-  </div>
-</div>
-
-
 <!-- FOOTER - Ana sayfayla aynı -->
 <footer style="
   background:#1c3d13; padding:28px 48px;
@@ -630,7 +691,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",
@@ -641,6 +703,7 @@ const firebaseConfig = {
   appId:"1:248185539120:web:cc66fbaf497fe47b13fbf5"
 };
 const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
 const db=getFirestore(app);
 const PAGE_COL='fisek';
 
@@ -658,29 +721,19 @@ async function uploadToCloudinary(file){
 }
 
 const brands = [
-  {name:"Winchester",flag:"🇺🇸",slug:"f-winchester"},
-  {name:"Remington",flag:"🇺🇸",slug:"f-remington"},
-  {name:"Federal",flag:"🇺🇸",slug:"f-federal"},
-  {name:"Fiocchi",flag:"🇮🇹",slug:"f-fiocchi"},
-  {name:"Clever",flag:"🇮🇹",slug:"f-clever"},
-  {name:"Baschieri & Pellagri",flag:"🇮🇹",slug:"f-bp"},
-  {name:"Rottweil",flag:"🇩🇪",slug:"f-rottweil"},
-  {name:"Hull Cartridge",flag:"🇬🇧",slug:"f-hull"},
-  {name:"Eley",flag:"🇬🇧",slug:"f-eley"},
-  {name:"Gamebore",flag:"🇬🇧",slug:"f-gamebore"},
-  {name:"Rio",flag:"🇪🇸",slug:"f-rio"},
-  {name:"Cheddite",flag:"🇫🇷",slug:"f-cheddite"},
-  {name:"NobelSport",flag:"🇫🇷",slug:"f-nobelsport"},
-  {name:"Sellier & Bellot",flag:"🇨🇿",slug:"f-sb"},
-  {name:"Geco",flag:"🇩🇪",slug:"f-geco"},
-  {name:"RWS",flag:"🇩🇪",slug:"f-rws"},
-  {name:"CCI",flag:"🇺🇸",slug:"f-cci"},
-  {name:"Hornady",flag:"🇺🇸",slug:"f-hornady"},
-  {name:"Turan",flag:"🇹🇷",slug:"f-turan"},
-  {name:"İzmir Patronluk",flag:"🇹🇷",slug:"f-izmir"},
+  {name:"Starling",flag:"🇹🇷",slug:"f-starling"},
+  {name:"Zuber",flag:"🇹🇷",slug:"f-zuber"},
+  {name:"Jet",flag:"🇹🇷",slug:"f-jet"},
+  {name:"BPS",flag:"🇹🇷",slug:"f-bps"},
+  {name:"YAF",flag:"🇹🇷",slug:"f-yaf"},
+  {name:"Meca",flag:"🇹🇷",slug:"f-meca"},
+  {name:"Mesco",flag:"🇹🇷",slug:"f-mesco"},
+  {name:"BP (Baschieri & Pellagri)",flag:"🇮🇹",slug:"f-bp"},
+  {name:"RC",flag:"🇮🇹",slug:"f-rc"},
+  {name:"Barnaghi",flag:"🇮🇹",slug:"f-barnaghi"},
 ];
 
-let activeBrand=null,activeCat='',minP=null,maxP=null,imgFile=null,allProducts=[],brandCounts={};
+let activeBrand=null,activeCat='',activeSubCat='',minP=null,maxP=null,imgFile=null,allProducts=[],brandCounts={};
 
 async function loadProducts(slug){
   document.getElementById('productGrid').innerHTML='<div class="empty-state"><div style="font-size:2rem">⏳</div><p>Yükleniyor…</p></div>';
@@ -732,16 +785,33 @@ function selectBrand(slug){
   loadProducts(slug);
 }
 
-function setCat(cat){
+function setCat(cat, subcat){
   activeCat=cat;
+  activeSubCat=subcat||'';
   document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
   event.target.classList.add('active');
   applyFilters();
 }
 
+function toggleSubcat(id){
+  const group = document.getElementById(id);
+  const arrow = document.getElementById('arrow' + id.replace('sub',''));
+  if(!group) return;
+  const isOpen = group.classList.contains('open');
+  // Tüm grupları kapat
+  document.querySelectorAll('.subcat-group').forEach(g=>g.classList.remove('open'));
+  document.querySelectorAll('.cat-arrow').forEach(a=>a.classList.remove('open'));
+  // Sadece bu gruba toggle
+  if(!isOpen){
+    group.classList.add('open');
+    if(arrow) arrow.classList.add('open');
+  }
+}
+
 function applyFilters(){
   let list=[...allProducts];
   if(activeCat) list=list.filter(p=>p.cat===activeCat);
+  if(activeSubCat) list=list.filter(p=>(p.subcat||p.gram||'')===activeSubCat);
   if(minP!==null) list=list.filter(p=>parsePrice(p.price)>=minP);
   if(maxP!==null) list=list.filter(p=>parsePrice(p.price)<=maxP);
   renderProducts(list);
@@ -816,11 +886,12 @@ function renderProducts(list){
         <div class="card-brand">${brandName}</div>
         <div class="card-name">${p.name}</div>
         <div class="card-cat">${p.cat}</div>
-        ${p.desc?`<div class="card-desc">${p.desc}</div>`:''}
+        
         ${p.price?`<div class="card-price-row"><span class="card-price">${p.price}</span></div>`:'<div class="card-price-row"><span class="card-price-note">Fiyat için arayın</span></div>'}
       </div>
       <div class="card-footer">
         <a class="btn-info" href="urun-detay.html?col=fisek&id=${p.id}" style="text-decoration:none;text-align:center;">🔍 Detay</a>
+        <button class="btn-edit ${isAdmin()?'visible':''}" onclick="openEditModal('${p.id}')">✏️</button>
         <button class="btn-del ${isAdmin()?'visible':''}" onclick="deleteProduct('${p.id}')">🗑</button>
       </div>
     </div>`;
@@ -828,17 +899,39 @@ function renderProducts(list){
 }
 
 function openAddModal(){
-  if(!isAdmin()){openAdminModal();return;}
+  if(!isAdmin()){window.location.href="index.html";return;}
   if(!activeBrand){alert('Önce sol panelden bir marka seçin!');return;}
+  editingId=null;
+  document.getElementById('addModalTitle').textContent='Yeni Ürün Ekle';
   document.getElementById('f-name').value='';
   document.getElementById('f-desc').value='';
   document.getElementById('f-price').value='';
   document.getElementById('f-cat').value='Saçma Fişeği';
   document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
+  imgFile=null;currentImgUrl=null;
+  document.getElementById('addModal').classList.add('open');
+}
+function openEditModal(docId){
+  if(!isAdmin())return;
+  const p=allProducts.find(x=>x.id===docId);
+  if(!p)return;
+  editingId=docId;
+  document.getElementById('addModalTitle').textContent='Ürünü Düzenle';
+  document.getElementById('addModalBrand').textContent=activeBrand?activeBrand.name:(brands.find(b=>b.slug===p.brand)||{name:p.brand||''}).name;
+  document.getElementById('f-name').value=p.name||'';
+  document.getElementById('f-desc').value=p.desc||'';
+  document.getElementById('f-price').value=p.price||'';
+  document.getElementById('f-cat').value=p.cat||'Saçma Fişeği';
+  currentImgUrl=p.img||null;
+  if(p.img){
+    document.getElementById('imgDrop').innerHTML=`<img src="${p.img}"/>`;
+  } else {
+    document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
+  }
   imgFile=null;
   document.getElementById('addModal').classList.add('open');
 }
-function closeAddModal(){document.getElementById('addModal').classList.remove('open');}
+function closeAddModal(){document.getElementById('addModal').classList.remove('open');editingId=null;}
 
 function previewImg(input){
   if(!input.files||!input.files[0])return;
@@ -855,17 +948,28 @@ async function saveProduct(){
   const btn=document.querySelector('.btn-save');
   btn.textContent='⏳ Kaydediliyor…';btn.disabled=true;
   try{
-    let imgUrl=null;
+    let imgUrl=currentImgUrl||null;
     if(imgFile) imgUrl=await uploadToCloudinary(imgFile);
-    await addDoc(collection(db,PAGE_COL),{
-      brand:activeBrand.slug,name,
-      desc:document.getElementById('f-desc').value.trim(),
-      cat:document.getElementById('f-cat').value,
-      price:document.getElementById('f-price').value.trim(),
-      img:imgUrl,createdAt:Date.now(),
-    });
+    if(editingId){
+      await updateDoc(doc(db,PAGE_COL,editingId),{
+        name,
+        desc:document.getElementById('f-desc').value.trim(),
+        cat:document.getElementById('f-cat').value,
+        price:document.getElementById('f-price').value.trim(),
+        ...(imgUrl!==undefined?{img:imgUrl}:{}),
+        updatedAt:Date.now(),
+      });
+    } else {
+      await addDoc(collection(db,PAGE_COL),{
+        brand:activeBrand.slug,name,
+        desc:document.getElementById('f-desc').value.trim(),
+        cat:document.getElementById('f-cat').value,
+        price:document.getElementById('f-price').value.trim(),
+        img:imgUrl,createdAt:Date.now(),
+      });
+    }
     closeAddModal();
-    await loadProducts(activeBrand.slug);
+    if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
   }catch(e){alert('Hata: '+e.message);}
   finally{btn.textContent='Ürünü Kaydet';btn.disabled=false;}
 }
@@ -890,44 +994,34 @@ function openLightbox(src,name){
 }
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeLightbox();['addModal','contactModal','adminModal'].forEach(id=>document.getElementById(id).classList.remove('open'));}
+  if(e.key==='Escape'){closeLightbox();['addModal','contactModal'].forEach(id=>document.getElementById(id).classList.remove('open'));}
 });
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(el=>{
   el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 });
 
-function hashPass(s){return btoa(unescape(encodeURIComponent(s))).split('').reverse().join('');}
-function isAdmin(){return sessionStorage.getItem('bag_admin')===hashPass('furkan.0706');}
+function isAdmin(){return !!auth.currentUser;}
 function openAdminModal(){
-  if(isAdmin()){logoutAdmin();return;}
-  document.getElementById('adminPwd').value='';
-  document.getElementById('adminErr').style.display='none';
-  document.getElementById('adminModal').classList.add('open');
-  setTimeout(()=>document.getElementById('adminPwd').focus(),100);
+  // index.html'e yönlendir — giriş oradan yapılıyor
+  window.location.href='index.html#admin-login';
 }
-function checkAdmin(){
-  if(hashPass(document.getElementById('adminPwd').value)===hashPass('furkan.0706')){
-    sessionStorage.setItem('bag_admin',hashPass('furkan.0706'));
-    closeModal('adminModal');setAdminUI(true);
-  }else{document.getElementById('adminErr').style.display='block';document.getElementById('adminPwd').value='';}
-}
-function logoutAdmin(){sessionStorage.removeItem('bag_admin');setAdminUI(false);}
+function logoutAdmin(){signOut(auth);}
+window.selectBrand=selectBrand;window.filterSidebar=filterSidebar;window.setCat=setCat;
+window.applyPriceFilter=applyPriceFilter;window.clearPriceFilter=clearPriceFilter;
+window.filterProducts=filterProducts;window.applySort=applySort;window.openAddModal=openAddModal;window.toggleSubcat=toggleSubcat;
+window.closeAddModal=closeAddModal;window.previewImg=previewImg;window.saveProduct=saveProduct;
+window.deleteProduct=deleteProduct;window.openContact=openContact;window.openLightbox=openLightbox;
+window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.logoutAdmin=logoutAdmin;
+window.openEditModal=openEditModal;
 function setAdminUI(on){
   document.getElementById('adminLock').style.display=on?'none':'flex';
   document.getElementById('adminLogout').style.display=on?'block':'none';
   document.getElementById('addBtn').classList.toggle('visible',on);
   document.querySelectorAll('.btn-del').forEach(b=>b.classList.toggle('visible',on));
+  document.querySelectorAll('.btn-edit').forEach(b=>b.classList.toggle('visible',on));
 }
-setAdminUI(isAdmin());
-
-window.selectBrand=selectBrand;window.filterSidebar=filterSidebar;window.setCat=setCat;
-window.applyPriceFilter=applyPriceFilter;window.clearPriceFilter=clearPriceFilter;
-window.filterProducts=filterProducts;window.applySort=applySort;window.openAddModal=openAddModal;
-window.closeAddModal=closeAddModal;window.previewImg=previewImg;window.saveProduct=saveProduct;
-window.deleteProduct=deleteProduct;window.openContact=openContact;window.openLightbox=openLightbox;
-window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.openAdminModal=openAdminModal;
-window.checkAdmin=checkAdmin;window.logoutAdmin=logoutAdmin;
+onAuthStateChanged(auth,(user)=>{setAdminUI(!!user);});
 
 // ── SAYFA AÇILINCA TÜM ÜRÜNLERİ YÜKLEYİP GÖSTER ──
 async function loadAllProducts() {

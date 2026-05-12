@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Av Tüfekleri — Başkent Av Galerisi</title>
+<meta name="description" content="Beretta, Benelli, Browning, Hatsan ve daha fazlası. Sıfır ve ikinci el av tüfekleri — Başkent Av Galerisi, Finike/Antalya." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -122,6 +124,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   border-radius:8px;overflow:hidden;
   transition:box-shadow .2s,transform .2s;
   position:relative;
+  display:flex;flex-direction:column;
 }
 .product-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.12);transform:translateY(-2px);}
 
@@ -147,7 +150,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 }
 .card-img:hover .zoom-btn{opacity:1;}
 
-.card-body{padding:10px 12px;}
+.card-body{padding:10px 12px;flex:1;}
 .card-brand{font-size:.68rem;color:#4a7a38;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:"Cinzel",serif;}
 .card-name{font-size:.95rem;font-weight:600;color:#1c3d13;margin-top:2px;line-height:1.35;font-family:"Playfair Display",serif;}
 .card-cat{font-size:.72rem;color:var(--grey2);margin-top:3px;}
@@ -171,7 +174,33 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 }
 .btn-del:hover{background:#fdd;}
 .btn-del.visible{display:block;}
+.btn-edit{
+  padding:8px 10px;background:#e8f4ff;color:#1a6bb5;
+  border:1px solid #c5dff8;border-radius:6px;cursor:pointer;
+  font-size:.8rem;display:none;transition:background .2s;
+}
+.btn-edit:hover{background:#c5dff8;}
+.btn-edit.visible{display:block;}
 
+/* Nested category styles */
+.cat-group { }
+.cat-group-title {
+  display:flex !important;
+  align-items:center;
+  gap:6px;
+  font-weight:700 !important;
+  color:var(--dark) !important;
+}
+.cat-group-title:hover { color:var(--green) !important; }
+.cat-arrow {
+  font-size:.65rem;
+  transition:transform .2s;
+  display:inline-block;
+  flex-shrink:0;
+  color:var(--grey2);
+}
+.cat-arrow.open { transform:rotate(90deg); }
+.cat-sub-list { padding-left:8px; }
 /* Boş durum */
 .empty-state{grid-column:1/-1;text-align:center;padding:80px 20px;}
 .empty-state .icon{font-size:3.5rem;opacity:.15;margin-bottom:12px;}
@@ -194,7 +223,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 /* ── MODAL ── */
 .modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--white);border-radius:12px;padding:28px;max-width:460px;width:92%;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.2);}
+.modal{background:var(--white);border-radius:12px;padding:28px;max-width:460px;width:92%;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto;}
 .modal h3{font-size:1.15rem;font-weight:900;color:var(--dark);margin-bottom:4px;}
 .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.3rem;color:var(--grey2);cursor:pointer;}
 .modal-close:hover{color:var(--dark);}
@@ -397,6 +426,24 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   .product-grid { grid-template-columns: 1fr !important; }
 }
 
+
+/* ── SAYFA ARKA PLAN DESENI ── */
+.page-bg-pattern {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.page-bg-pattern svg {
+  width: 100%;
+  height: 100%;
+}
+.page > *:not(.page-bg-pattern) {
+  position: relative;
+  z-index: 1;
+}
+
 </style>
 </head>
 <body>
@@ -443,6 +490,65 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 
 <!-- PAGE -->
 <div class="page">
+<div class="page-bg-pattern" aria-hidden="true">
+<svg viewBox="0 0 1080 990" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+<g transform="translate(110,46) rotate(-25) scale(1.18)" opacity="0.055"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(258,66) rotate(-15) scale(1.15)" opacity="0.081"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(435,61) rotate(25) scale(0.86)" opacity="0.049"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(624,59) rotate(-25) scale(1.10)" opacity="0.074"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(824,56) rotate(0) scale(1.05)" opacity="0.056"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(970,67) rotate(-8) scale(1.16)" opacity="0.059"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(79,159) rotate(15) scale(0.90)" opacity="0.060"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(272,164) rotate(8) scale(1.21)" opacity="0.074"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(464,156) rotate(25) scale(0.89)" opacity="0.057"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(650,172) rotate(15) scale(1.11)" opacity="0.073"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(792,174) rotate(0) scale(1.20)" opacity="0.084"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(984,156) rotate(25) scale(0.98)" opacity="0.070"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(93,268) rotate(15) scale(1.01)" opacity="0.072"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(254,282) rotate(-8) scale(1.09)" opacity="0.055"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(459,275) rotate(8) scale(1.30)" opacity="0.071"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(645,270) rotate(15) scale(1.23)" opacity="0.076"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(804,264) rotate(15) scale(1.03)" opacity="0.048"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(1006,285) rotate(15) scale(0.95)" opacity="0.065"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(99,377) rotate(8) scale(0.91)" opacity="0.075"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(284,381) rotate(25) scale(1.25)" opacity="0.061"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(444,377) rotate(35) scale(0.89)" opacity="0.047"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(617,377) rotate(-8) scale(1.21)" opacity="0.062"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(794,385) rotate(25) scale(1.12)" opacity="0.064"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(986,390) rotate(-25) scale(1.16)" opacity="0.050"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(104,507) rotate(8) scale(1.20)" opacity="0.059"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(268,496) rotate(-8) scale(1.05)" opacity="0.083"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(446,499) rotate(-8) scale(1.08)" opacity="0.049"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(650,492) rotate(0) scale(0.92)" opacity="0.076"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(824,507) rotate(-25) scale(1.12)" opacity="0.065"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(977,494) rotate(8) scale(0.96)" opacity="0.055"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(106,595) rotate(-15) scale(1.18)" opacity="0.078"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(284,617) rotate(-8) scale(0.91)" opacity="0.064"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(465,598) rotate(8) scale(1.09)" opacity="0.069"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(623,610) rotate(0) scale(1.17)" opacity="0.061"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(813,607) rotate(35) scale(0.90)" opacity="0.054"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(991,593) rotate(0) scale(1.11)" opacity="0.045"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(110,704) rotate(0) scale(0.88)" opacity="0.046"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(271,705) rotate(0) scale(0.98)" opacity="0.064"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(464,707) rotate(35) scale(0.96)" opacity="0.064"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(636,709) rotate(-15) scale(0.89)" opacity="0.062"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(817,716) rotate(35) scale(1.24)" opacity="0.047"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(976,704) rotate(25) scale(1.18)" opacity="0.077"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(76,820) rotate(0) scale(0.94)" opacity="0.063"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(277,818) rotate(8) scale(1.06)" opacity="0.080"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(434,827) rotate(-15) scale(0.87)" opacity="0.085"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(610,815) rotate(0) scale(0.92)" opacity="0.064"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(803,825) rotate(-25) scale(0.92)" opacity="0.045"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(994,821) rotate(35) scale(0.98)" opacity="0.073"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(105,944) rotate(35) scale(0.92)" opacity="0.057"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(253,941) rotate(-25) scale(1.19)" opacity="0.047"><path d="M20,20 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M20,8 L20,32 M8,20 L32,20 M20,20 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(467,938) rotate(-8) scale(0.88)" opacity="0.065"><path d="M20,6 C17,6 14,9 14,14 L14,28 L20,32 L26,28 L26,14 C26,9 23,6 20,6 Z M20,6 L20,32 M17,10 Q20,8 23,10" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(621,925) rotate(-15) scale(1.15)" opacity="0.054"><path d="M20,20 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 M20,20 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M20,6 L20,14 M20,26 L20,34 M6,20 L14,20 M26,20 L34,20" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(797,941) rotate(0) scale(1.11)" opacity="0.047"><path d="M10,32 L20,8 L22,10 L14,34 Z M10,32 L14,34 M20,8 Q24,8 24,12" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(975,936) rotate(15) scale(1.27)" opacity="0.053"><path d="M6,14 L6,26 Q6,28 8,28 L14,28 Q16,28 16,26 L16,14 Q16,12 14,12 L8,12 Q6,12 6,14 Z M24,14 L24,26 Q24,28 26,28 L32,28 Q34,28 34,26 L34,14 Q34,12 32,12 L26,12 Q24,12 24,14 Z M16,20 L24,20 M11,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M29,18 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>
+</div>
+
 
   <!-- MOBİL FİLTRE -->
   <button class="mobile-filter-btn" onclick="toggleSidebar()">☰ Filtrele / Markalar</button>
@@ -454,12 +560,41 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
     <div class="sidebar-box">
       <div class="sidebar-title">Ürün Grupları</div>
       <div class="sidebar-sub-title">Av Tüfekleri</div>
-      <a href="#" class="sidebar-link active" id="catAll" onclick="setCat('');return false;">Tüm Tüfekler</a>
-      <a href="#" class="sidebar-link" onclick="setCat('Sıfır Tüfek');return false;">› Sıfır Tüfekler</a>
-      <a href="#" class="sidebar-link" onclick="setCat('İkinci El');return false;">› İkinci El Tüfekler</a>
-      <a href="#" class="sidebar-link" onclick="setCat('Yarı Otomatik');return false;">› Yarı Otomatik</a>
-      <a href="#" class="sidebar-link" onclick="setCat('Çift Namlulu');return false;">› Çift Namlulu</a>
-      <a href="#" class="sidebar-link" onclick="setCat('Sürgülü');return false;">› Sürgülü</a>
+      <a href="#" class="sidebar-link active" id="catAll" onclick="setCatFilter('','');return false;">Tüm Tüfekler</a>
+
+      <!-- Sıfır Tüfek grubu -->
+      <div class="cat-group">
+        <a href="#" class="sidebar-link cat-group-title" onclick="setCatFilter('Sıfır','');return false;">
+          <span class="cat-arrow" id="arrow-sifir">▶</span> Sıfır Tüfekler
+        </a>
+        <div class="cat-sub-list" id="sub-sifir" style="display:none;">
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('Sıfır','Yarı Otomatik');return false;">› Yarı Otomatik</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('Sıfır','Süperpoze');return false;">› Süperpoze</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('Sıfır','Çift Kırma');return false;">› Çift Kırma</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('Sıfır','Pompalı');return false;">› Pompalı</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('Sıfır','Şarjörlü Yarı Otomatik & Taktik');return false;">› Şarjörlü Yarı Otomatik & Taktik</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('Sıfır','Tek Kırma');return false;">› Tek Kırma</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('Sıfır','Trap & Skeet');return false;">› Trap & Skeet</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('Sıfır','Bullpup');return false;">› Bullpup</a>
+        </div>
+      </div>
+
+      <!-- İkinci El grubu -->
+      <div class="cat-group">
+        <a href="#" class="sidebar-link cat-group-title" onclick="setCatFilter('İkinci El','');return false;">
+          <span class="cat-arrow" id="arrow-ikinciEl">▶</span> İkinci El Tüfekler
+        </a>
+        <div class="cat-sub-list" id="sub-ikinciEl" style="display:none;">
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('İkinci El','Yarı Otomatik');return false;">› Yarı Otomatik</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('İkinci El','Süperpoze');return false;">› Süperpoze</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('İkinci El','Çift Kırma');return false;">› Çift Kırma</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('İkinci El','Pompalı');return false;">› Pompalı</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('İkinci El','Şarjörlü Yarı Otomatik & Taktik');return false;">› Şarjörlü Yarı Otomatik & Taktik</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('İkinci El','Tek Kırma');return false;">› Tek Kırma</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('İkinci El','Trap & Skeet');return false;">› Trap & Skeet</a>
+          <a href="#" class="sidebar-link cat-sub" onclick="setCatFilter('İkinci El','Bullpup');return false;">› Bullpup</a>
+        </div>
+      </div>
     </div>
 
     <!-- Markalar -->
@@ -527,11 +662,11 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   <div class="lb-caption" id="lb-caption"></div>
 </div>
 
-<!-- ÜRÜN EKLEME MODAL -->
+<!-- ÜRÜN EKLEME / DÜZENLEME MODAL -->
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <button class="modal-close" onclick="closeAddModal()">✕</button>
-    <h3>Yeni Ürün Ekle</h3>
+    <h3 id="addModalTitle">Yeni Ürün Ekle</h3>
     <p style="font-size:.8rem;color:#888;margin-top:3px;">Marka: <strong id="addModalBrand" style="color:var(--green);">—</strong></p>
     <div class="form-row">
       <label>Model Adı *</label>
@@ -543,14 +678,23 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
     </div>
     <div style="display:flex;gap:10px;">
       <div class="form-row" style="flex:1;">
-        <label>Kategori</label>
-        <select id="f-cat">
-          <option value="Sıfır Tüfek">Sıfır Tüfek</option>
+        <label>Ana Kategori</label>
+        <select id="f-maincat" onchange="updateSubCatOptions()">
+          <option value="Sıfır">Sıfır Tüfek</option>
           <option value="İkinci El">İkinci El</option>
+        </select>
+      </div>
+      <div class="form-row" style="flex:1;">
+        <label>Tüfek Tipi</label>
+        <select id="f-subcat">
           <option value="Yarı Otomatik">Yarı Otomatik</option>
-          <option value="Çift Namlulu">Çift Namlulu</option>
-          <option value="Sürgülü">Sürgülü</option>
-          <option value="Tek Namlulu">Tek Namlulu</option>
+          <option value="Süperpoze">Süperpoze</option>
+          <option value="Çift Kırma">Çift Kırma</option>
+          <option value="Pompalı">Pompalı</option>
+          <option value="Şarjörlü Yarı Otomatik & Taktik">Şarjörlü Yarı Otomatik & Taktik</option>
+          <option value="Tek Kırma">Tek Kırma</option>
+          <option value="Trap & Skeet">Trap & Skeet</option>
+          <option value="Bullpup">Bullpup</option>
         </select>
       </div>
       <div class="form-row" style="flex:1;">
@@ -565,6 +709,71 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
       </div>
       <input type="file" id="f-img" accept="image/*" style="display:none" onchange="previewImg(this)"/>
     </div>
+
+    <!-- TEKNİK ÖZELLİKLER -->
+    <div style="margin-top:14px;border-top:2px dashed var(--border);padding-top:12px;">
+      <div style="font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:var(--grey2);margin-bottom:8px;">⚙️ Teknik Özellikler <span style="font-weight:400;opacity:.6;">(isteğe bağlı)</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="form-row" style="margin-top:0;">
+          <label>Sistem</label>
+          <select id="f-sistem">
+            <option value="">— Seçiniz —</option>
+            <option>Gazlı Sistem</option>
+            <option>Pompali Sistem</option>
+            <option>Yarı Otomatik</option>
+            <option>Kırma Sistem</option>
+            <option>Sürgülü Sistem</option>
+            <option>Lever Action</option>
+          </select>
+        </div>
+        <div class="form-row" style="margin-top:0;">
+          <label>Kalibre</label>
+          <select id="f-kalibre">
+            <option value="">— Seçiniz —</option>
+            <option>12 Kalibre</option>
+            <option>20 Kalibre</option>
+            <option>28 Kalibre</option>
+            <option>.410</option>
+            <option>9mm</option>
+            <option>.308</option>
+            <option>.223</option>
+            <option>7.62x39</option>
+          </select>
+        </div>
+        <div class="form-row" style="margin-top:0;">
+          <label>Şarjör Kapasitesi</label>
+          <input type="text" id="f-sarjor" placeholder="Örn: 5+1 / 10+1"/>
+        </div>
+        <div class="form-row" style="margin-top:0;">
+          <label>Namlu Boyu</label>
+          <input type="text" id="f-namlu" placeholder="Örn: 47 cm"/>
+        </div>
+        <div class="form-row" style="margin-top:0;">
+          <label>Ağırlık</label>
+          <input type="text" id="f-agirlik" placeholder="Örn: 3300 Gram"/>
+        </div>
+        <div class="form-row" style="margin-top:0;">
+          <label>Fişek Yatağı</label>
+          <input type="text" id="f-fisekyatagi" placeholder="Örn: 76 mm Magnum"/>
+        </div>
+        <div class="form-row" style="margin-top:0;">
+          <label>Mobil Şok</label>
+          <select id="f-mobilsok">
+            <option value="">— Seçiniz —</option>
+            <option>Var / 3 Numara</option>
+            <option>Var / 5 Numara</option>
+            <option>Yok</option>
+            <option>Sabit Tam Kol</option>
+            <option>Sabit Yarım Kol</option>
+          </select>
+        </div>
+        <div class="form-row" style="margin-top:0;">
+          <label>Renk / Finish</label>
+          <input type="text" id="f-renk" placeholder="Örn: Siyah, Ceviz, Kamuflaj"/>
+        </div>
+      </div>
+    </div>
+
     <button class="btn-save" onclick="saveProduct()">Ürünü Kaydet</button>
   </div>
 </div>
@@ -587,21 +796,6 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
     </div>
   </div>
 </div>
-
-<!-- ADMİN GİRİŞ MODAL -->
-<div class="modal-overlay" id="adminModal">
-  <div class="modal admin-modal">
-    <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
-    <div class="a-icon">🔐</div>
-    <h3>Yönetici Girişi</h3>
-    <p style="font-size:.82rem;color:#888;margin-top:4px;">Şifrenizi girin</p>
-    <input class="admin-pwd" type="password" id="adminPwd" placeholder="••••••••"
-      onkeydown="if(event.key==='Enter')checkAdmin()"/>
-    <div class="admin-err" id="adminErr">❌ Hatalı şifre!</div>
-    <button class="btn-login" onclick="checkAdmin()">Giriş Yap</button>
-  </div>
-</div>
-
 
 <!-- FOOTER - Ana sayfayla aynı -->
 <footer style="
@@ -630,7 +824,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",
@@ -641,6 +836,7 @@ const firebaseConfig = {
   appId:"1:248185539120:web:cc66fbaf497fe47b13fbf5"
 };
 const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
 const db=getFirestore(app);
 const PAGE_COL='tufekler';
 
@@ -688,7 +884,7 @@ const brands = [
   {name:"Rizzini",flag:"🇮🇹",slug:"rizzini"},
 ];
 
-let activeBrand=null,activeCat='',minP=null,maxP=null,imgFile=null,allProducts=[],brandCounts={};
+let activeBrand=null,activeCat='',activeMain='',activeSub='',minP=null,maxP=null,imgFile=null,allProducts=[],brandCounts={},editingId=null,currentImgUrl=null;
 
 async function loadProducts(slug){
   document.getElementById('productGrid').innerHTML='<div class="empty-state"><div style="font-size:2rem">⏳</div><p>Yükleniyor…</p></div>';
@@ -730,7 +926,7 @@ function filterSidebar(q){
 
 function selectBrand(slug){
   activeBrand=brands.find(b=>b.slug===slug);
-  activeCat='';minP=null;maxP=null;
+  activeCat='';activeMain='';activeSub='';minP=null;maxP=null;
   const bcBrand=document.getElementById('bcBrand'); if(bcBrand) bcBrand.textContent=' › '+activeBrand.name;
   const addModalBrand=document.getElementById('addModalBrand'); if(addModalBrand) addModalBrand.textContent=activeBrand.name;
   const toolbarTitle=document.getElementById('toolbarTitle'); if(toolbarTitle) toolbarTitle.textContent=activeBrand.flag+' '+activeBrand.name+' Tüfekleri';
@@ -740,16 +936,82 @@ function selectBrand(slug){
   loadProducts(slug);
 }
 
-function setCat(cat){
-  activeCat=cat;
-  document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
-  event.target.classList.add('active');
+function setCatFilter(main, sub) {
+  activeMain = main;
+  activeSub = sub;
+  // Remove active from all sidebar links
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  // Toggle accordion
+  ['sifir','ikinciEl'].forEach(key => {
+    const arrow = document.getElementById('arrow-' + key);
+    const subList = document.getElementById('sub-' + key);
+    if (arrow && subList) {
+      arrow.classList.remove('open');
+      subList.style.display = 'none';
+    }
+  });
+  if (main === '') {
+    document.getElementById('catAll').classList.add('active');
+  } else if (main === 'Sıfır') {
+    const arrow = document.getElementById('arrow-sifir');
+    const subList = document.getElementById('sub-sifir');
+    if (arrow) arrow.classList.add('open');
+    if (subList) subList.style.display = 'block';
+    if (!sub) {
+      document.querySelector('[onclick="setCatFilter(\'Sıfır\',\'\');return false;"]').classList.add('active');
+    } else {
+      const el = document.querySelector(`[onclick="setCatFilter('Sıfır','${sub}');return false;"]`);
+      if (el) el.classList.add('active');
+    }
+  } else if (main === 'İkinci El') {
+    const arrow = document.getElementById('arrow-ikinciEl');
+    const subList = document.getElementById('sub-ikinciEl');
+    if (arrow) arrow.classList.add('open');
+    if (subList) subList.style.display = 'block';
+    if (!sub) {
+      document.querySelector('[onclick="setCatFilter(\'İkinci El\',\'\');return false;"]').classList.add('active');
+    } else {
+      const el = document.querySelector(`[onclick="setCatFilter('İkinci El','${sub}');return false;"]`);
+      if (el) el.classList.add('active');
+    }
+  }
   applyFilters();
+}
+
+// Legacy setCat for backwards compatibility
+function setCat(cat){setCatFilter(cat,'');}
+
+function parseCat(p) {
+  // New format: "Sıfır|Yarı Otomatik" or "İkinci El|Çift Namlulu"
+  // Old format: "Sıfır Tüfek", "İkinci El", "Yarı Otomatik", etc.
+  if (p.cat && p.cat.includes('|')) {
+    const parts = p.cat.split('|');
+    return { main: parts[0], sub: parts[1] || '' };
+  }
+  // Legacy mapping
+  const c = p.cat || '';
+  if (c === 'Sıfır Tüfek' || c === 'Sıfır') return { main: 'Sıfır', sub: '' };
+  if (c === 'İkinci El') return { main: 'İkinci El', sub: '' };
+  if (c === 'Yarı Otomatik') return { main: 'Sıfır', sub: 'Yarı Otomatik' };
+  if (c === 'Süperpoze') return { main: 'Sıfır', sub: 'Süperpoze' };
+  if (c === 'Çift Kırma') return { main: 'Sıfır', sub: 'Çift Kırma' };
+  if (c === 'Pompalı') return { main: 'Sıfır', sub: 'Pompalı' };
+  if (c === 'Şarjörlü Yarı Otomatik & Taktik') return { main: 'Sıfır', sub: 'Şarjörlü Yarı Otomatik & Taktik' };
+  if (c === 'Tek Kırma') return { main: 'Sıfır', sub: 'Tek Kırma' };
+  if (c === 'Trap & Skeet') return { main: 'Sıfır', sub: 'Trap & Skeet' };
+  if (c === 'Bullpup') return { main: 'Sıfır', sub: 'Bullpup' };
+  return { main: '', sub: c };
 }
 
 function applyFilters(){
   let list=[...allProducts];
-  if(activeCat) list=list.filter(p=>p.cat===activeCat);
+  if(activeMain) {
+    list = list.filter(p => {
+      const c = parseCat(p);
+      if (activeSub) return c.main === activeMain && c.sub === activeSub;
+      return c.main === activeMain;
+    });
+  }
   if(minP!==null) list=list.filter(p=>parsePrice(p.price)>=minP);
   if(maxP!==null) list=list.filter(p=>parsePrice(p.price)<=maxP);
   renderProducts(list);
@@ -810,12 +1072,16 @@ function renderProducts(list){
   grid.innerHTML=list.map((p,i)=>{
     const safeName=(p.name||'').replace(/'/g,"\'");
     const safeImg=p.img?p.img.replace(/'/g,"\'"):'';
-    const isSecond=p.cat==='İkinci El';
+    const pc=parseCat(p);
+    const isSecond=pc.main==='İkinci El';
+    const badgeLabel=isSecond?'İkinci El':'Sıfır';
+    const catLabel=pc.sub?pc.sub:(isSecond?'İkinci El':'Sıfır Tüfek');
     const brandName=activeBrand?activeBrand.name:(brands.find(b=>b.slug===p.brand)||{name:p.brand||''}).name;
     return `
     <div class="product-card" style="animation:fadeInUp .3s ease ${i*0.05}s both;">
       <div class="card-badges">
-        ${isSecond?'<span class="badge badge-second">İkinci El</span>':'<span class="badge badge-new">'+p.cat+'</span>'}
+        ${isSecond?'<span class="badge badge-second">İkinci El</span>':'<span class="badge badge-new">Sıfır</span>'}
+        ${pc.sub?`<span class="badge" style="background:#555;color:#fff;margin-top:2px;">${pc.sub}</span>`:''}
       </div>
       <div class="card-img" onclick="location.href='urun-detay.html?col=tufekler&id=${p.id}'" style="cursor:pointer;">
         ${p.img?`<img src="${p.img}" alt="${p.name}"/>`:`<div class="no-img">🔫</div>`}
@@ -823,12 +1089,13 @@ function renderProducts(list){
       <div class="card-body">
         <div class="card-brand">${brandName}</div>
         <div class="card-name">${p.name}</div>
-        <div class="card-cat">${p.cat}</div>
-        ${p.desc?`<div class="card-desc">${p.desc}</div>`:''}
+        <div class="card-cat">${catLabel}</div>
+        
         ${p.price?`<div class="card-price-row"><span class="card-price">${p.price}</span></div>`:'<div class="card-price-row"><span class="card-price-note">Fiyat için arayın</span></div>'}
       </div>
       <div class="card-footer">
         <a class="btn-info" href="urun-detay.html?col=tufekler&id=${p.id}" style="text-decoration:none;text-align:center;">🔍 Detay</a>
+        <button class="btn-edit ${isAdmin()?'visible':''}" onclick="openEditModal('${p.id}')">✏️</button>
         <button class="btn-del ${isAdmin()?'visible':''}" onclick="deleteProduct('${p.id}')">🗑</button>
       </div>
     </div>`;
@@ -836,17 +1103,47 @@ function renderProducts(list){
 }
 
 function openAddModal(){
-  if(!isAdmin()){openAdminModal();return;}
+  if(!isAdmin()){window.location.href="index.html";return;}
   if(!activeBrand){alert('Önce sol panelden bir marka seçin!');return;}
+  editingId=null;
+  document.getElementById('addModalTitle').textContent='Yeni Ürün Ekle';
   document.getElementById('f-name').value='';
   document.getElementById('f-desc').value='';
   document.getElementById('f-price').value='';
-  document.getElementById('f-cat').value='Sıfır Tüfek';
+  document.getElementById('f-maincat').value='Sıfır';
+  document.getElementById('f-subcat').value='Yarı Otomatik';
   document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
-  imgFile=null;
+  imgFile=null;currentImgUrl=null;
+  ['f-sistem','f-kalibre','f-sarjor','f-namlu','f-agirlik','f-fisekyatagi','f-mobilsok','f-renk'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
   document.getElementById('addModal').classList.add('open');
 }
-function closeAddModal(){document.getElementById('addModal').classList.remove('open');}
+function openEditModal(docId){
+  if(!isAdmin())return;
+  const p=allProducts.find(x=>x.id===docId);
+  if(!p)return;
+  editingId=docId;
+  document.getElementById('addModalTitle').textContent='Ürünü Düzenle';
+  document.getElementById('addModalBrand').textContent=activeBrand?activeBrand.name:(brands.find(b=>b.slug===p.brand)||{name:p.brand||''}).name;
+  document.getElementById('f-name').value=p.name||'';
+  document.getElementById('f-desc').value=p.desc||'';
+  document.getElementById('f-price').value=p.price||'';
+  const parsedCat = parseCat(p);
+  document.getElementById('f-maincat').value = parsedCat.main || 'Sıfır';
+  document.getElementById('f-subcat').value = parsedCat.sub || 'Yarı Otomatik';
+  currentImgUrl=p.img||null;
+  if(p.img){
+    document.getElementById('imgDrop').innerHTML=`<img src="${p.img}"/>`;
+  } else {
+    document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
+  }
+  imgFile=null;
+  const specMap={'f-sistem':'sistem','f-kalibre':'kalibre','f-sarjor':'sarjorKapasitesi','f-namlu':'namluBoyu','f-agirlik':'agirlik','f-fisekyatagi':'fisekYatagi','f-mobilsok':'mobilSok','f-renk':'renk'};
+  Object.entries(specMap).forEach(([id,key])=>{ const el=document.getElementById(id); if(el) el.value=p[key]||''; });
+  document.getElementById('addModal').classList.add('open');
+}
+function closeAddModal(){document.getElementById('addModal').classList.remove('open');editingId=null;}
 
 function previewImg(input){
   if(!input.files||!input.files[0])return;
@@ -863,17 +1160,36 @@ async function saveProduct(){
   const btn=document.querySelector('.btn-save');
   btn.textContent='⏳ Kaydediliyor…';btn.disabled=true;
   try{
-    let imgUrl=null;
+    let imgUrl=currentImgUrl||null;
     if(imgFile) imgUrl=await uploadToCloudinary(imgFile);
-    await addDoc(collection(db,PAGE_COL),{
-      brand:activeBrand.slug,name,
-      desc:document.getElementById('f-desc').value.trim(),
-      cat:document.getElementById('f-cat').value,
-      price:document.getElementById('f-price').value.trim(),
-      img:imgUrl,createdAt:Date.now(),
-    });
+    const specs={};
+    const specMap={sistem:'f-sistem',kalibre:'f-kalibre',sarjorKapasitesi:'f-sarjor',namluBoyu:'f-namlu',agirlik:'f-agirlik',fisekYatagi:'f-fisekyatagi',mobilSok:'f-mobilsok',renk:'f-renk'};
+    Object.entries(specMap).forEach(([key,id])=>{ const el=document.getElementById(id); if(el&&el.value.trim()) specs[key]=el.value.trim(); });
+    const maincat = document.getElementById('f-maincat').value;
+    const subcat = document.getElementById('f-subcat').value;
+    const catValue = maincat + '|' + subcat;
+    if(editingId){
+      await updateDoc(doc(db,PAGE_COL,editingId),{
+        name,
+        desc:document.getElementById('f-desc').value.trim(),
+        cat:catValue,
+        price:document.getElementById('f-price').value.trim(),
+        ...(imgUrl!==undefined?{img:imgUrl}:{}),
+        ...specs,
+        updatedAt:Date.now(),
+      });
+    } else {
+      await addDoc(collection(db,PAGE_COL),{
+        brand:activeBrand.slug,name,
+        desc:document.getElementById('f-desc').value.trim(),
+        cat:catValue,
+        price:document.getElementById('f-price').value.trim(),
+        img:imgUrl,createdAt:Date.now(),
+        ...specs,
+      });
+    }
     closeAddModal();
-    await loadProducts(activeBrand.slug);
+    if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
   }catch(e){alert('Hata: '+e.message);}
   finally{btn.textContent='Ürünü Kaydet';btn.disabled=false;}
 }
@@ -898,44 +1214,35 @@ function openLightbox(src,name){
 }
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeLightbox();['addModal','contactModal','adminModal'].forEach(id=>document.getElementById(id).classList.remove('open'));}
+  if(e.key==='Escape'){closeLightbox();['addModal','contactModal'].forEach(id=>document.getElementById(id).classList.remove('open'));}
 });
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(el=>{
   el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 });
 
-function hashPass(s){return btoa(unescape(encodeURIComponent(s))).split('').reverse().join('');}
-function isAdmin(){return sessionStorage.getItem('bag_admin')===hashPass('furkan.0706');}
+function isAdmin(){return !!auth.currentUser;}
 function openAdminModal(){
-  if(isAdmin()){logoutAdmin();return;}
-  document.getElementById('adminPwd').value='';
-  document.getElementById('adminErr').style.display='none';
-  document.getElementById('adminModal').classList.add('open');
-  setTimeout(()=>document.getElementById('adminPwd').focus(),100);
+  // index.html'e yönlendir — giriş oradan yapılıyor
+  window.location.href='index.html#admin-login';
 }
-function checkAdmin(){
-  if(hashPass(document.getElementById('adminPwd').value)===hashPass('furkan.0706')){
-    sessionStorage.setItem('bag_admin',hashPass('furkan.0706'));
-    closeModal('adminModal');setAdminUI(true);
-  }else{document.getElementById('adminErr').style.display='block';document.getElementById('adminPwd').value='';}
-}
-function logoutAdmin(){sessionStorage.removeItem('bag_admin');setAdminUI(false);}
+function logoutAdmin(){signOut(auth);}
+window.selectBrand=selectBrand;window.filterSidebar=filterSidebar;window.setCat=setCat;window.setCatFilter=setCatFilter;
+window.applyPriceFilter=applyPriceFilter;window.clearPriceFilter=clearPriceFilter;
+window.filterProducts=filterProducts;window.applySort=applySort;window.openAddModal=openAddModal;
+window.closeAddModal=closeAddModal;window.previewImg=previewImg;window.saveProduct=saveProduct;
+window.deleteProduct=deleteProduct;window.openContact=openContact;window.openLightbox=openLightbox;
+window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.logoutAdmin=logoutAdmin;
+window.openEditModal=openEditModal;
+window.updateSubCatOptions=function(){}; // placeholder, options are static
 function setAdminUI(on){
   document.getElementById('adminLock').style.display=on?'none':'flex';
   document.getElementById('adminLogout').style.display=on?'block':'none';
   document.getElementById('addBtn').classList.toggle('visible',on);
   document.querySelectorAll('.btn-del').forEach(b=>b.classList.toggle('visible',on));
+  document.querySelectorAll('.btn-edit').forEach(b=>b.classList.toggle('visible',on));
 }
-setAdminUI(isAdmin());
-
-window.selectBrand=selectBrand;window.filterSidebar=filterSidebar;window.setCat=setCat;
-window.applyPriceFilter=applyPriceFilter;window.clearPriceFilter=clearPriceFilter;
-window.filterProducts=filterProducts;window.applySort=applySort;window.openAddModal=openAddModal;
-window.closeAddModal=closeAddModal;window.previewImg=previewImg;window.saveProduct=saveProduct;
-window.deleteProduct=deleteProduct;window.openContact=openContact;window.openLightbox=openLightbox;
-window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.openAdminModal=openAdminModal;
-window.checkAdmin=checkAdmin;window.logoutAdmin=logoutAdmin;
+onAuthStateChanged(auth,(user)=>{setAdminUI(!!user);});
 
 // ── SAYFA AÇILINCA TÜM ÜRÜNLERİ YÜKLEYİP GÖSTER ──
 async function loadAllProducts() {

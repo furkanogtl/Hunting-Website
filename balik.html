@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Balık Avı — Başkent Av Galerisi</title>
+<meta name="description" content="Olta, makine, yem, misina ve tüm balıkçılık ekipmanları — Başkent Av Galerisi, Finike/Antalya." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -122,6 +124,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   border-radius:8px;overflow:hidden;
   transition:box-shadow .2s,transform .2s;
   position:relative;
+  display:flex;flex-direction:column;
 }
 .product-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.12);transform:translateY(-2px);}
 
@@ -147,7 +150,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 }
 .card-img:hover .zoom-btn{opacity:1;}
 
-.card-body{padding:10px 12px;}
+.card-body{padding:10px 12px;flex:1;}
 .card-brand{font-size:.68rem;color:#4a7a38;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:"Cinzel",serif;}
 .card-name{font-size:.95rem;font-weight:600;color:#1c3d13;margin-top:2px;line-height:1.35;font-family:"Playfair Display",serif;}
 .card-cat{font-size:.72rem;color:var(--grey2);margin-top:3px;}
@@ -171,6 +174,13 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 }
 .btn-del:hover{background:#fdd;}
 .btn-del.visible{display:block;}
+.btn-edit{
+  padding:8px 10px;background:#e8f4ff;color:#1a6bb5;
+  border:1px solid #c5dff8;border-radius:6px;cursor:pointer;
+  font-size:.8rem;display:none;transition:background .2s;
+}
+.btn-edit:hover{background:#c5dff8;}
+.btn-edit.visible{display:block;}
 
 /* Boş durum */
 .empty-state{grid-column:1/-1;text-align:center;padding:80px 20px;}
@@ -194,7 +204,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 /* ── MODAL ── */
 .modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--white);border-radius:12px;padding:28px;max-width:460px;width:92%;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.2);}
+.modal{background:var(--white);border-radius:12px;padding:28px;max-width:460px;width:92%;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto;}
 .modal h3{font-size:1.15rem;font-weight:900;color:var(--dark);margin-bottom:4px;}
 .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.3rem;color:var(--grey2);cursor:pointer;}
 .modal-close:hover{color:var(--dark);}
@@ -495,7 +505,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 
     <div class="toolbar">
       <div class="toolbar-left">
-        <div class="toolbar-title" id="toolbarTitle">Av Tüfekleri</div>
+        <div class="toolbar-title" id="toolbarTitle">Balık Avı</div>
         <div class="toolbar-count" id="toolbarCount"></div>
       </div>
       <div class="toolbar-right">
@@ -534,7 +544,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <button class="modal-close" onclick="closeAddModal()">✕</button>
-    <h3>Yeni Ürün Ekle</h3>
+    <h3 id="addModalTitle">Yeni Ürün Ekle</h3>
     <p style="font-size:.8rem;color:#888;margin-top:3px;">Marka: <strong id="addModalBrand" style="color:var(--green);">—</strong></p>
     <div class="form-row">
       <label>Model Adı *</label>
@@ -548,12 +558,14 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
       <div class="form-row" style="flex:1;">
         <label>Kategori</label>
         <select id="f-cat">
-          <option value="Sıfır Tüfek">Sıfır Tüfek</option>
-          <option value="İkinci El">İkinci El</option>
-          <option value="Yarı Otomatik">Yarı Otomatik</option>
-          <option value="Çift Namlulu">Çift Namlulu</option>
-          <option value="Sürgülü">Sürgülü</option>
-          <option value="Tek Namlulu">Tek Namlulu</option>
+          <option value="Olta & Makine">Olta & Makine</option>
+          <option value="Yem & Yapay Yem">Yem & Yapay Yem</option>
+          <option value="İğne & Kanca">İğne & Kanca</option>
+          <option value="Misina & Bağ">Misina & Bağ</option>
+          <option value="Kepçe & Sepet">Kepçe & Sepet</option>
+          <option value="Çanta & Kutu">Çanta & Kutu</option>
+          <option value="Giyim & Ekipman">Giyim & Ekipman</option>
+          <option value="Tekne & Ekipman">Tekne & Ekipman</option>
         </select>
       </div>
       <div class="form-row" style="flex:1;">
@@ -591,21 +603,6 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   </div>
 </div>
 
-<!-- ADMİN GİRİŞ MODAL -->
-<div class="modal-overlay" id="adminModal">
-  <div class="modal admin-modal">
-    <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
-    <div class="a-icon">🔐</div>
-    <h3>Yönetici Girişi</h3>
-    <p style="font-size:.82rem;color:#888;margin-top:4px;">Şifrenizi girin</p>
-    <input class="admin-pwd" type="password" id="adminPwd" placeholder="••••••••"
-      onkeydown="if(event.key==='Enter')checkAdmin()"/>
-    <div class="admin-err" id="adminErr">❌ Hatalı şifre!</div>
-    <button class="btn-login" onclick="checkAdmin()">Giriş Yap</button>
-  </div>
-</div>
-
-
 <!-- FOOTER - Ana sayfayla aynı -->
 <footer style="
   background:#1c3d13; padding:28px 48px;
@@ -633,7 +630,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",
@@ -644,6 +642,7 @@ const firebaseConfig = {
   appId:"1:248185539120:web:cc66fbaf497fe47b13fbf5"
 };
 const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
 const db=getFirestore(app);
 const PAGE_COL='balik';
 
@@ -681,7 +680,7 @@ const brands = [
   {name:"Drennan",flag:"🇬🇧",slug:"drennan"},
 ];
 
-let activeBrand=null,activeCat='',minP=null,maxP=null,imgFile=null,allProducts=[],brandCounts={};
+let activeBrand=null,activeCat='',minP=null,maxP=null,imgFile=null,allProducts=[],brandCounts={},editingId=null,currentImgUrl=null;
 
 async function loadProducts(slug){
   document.getElementById('productGrid').innerHTML='<div class="empty-state"><div style="font-size:2rem">⏳</div><p>Yükleniyor…</p></div>';
@@ -822,6 +821,7 @@ function renderProducts(list){
       </div>
       <div class="card-footer">
         <a class="btn-info" href="urun-detay.html?col=balik&id=${p.id}" style="text-decoration:none;text-align:center;">🔍 Detay</a>
+        <button class="btn-edit ${isAdmin()?'visible':''}" onclick="openEditModal('${p.id}')">✏️</button>
         <button class="btn-del ${isAdmin()?'visible':''}" onclick="deleteProduct('${p.id}')">🗑</button>
       </div>
     </div>`;
@@ -829,17 +829,39 @@ function renderProducts(list){
 }
 
 function openAddModal(){
-  if(!isAdmin()){openAdminModal();return;}
+  if(!isAdmin()){window.location.href="index.html";return;}
   if(!activeBrand){alert('Önce sol panelden bir marka seçin!');return;}
+  editingId=null;
+  document.getElementById('addModalTitle').textContent='Yeni Ürün Ekle';
   document.getElementById('f-name').value='';
   document.getElementById('f-desc').value='';
   document.getElementById('f-price').value='';
   document.getElementById('f-cat').value='Olta & Makine';
   document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
+  imgFile=null;currentImgUrl=null;
+  document.getElementById('addModal').classList.add('open');
+}
+function openEditModal(docId){
+  if(!isAdmin())return;
+  const p=allProducts.find(x=>x.id===docId);
+  if(!p)return;
+  editingId=docId;
+  document.getElementById('addModalTitle').textContent='Ürünü Düzenle';
+  document.getElementById('addModalBrand').textContent=activeBrand?activeBrand.name:(brands.find(b=>b.slug===p.brand)||{name:p.brand||''}).name;
+  document.getElementById('f-name').value=p.name||'';
+  document.getElementById('f-desc').value=p.desc||'';
+  document.getElementById('f-price').value=p.price||'';
+  document.getElementById('f-cat').value=p.cat||'Olta & Makine';
+  currentImgUrl=p.img||null;
+  if(p.img){
+    document.getElementById('imgDrop').innerHTML=`<img src="${p.img}"/>`;
+  } else {
+    document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
+  }
   imgFile=null;
   document.getElementById('addModal').classList.add('open');
 }
-function closeAddModal(){document.getElementById('addModal').classList.remove('open');}
+function closeAddModal(){document.getElementById('addModal').classList.remove('open');editingId=null;}
 
 function previewImg(input){
   if(!input.files||!input.files[0])return;
@@ -856,17 +878,28 @@ async function saveProduct(){
   const btn=document.querySelector('.btn-save');
   btn.textContent='⏳ Kaydediliyor…';btn.disabled=true;
   try{
-    let imgUrl=null;
+    let imgUrl=currentImgUrl||null;
     if(imgFile) imgUrl=await uploadToCloudinary(imgFile);
-    await addDoc(collection(db,PAGE_COL),{
-      brand:activeBrand.slug,name,
-      desc:document.getElementById('f-desc').value.trim(),
-      cat:document.getElementById('f-cat').value,
-      price:document.getElementById('f-price').value.trim(),
-      img:imgUrl,createdAt:Date.now(),
-    });
+    if(editingId){
+      await updateDoc(doc(db,PAGE_COL,editingId),{
+        name,
+        desc:document.getElementById('f-desc').value.trim(),
+        cat:document.getElementById('f-cat').value,
+        price:document.getElementById('f-price').value.trim(),
+        ...(imgUrl!==undefined?{img:imgUrl}:{}),
+        updatedAt:Date.now(),
+      });
+    } else {
+      await addDoc(collection(db,PAGE_COL),{
+        brand:activeBrand.slug,name,
+        desc:document.getElementById('f-desc').value.trim(),
+        cat:document.getElementById('f-cat').value,
+        price:document.getElementById('f-price').value.trim(),
+        img:imgUrl,createdAt:Date.now(),
+      });
+    }
     closeAddModal();
-    await loadProducts(activeBrand.slug);
+    if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
   }catch(e){alert('Hata: '+e.message);}
   finally{btn.textContent='Ürünü Kaydet';btn.disabled=false;}
 }
@@ -891,44 +924,34 @@ function openLightbox(src,name){
 }
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeLightbox();['addModal','contactModal','adminModal'].forEach(id=>document.getElementById(id).classList.remove('open'));}
+  if(e.key==='Escape'){closeLightbox();['addModal','contactModal'].forEach(id=>document.getElementById(id).classList.remove('open'));}
 });
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(el=>{
   el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 });
 
-function hashPass(s){return btoa(unescape(encodeURIComponent(s))).split('').reverse().join('');}
-function isAdmin(){return sessionStorage.getItem('bag_admin')===hashPass('furkan.0706');}
+function isAdmin(){return !!auth.currentUser;}
 function openAdminModal(){
-  if(isAdmin()){logoutAdmin();return;}
-  document.getElementById('adminPwd').value='';
-  document.getElementById('adminErr').style.display='none';
-  document.getElementById('adminModal').classList.add('open');
-  setTimeout(()=>document.getElementById('adminPwd').focus(),100);
+  // index.html'e yönlendir — giriş oradan yapılıyor
+  window.location.href='index.html#admin-login';
 }
-function checkAdmin(){
-  if(hashPass(document.getElementById('adminPwd').value)===hashPass('furkan.0706')){
-    sessionStorage.setItem('bag_admin',hashPass('furkan.0706'));
-    closeModal('adminModal');setAdminUI(true);
-  }else{document.getElementById('adminErr').style.display='block';document.getElementById('adminPwd').value='';}
-}
-function logoutAdmin(){sessionStorage.removeItem('bag_admin');setAdminUI(false);}
-function setAdminUI(on){
-  document.getElementById('adminLock').style.display=on?'none':'flex';
-  document.getElementById('adminLogout').style.display=on?'block':'none';
-  document.getElementById('addBtn').classList.toggle('visible',on);
-  document.querySelectorAll('.btn-del').forEach(b=>b.classList.toggle('visible',on));
-}
-setAdminUI(isAdmin());
-
+function logoutAdmin(){signOut(auth);}
 window.selectBrand=selectBrand;window.filterSidebar=filterSidebar;window.setCat=setCat;
 window.applyPriceFilter=applyPriceFilter;window.clearPriceFilter=clearPriceFilter;
 window.filterProducts=filterProducts;window.applySort=applySort;window.openAddModal=openAddModal;
 window.closeAddModal=closeAddModal;window.previewImg=previewImg;window.saveProduct=saveProduct;
 window.deleteProduct=deleteProduct;window.openContact=openContact;window.openLightbox=openLightbox;
-window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.openAdminModal=openAdminModal;
-window.checkAdmin=checkAdmin;window.logoutAdmin=logoutAdmin;
+window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.logoutAdmin=logoutAdmin;
+window.openEditModal=openEditModal;
+function setAdminUI(on){
+  document.getElementById('adminLock').style.display=on?'none':'flex';
+  document.getElementById('adminLogout').style.display=on?'block':'none';
+  document.getElementById('addBtn').classList.toggle('visible',on);
+  document.querySelectorAll('.btn-del').forEach(b=>b.classList.toggle('visible',on));
+  document.querySelectorAll('.btn-edit').forEach(b=>b.classList.toggle('visible',on));
+}
+onAuthStateChanged(auth,(user)=>{setAdminUI(!!user);});
 
 // ── SAYFA AÇILINCA TÜM ÜRÜNLERİ YÜKLEYİP GÖSTER ──
 async function loadAllProducts() {
