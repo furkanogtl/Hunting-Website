@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Av Tüfekleri — Başkent Av Galerisi</title>
 <meta name="description" content="Beretta, Benelli, Browning, Hatsan ve daha fazlası. Sıfır ve ikinci el av tüfekleri — Başkent Av Galerisi, Finike/Antalya." />
+<meta property="og:title" content="Av Tüfekleri — Başkent Av Galerisi" />
+<meta property="og:description" content="Beretta, Benelli, Browning, Hatsan ve daha fazlası. Sıfır ve ikinci el av tüfekleri." />
+<meta property="og:image" content="https://calm-cranachan-71cada.netlify.app/tufek.png" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="tr_TR" />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
@@ -65,118 +70,118 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 
 /* ── SOL PANEL ── */
 .sidebar{width:240px;flex-shrink:0;margin-right:16px;}
-.sidebar-box{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px;}
-.sidebar-title{background:#2e5c22;color:#b8e08a;padding:12px 16px;font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-family:"Cinzel",serif;}
-.sidebar-sub-title{padding:12px 16px 4px;font-size:.8rem;font-weight:800;color:var(--dark);text-transform:uppercase;letter-spacing:.04em;}
-.sidebar-link{display:block;padding:8px 16px 8px 24px;font-size:.83rem;color:var(--grey);text-decoration:none;border-left:3px solid transparent;transition:all .15s;}
+.sidebar-box{background:var(--white);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px;box-shadow:0 4px 20px rgba(46,92,34,.06);}
+.sidebar-title{background:#2e5c22;color:#b8e08a;padding:12px 16px;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-family:"Cinzel",serif;}
+.sidebar-sub-title{padding:12px 16px 4px;font-size:.72rem;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:.1em;font-family:"Cinzel",serif;}
+.sidebar-link{display:block;padding:8px 16px 8px 24px;font-size:.85rem;font-family:'Lora',serif;color:var(--grey);text-decoration:none;border-left:3px solid transparent;transition:all .15s;}
 .sidebar-link:hover{color:var(--green);background:var(--greenlt);border-left-color:var(--green);}
 .sidebar-link.active{color:var(--green);font-weight:700;background:var(--greenlt);border-left-color:var(--green);}
 
 .brand-search{padding:10px 12px;border-bottom:1px solid var(--border);}
-.brand-search input{width:100%;border:1px solid var(--border);border-radius:20px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:.82rem;outline:none;transition:border-color .2s;}
+.brand-search input{width:100%;border:1px solid var(--border);border-radius:20px;padding:7px 12px;font-family:'Lora',serif;font-size:.82rem;outline:none;transition:border-color .2s;}
 .brand-search input:focus{border-color:var(--green);}
 
 .brand-item{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-left:3px solid transparent;transition:all .15s;}
 .brand-item:hover{background:var(--greenlt);}
 .brand-item.active{background:var(--greenlt);border-left-color:var(--green);}
 .brand-item input[type=radio]{accent-color:var(--green);width:15px;height:15px;flex-shrink:0;}
-.brand-item label{flex:1;font-size:.83rem;color:var(--grey);cursor:pointer;}
+.brand-item label{flex:1;font-size:.83rem;font-family:'Lora',serif;color:var(--grey);cursor:pointer;}
 .brand-item.active label{color:var(--green);font-weight:700;}
-.brand-count{font-size:.72rem;color:var(--grey2);background:#f0f0f0;padding:1px 7px;border-radius:10px;}
+.brand-count{font-size:.68rem;font-family:"Cinzel",serif;color:var(--grey2);background:var(--offwhite);padding:2px 8px;border-radius:10px;}
 .brand-list-inner{max-height:320px;overflow-y:auto;}
 
 /* Fiyat filtresi */
 .price-filter{padding:12px 14px;}
 .price-inputs{display:flex;gap:6px;align-items:center;margin-top:8px;}
-.price-inputs input{flex:1;border:1px solid var(--border);border-radius:6px;padding:7px 8px;font-family:'Nunito',sans-serif;font-size:.8rem;outline:none;min-width:0;}
+.price-inputs input{flex:1;border:1px solid var(--border);border-radius:4px;padding:7px 8px;font-family:'Lora',serif;font-size:.8rem;outline:none;min-width:0;}
 .price-inputs input:focus{border-color:var(--green);}
 .price-inputs span{color:var(--grey2);font-size:.8rem;flex-shrink:0;}
-.btn-filter{display:block;width:100%;margin-top:8px;padding:8px;background:var(--green);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;transition:background .2s;}
+.btn-filter{display:block;width:100%;margin-top:8px;padding:9px;background:var(--green);color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:'Cinzel',serif;font-weight:700;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;transition:background .2s;}
 .btn-filter:hover{background:var(--green2);}
 
 /* ── SAĞ İÇERİK ── */
 .main{flex:1;min-width:0;}
 
 /* Toolbar */
-.toolbar{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.toolbar{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:0 4px 20px rgba(46,92,34,.06);}
 .toolbar-left{display:flex;align-items:center;gap:8px;}
-.toolbar-title{font-size:1.2rem;font-weight:700;color:#1c3d13;font-family:"Playfair Display",serif;}
-.toolbar-count{font-size:.8rem;color:var(--grey2);}
+.toolbar-title{font-size:1.25rem;font-weight:700;color:#1c3d13;font-family:"Playfair Display",serif;}
+.toolbar-count{font-size:.78rem;font-family:'Lora',serif;font-style:italic;color:var(--grey2);}
 .toolbar-right{display:flex;align-items:center;gap:8px;}
-.sort-select{border:1px solid var(--border);border-radius:6px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:.82rem;outline:none;cursor:pointer;color:var(--dark);}
+.sort-select{border:1px solid var(--border);border-radius:4px;padding:7px 12px;font-family:'Lora',serif;font-size:.82rem;outline:none;cursor:pointer;color:var(--dark);}
 .sort-select:focus{border-color:var(--green);}
 .btn-add-admin{
   display:none;align-items:center;gap:6px;
   background:var(--gold);color:#fff;border:none;
-  padding:8px 16px;border-radius:6px;cursor:pointer;
-  font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;
+  padding:9px 18px;border-radius:4px;cursor:pointer;
+  font-family:'Cinzel',serif;font-weight:700;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
   transition:background .2s;
 }
 .btn-add-admin:hover{background:#c8880e;}
 .btn-add-admin.visible{display:inline-flex;}
 
 /* Ürün grid */
-.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
 
 /* Ürün kartı */
 .product-card{
   background:var(--white);border:1px solid var(--border);
-  border-radius:8px;overflow:hidden;
-  transition:box-shadow .2s,transform .2s;
+  border-radius:4px;overflow:hidden;
+  transition:box-shadow .3s,transform .3s;
   position:relative;
   display:flex;flex-direction:column;
 }
-.product-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.12);transform:translateY(-2px);}
+.product-card:hover{box-shadow:0 16px 40px rgba(46,92,34,.18);transform:translateY(-4px);}
 
 .card-badges{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;z-index:2;}
-.badge{font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;}
-.badge-new{background:var(--green);color:#fff;}
-.badge-second{background:#e07820;color:#fff;}
+.badge{font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.08em;}
+.badge-new{background:rgba(74,122,56,.88);color:#fff;}
+.badge-second{background:rgba(200,168,50,.9);color:#fff;}
 
 .card-img{
   height:170px;background:#f8f8f8;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
-  cursor:zoom-in;position:relative;
+  cursor:pointer;position:relative;
 }
-.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .35s;}
-.card-img:hover img{transform:scale(1.06);}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.card-img:hover img{transform:scale(1.07);}
 .card-img .no-img{font-size:3rem;opacity:.15;}
 .zoom-btn{
   position:absolute;bottom:8px;right:8px;
-  background:rgba(0,0,0,.45);color:#fff;border:none;
+  background:rgba(20,50,12,.55);color:#fff;border:none;
   border-radius:50%;width:28px;height:28px;font-size:.75rem;
   display:flex;align-items:center;justify-content:center;
   opacity:0;transition:opacity .2s;cursor:pointer;
 }
 .card-img:hover .zoom-btn{opacity:1;}
 
-.card-body{padding:10px 12px;flex:1;}
+.card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column;}
 .card-brand{font-size:.68rem;color:#4a7a38;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:"Cinzel",serif;}
-.card-name{font-size:.95rem;font-weight:600;color:#1c3d13;margin-top:2px;line-height:1.35;font-family:"Playfair Display",serif;}
-.card-cat{font-size:.72rem;color:var(--grey2);margin-top:3px;}
-.card-desc{font-size:.75rem;color:var(--grey2);margin-top:5px;line-height:1.4;}
-.card-price-row{margin-top:8px;display:flex;align-items:baseline;gap:6px;}
-.card-price{font-size:1.05rem;font-weight:900;color:var(--green);}
-.card-price-note{font-size:.7rem;color:var(--grey2);}
+.card-name{font-size:.95rem;font-weight:600;color:#1c3d13;margin-top:3px;line-height:1.35;font-family:"Playfair Display",serif;}
+.card-cat{font-size:.72rem;font-family:'Lora',serif;color:var(--grey2);margin-top:3px;}
+.card-desc{font-size:.78rem;font-family:'Lora',serif;color:var(--grey2);margin-top:5px;line-height:1.5;}
+.card-price-row{margin-top:auto;padding-top:8px;display:flex;align-items:baseline;gap:6px;}
+.card-price{font-size:1.05rem;font-weight:400;letter-spacing:.01em;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;color:var(--green);}
+.card-price-note{font-size:.7rem;font-family:'Lora',serif;font-style:italic;color:var(--grey2);}
 
-.card-footer{padding:8px 12px 12px;display:flex;gap:6px;}
+.card-footer{padding:8px 14px 14px;display:flex;gap:6px;}
 .btn-info{
-  flex:1;padding:8px;background:var(--green);color:#fff;
-  border:none;border-radius:6px;cursor:pointer;
-  font-family:'Nunito',sans-serif;font-weight:700;font-size:.78rem;
+  flex:1;padding:9px;background:var(--green);color:#fff;
+  border:none;border-radius:4px;cursor:pointer;
+  font-family:'Cinzel',serif;font-weight:700;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
   transition:background .2s;
 }
 .btn-info:hover{background:var(--green2);}
 .btn-del{
   padding:8px 10px;background:#fef0f0;color:var(--red);
-  border:1px solid #fdd;border-radius:6px;cursor:pointer;
+  border:1px solid #fdd;border-radius:4px;cursor:pointer;
   font-size:.8rem;display:none;transition:background .2s;
 }
 .btn-del:hover{background:#fdd;}
 .btn-del.visible{display:block;}
 .btn-edit{
   padding:8px 10px;background:#e8f4ff;color:#1a6bb5;
-  border:1px solid #c5dff8;border-radius:6px;cursor:pointer;
+  border:1px solid #c5dff8;border-radius:4px;cursor:pointer;
   font-size:.8rem;display:none;transition:background .2s;
 }
 .btn-edit:hover{background:#c5dff8;}
@@ -214,7 +219,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   align-items:center;justify-content:center;flex-direction:column;
 }
 #lightbox.open{display:flex;}
-#lightbox img{max-width:88vw;max-height:80vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 48px rgba(0,0,0,.6);animation:lbIn .22s ease;}
+#lightbox img{max-width:88vw;max-height:80vh;object-fit:contain;border-radius:4px;box-shadow:0 8px 48px rgba(0,0,0,.6);animation:lbIn .22s ease;}
 @keyframes lbIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 .lb-caption{margin-top:14px;color:rgba(255,255,255,.7);font-size:.95rem;font-weight:600;}
 .lb-close{position:fixed;top:18px;right:24px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.4rem;width:40px;height:40px;border-radius:50%;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;}
@@ -223,32 +228,32 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 /* ── MODAL ── */
 .modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--white);border-radius:12px;padding:28px;max-width:460px;width:92%;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto;}
-.modal h3{font-size:1.15rem;font-weight:900;color:var(--dark);margin-bottom:4px;}
-.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.3rem;color:var(--grey2);cursor:pointer;}
+.modal{background:var(--white);border-radius:6px;padding:30px;max-width:460px;width:92%;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto;}
+.modal h3{font-size:1.25rem;font-weight:900;font-family:"Playfair Display",serif;color:var(--dark);margin-bottom:4px;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.3rem;color:var(--grey2);cursor:pointer;}
 .modal-close:hover{color:var(--dark);}
 .form-row{display:flex;flex-direction:column;gap:4px;margin-top:12px;}
-.form-row label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);}
+.form-row label{font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--grey);}
 .form-row input,.form-row textarea,.form-row select{
-  border:1.5px solid var(--border);border-radius:7px;
-  padding:9px 12px;font-family:'Nunito',sans-serif;font-size:.88rem;
+  border:1.5px solid var(--border);border-radius:4px;
+  padding:9px 12px;font-family:'Lora',serif;font-size:.88rem;
   color:var(--dark);outline:none;transition:border-color .2s;background:#fafafa;
 }
 .form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:var(--green);background:#fff;}
 .form-row textarea{resize:vertical;min-height:70px;}
 .img-drop{
   width:100%;height:120px;border:2px dashed var(--border);
-  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  border-radius:4px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;background:#fafafa;overflow:hidden;transition:border-color .2s;
   font-size:.82rem;color:var(--grey2);gap:8px;
 }
 .img-drop:hover{border-color:var(--green);}
 .img-drop img{width:100%;height:100%;object-fit:cover;}
 .btn-save{
-  width:100%;margin-top:16px;padding:12px;
+  width:100%;margin-top:16px;padding:13px;
   background:var(--green);color:#fff;border:none;
-  border-radius:8px;cursor:pointer;
-  font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;
+  border-radius:4px;cursor:pointer;
+  font-family:'Cinzel',serif;font-weight:700;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
   transition:background .2s;
 }
 .btn-save:hover{background:var(--green2);}
@@ -256,13 +261,13 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 /* İletişim modal */
 .contact-wrap{text-align:center;padding-top:8px;}
 .contact-wrap .c-icon{font-size:2.5rem;margin-bottom:10px;}
-.c-name{font-size:.72rem;font-weight:800;text-transform:uppercase;color:var(--grey2);letter-spacing:.08em;margin-top:14px;}
-.c-phone{display:block;font-size:1.25rem;font-weight:900;color:var(--green);text-decoration:none;margin-top:2px;}
+.c-name{font-size:.6rem;font-family:'Cinzel',serif;font-weight:700;text-transform:uppercase;color:var(--grey2);letter-spacing:.14em;margin-top:14px;}
+.c-phone{display:block;font-size:1.3rem;font-family:"Playfair Display",serif;font-weight:700;color:var(--green);text-decoration:none;margin-top:4px;}
 .c-phone:hover{color:var(--green2);}
 .c-wa{
   display:inline-flex;align-items:center;gap:8px;margin-top:16px;
   background:#25d366;color:#fff;text-decoration:none;
-  padding:10px 24px;border-radius:30px;font-weight:800;font-size:.85rem;
+  padding:11px 26px;border-radius:4px;font-family:'Cinzel',serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
   transition:background .2s;
 }
 .c-wa:hover{background:#1da851;}
@@ -279,8 +284,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 #adminLock:hover{background:rgba(26,107,47,.15);color:var(--green);}
 #adminLogout{
   display:none;position:fixed;bottom:20px;left:20px;z-index:300;
-  padding:7px 14px;border-radius:20px;background:var(--green);color:#fff;
-  cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:.75rem;
+  padding:8px 16px;border-radius:20px;background:var(--green);color:#fff;
+  cursor:pointer;font-family:'Cinzel',serif;font-weight:700;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;
   box-shadow:0 4px 12px rgba(26,107,47,.3);
 }
 
@@ -288,18 +293,18 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 .admin-modal{text-align:center;}
 .admin-modal .a-icon{font-size:2.2rem;margin-bottom:10px;}
 .admin-pwd{
-  width:100%;border:2px solid var(--border);border-radius:8px;
-  padding:11px 14px;font-family:'Nunito',sans-serif;font-size:.95rem;
+  width:100%;border:2px solid var(--border);border-radius:4px;
+  padding:11px 14px;font-family:'Lora',serif;font-size:.95rem;
   text-align:center;letter-spacing:.12em;outline:none;transition:border-color .2s;
   margin-top:8px;
 }
 .admin-pwd:focus{border-color:var(--green);}
 .admin-err{color:var(--red);font-size:.78rem;margin-top:6px;display:none;}
 .btn-login{
-  width:100%;margin-top:12px;padding:12px;
-  background:var(--green);color:#fff;border:none;border-radius:8px;
-  cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;
-  font-size:.88rem;transition:background .2s;
+  width:100%;margin-top:12px;padding:13px;
+  background:var(--green);color:#fff;border:none;border-radius:4px;
+  cursor:pointer;font-family:'Cinzel',serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  font-size:.78rem;transition:background .2s;
 }
 .btn-login:hover{background:var(--green2);}
 
@@ -375,7 +380,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   display: none;
   align-items: center; gap: 8px;
   background: var(--forest); color: #fff;
-  border: none; border-radius: 6px;
+  border: none; border-radius: 4px;
   padding: 10px 18px; font-family: 'Cinzel', serif;
   font-size: .75rem; letter-spacing: .12em;
   text-transform: uppercase; cursor: pointer;
@@ -388,10 +393,11 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   .main-nav { padding: 14px 16px !important; }
 
   /* Sidebar as slide-in drawer */
+  .sidebar.reveal { opacity: 1 !important; transform: none !important; }
   .sidebar {
     display: block !important;
     position: fixed !important; top: 0; left: -280px; bottom: 0;
-    width: 275px !important; z-index: 140;
+    width: 275px !important; z-index: 140 !important;
     background: var(--white); overflow-y: auto;
     transition: left .3s ease; box-shadow: 4px 0 24px rgba(0,0,0,.2);
     padding-top: 16px; margin-right: 0 !important;
@@ -400,7 +406,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   .mobile-filter-btn { display: flex !important; }
 
   .page { padding: 0 10px !important; flex-direction: column !important; }
-  .main { width: 100% !important; }
+  .main { width: 100% !important; transition: transform .3s ease; }
+  .sidebar.open ~ .main { transform: translateX(230px); }
 
   /* Toolbar */
   .toolbar { flex-direction: column !important; align-items: stretch !important; gap: 8px; padding: 10px !important; }
@@ -443,6 +450,21 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   position: relative;
   z-index: 1;
 }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── SKELETON LOADER ── */
+@keyframes skelShimmer { 0%{background-position:-200% 0;} 100%{background-position:200% 0;} }
+.skel-card{background:var(--white);border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;}
+.skel-shimmer{background:linear-gradient(90deg,#e8ede4 25%,#f4f7f1 37%,#e8ede4 63%);background-size:400% 100%;animation:skelShimmer 1.4s ease infinite;border-radius:4px;}
+.skel-img{height:170px;border-radius:0;}
+.skel-line{height:10px;margin-bottom:8px;}
+.skel-line.w40{width:40%;}
+.skel-line.w80{height:14px;width:80%;}
+.skel-line.w60{width:60%;}
+.skel-btn{height:32px;width:100%;}
 
 </style>
 </head>
@@ -554,7 +576,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   <button class="mobile-filter-btn" onclick="toggleSidebar()">☰ Filtrele / Markalar</button>
 
 <!-- SOL PANEL -->
-  <aside class="sidebar">
+  <aside class="sidebar reveal">
 
     <!-- Kategori filtresi -->
     <div class="sidebar-box">
@@ -601,7 +623,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
     <div class="sidebar-box">
       <div class="sidebar-title">Tüm Markalar</div>
       <div class="brand-search">
-        <input type="text" id="brandSearchInput" placeholder="🔍 Marka ara…" oninput="filterSidebar(this.value)"/>
+        <input type="text" id="brandSearchInput" placeholder="Marka ara…" oninput="filterSidebar(this.value)"/>
       </div>
       <div class="brand-list-inner" id="brandListEl"></div>
     </div>
@@ -623,7 +645,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   </aside>
 
   <!-- SAĞ İÇERİK -->
-  <div class="main">
+  <div class="main reveal">
 
     <div class="toolbar">
       <div class="toolbar-left">
@@ -631,8 +653,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
         <div class="toolbar-count" id="toolbarCount"></div>
       </div>
       <div class="toolbar-right">
-        <div style="display:flex;align-items:center;background:#fff;border:1.5px solid var(--border);border-radius:6px;overflow:hidden;">
-          <input type="text" id="headerSearch" placeholder="🔍 Ürün ara…" oninput="filterProducts(this.value)"
+        <div style="display:flex;align-items:center;background:#fff;border:1.5px solid var(--border);border-radius:4px;overflow:hidden;">
+          <input type="text" id="headerSearch" placeholder="Ürün ara…" oninput="filterProducts(this.value)"
             style="border:none;padding:8px 14px;font-family:'Lora',serif;font-size:.85rem;outline:none;min-width:200px;"/>
         </div>
         <select class="sort-select" id="sortSelect" onchange="applySort()">
@@ -886,8 +908,21 @@ const brands = [
 
 let activeBrand=null,activeCat='',activeMain='',activeSub='',minP=null,maxP=null,imgFile=null,allProducts=[],brandCounts={},editingId=null,currentImgUrl=null;
 
+function skeletonGridHtml(n){
+  return Array.from({length:n}).map(()=>`
+    <div class="skel-card">
+      <div class="skel-img skel-shimmer"></div>
+      <div class="card-body">
+        <div class="skel-line w40 skel-shimmer"></div>
+        <div class="skel-line w80 skel-shimmer"></div>
+        <div class="skel-line w60 skel-shimmer"></div>
+      </div>
+      <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+    </div>`).join('');
+}
+
 async function loadProducts(slug){
-  document.getElementById('productGrid').innerHTML='<div class="empty-state"><div style="font-size:2rem">⏳</div><p>Yükleniyor…</p></div>';
+  document.getElementById('productGrid').innerHTML = skeletonGridHtml(6);
   try{
     const q=query(collection(db,PAGE_COL),where('brand','==',slug));
     const snap=await getDocs(q);
@@ -1019,7 +1054,7 @@ function applyFilters(){
 
 function parsePrice(str){
   if(!str)return 0;
-  return parseFloat(str.replace(/[^\d,.]/g,'').replace(',','.'))||0;
+  return parseFloat(str.replace(/[^\d,]/g,'').replace(',','.'))||0;
 }
 
 function applyPriceFilter(){
@@ -1064,7 +1099,7 @@ function renderProducts(list){
     if(total===0){
       grid.innerHTML=`<div class="empty-state"><div class="icon">🔫</div><p>Henüz ürün eklenmemiş.</p></div>`;
     } else {
-      grid.innerHTML=`<div class="empty-state"><div class="icon">🔍</div><p>Filtreyle eşleşen ürün bulunamadı.</p></div>`;
+      grid.innerHTML=`<div class="empty-state"><p>Filtreyle eşleşen ürün bulunamadı.</p></div>`;
     }
     return;
   }
@@ -1094,7 +1129,7 @@ function renderProducts(list){
         ${p.price?`<div class="card-price-row"><span class="card-price">${p.price}</span></div>`:'<div class="card-price-row"><span class="card-price-note">Fiyat için arayın</span></div>'}
       </div>
       <div class="card-footer">
-        <a class="btn-info" href="urun-detay.html?col=tufekler&id=${p.id}" style="text-decoration:none;text-align:center;">🔍 Detay</a>
+        <a class="btn-info" href="urun-detay.html?col=tufekler&id=${p.id}" style="text-decoration:none;text-align:center;">Detay</a>
         <button class="btn-edit ${isAdmin()?'visible':''}" onclick="openEditModal('${p.id}')">✏️</button>
         <button class="btn-del ${isAdmin()?'visible':''}" onclick="deleteProduct('${p.id}')">🗑</button>
       </div>
@@ -1234,6 +1269,7 @@ window.closeAddModal=closeAddModal;window.previewImg=previewImg;window.saveProdu
 window.deleteProduct=deleteProduct;window.openContact=openContact;window.openLightbox=openLightbox;
 window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.logoutAdmin=logoutAdmin;
 window.openEditModal=openEditModal;
+window.toggleMenu=toggleMenu;window.toggleSidebar=toggleSidebar;window.openAdminModal=openAdminModal;
 window.updateSubCatOptions=function(){}; // placeholder, options are static
 function setAdminUI(on){
   document.getElementById('adminLock').style.display=on?'none':'flex';
@@ -1247,19 +1283,8 @@ onAuthStateChanged(auth,(user)=>{setAdminUI(!!user);});
 // ── SAYFA AÇILINCA TÜM ÜRÜNLERİ YÜKLEYİP GÖSTER ──
 async function loadAllProducts() {
   const grid = document.getElementById('productGrid');
-  // Skeleton loader - yükleniyor yerine iskelet kartlar göster
-  grid.innerHTML = [1,2,3,4,5,6].map(()=>`
-    <div class="product-card" style="opacity:.4;pointer-events:none;">
-      <div class="card-img" style="background:#e8f0e8;display:flex;align-items:center;justify-content:center;">
-        <div style="width:60px;height:60px;border-radius:50%;background:#d0ddd0;"></div>
-      </div>
-      <div class="card-body">
-        <div style="height:10px;background:#e0e8e0;border-radius:4px;width:40%;margin-bottom:8px;"></div>
-        <div style="height:14px;background:#e0e8e0;border-radius:4px;width:80%;margin-bottom:6px;"></div>
-        <div style="height:10px;background:#e0e8e0;border-radius:4px;width:60%;"></div>
-      </div>
-      <div class="card-footer"><div style="height:32px;background:#e0e8e0;border-radius:6px;width:100%;"></div></div>
-    </div>`).join('');
+  // Skeleton loader - yükleniyor yerine shimmer'lı iskelet kartlar göster
+  grid.innerHTML = skeletonGridHtml(6);
   try {
     const snap = await getDocs(collection(db, PAGE_COL));
     const allDocs = snap.docs.map(d => ({id: d.id, ...d.data()}));
@@ -1294,6 +1319,12 @@ if(autoSlug) {
 
 // Her zaman tüm ürünleri yükle (marka seçili olsa da olmasa da)
 loadAllProducts();
+
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 function toggleMenu() {
   const m = document.getElementById('mobileMenu');

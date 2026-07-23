@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Yönetim Paneli — Başkent Av Galerisi</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:     #ffffff;
+      --milk:      #f8faf5;
+      --offwhite:  #eef2e8;
+      --mist:      #d6e4cc;
+      --sage:      #8fad7a;
+      --forest:    #4a7a38;
+      --pine:      #2e5c22;
+      --deep:      #1c3d13;
+      --gold:      #8aad3a;
+      --accent:    #c8a832;
+      --danger:    #b23a3a;
+      --danger-bg: rgba(178,58,58,.08);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Lora', serif;
+      background-color: var(--milk);
+      color: var(--deep);
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN ── */
+    .login-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(160deg, rgba(20,50,12,.94) 0%, rgba(28,61,19,.9) 100%);
+    }
+    .login-box {
+      background: var(--white); border-radius: 8px;
+      padding: 40px 36px; width: 92%; max-width: 380px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.4);
+      text-align: center;
+    }
+    .login-box h1 {
+      font-family: 'Cinzel', serif; font-size: .78rem;
+      letter-spacing: .28em; text-transform: uppercase;
+      color: var(--forest); margin-bottom: 6px;
+    }
+    .login-box h2 {
+      font-family: 'Playfair Display', serif; font-size: 1.5rem;
+      color: var(--deep); margin-bottom: 22px;
+    }
+    .login-box input {
+      width: 100%; padding: 12px 14px; margin-bottom: 12px;
+      border: 1.5px solid var(--mist); border-radius: 4px;
+      font-family: 'Lora', serif; font-size: .92rem; background: var(--milk);
+    }
+    .login-box input:focus { outline: none; border-color: var(--sage); }
+    .login-btn {
+      width: 100%; padding: 13px; margin-top: 6px;
+      background: var(--forest); color: #fff; border: none; border-radius: 4px;
+      font-family: 'Cinzel', serif; font-size: .8rem; letter-spacing: .12em;
+      text-transform: uppercase; cursor: pointer; transition: background .2s;
+    }
+    .login-btn:hover { background: var(--pine); }
+    .login-err { color: var(--danger); font-size: .8rem; margin-top: 10px; min-height: 18px; }
+
+    /* ── SHELL ── */
+    #panelApp { display: none; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px; background: var(--deep); color: #eef2e8;
+    }
+    .topbar .brand { font-family: 'Cinzel', serif; font-size: .95rem; letter-spacing: .12em; }
+    .topbar .brand span { color: #b8e08a; }
+    .logout-btn {
+      background: transparent; border: 1.5px solid rgba(255,255,255,.4); color: #eef2e8;
+      padding: 8px 18px; border-radius: 4px; font-family: 'Lora', serif; font-size: .82rem;
+      cursor: pointer; transition: all .2s;
+    }
+    .logout-btn:hover { border-color: #b8e08a; color: #b8e08a; }
+
+    .tabs {
+      display: flex; gap: 4px; padding: 0 32px; background: var(--white);
+      border-bottom: 1px solid var(--mist); overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 16px 22px; background: none; border: none; cursor: pointer;
+      font-family: 'Lora', serif; font-size: .88rem; color: #6a8060;
+      border-bottom: 3px solid transparent; white-space: nowrap; transition: all .2s;
+    }
+    .tab-btn:hover { color: var(--forest); }
+    .tab-btn.active { color: var(--forest); border-bottom-color: var(--forest); font-weight: 600; }
+
+    main { max-width: 1180px; margin: 0 auto; padding: 32px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    h3.panel-title {
+      font-family: 'Playfair Display', serif; font-size: 1.4rem;
+      color: var(--deep); margin-bottom: 20px;
+    }
+
+    /* ── CARD / TABLE shared ── */
+    .card {
+      background: var(--white); border: 1px solid var(--mist); border-radius: 6px;
+      padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    }
+    .toolbar { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .toolbar select, .toolbar input[type="text"] {
+      padding: 10px 12px; border: 1.5px solid var(--mist); border-radius: 4px;
+      font-family: 'Lora', serif; font-size: .85rem; background: var(--milk);
+    }
+    .qty-range { display: flex; align-items: center; gap: 6px; }
+    .qty-range input[type="number"] {
+      width: 90px; padding: 10px 12px; border: 1.5px solid var(--mist); border-radius: 4px;
+      font-family: 'Lora', serif; font-size: .85rem; background: var(--milk);
+    }
+    .qty-range input[type="number"]:focus { outline: none; border-color: var(--sage); }
+    .qty-range span { color: #6a8060; font-size: .82rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    th { text-align: left; padding: 10px 12px; color: var(--forest); font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; border-bottom: 2px solid var(--mist); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--offwhite); vertical-align: middle; }
+    tr.low-stock td { background: var(--danger-bg); }
+    .empty-row { text-align: center; color: #8fa080; padding: 24px !important; }
+    .record-time { color: #8fa080; font-size: .78rem; }
+    .payment-tag {
+      display: inline-block; padding: 2px 8px; border-radius: 20px;
+      font-size: .68rem; letter-spacing: .03em; font-weight: 600;
+      background: rgba(74,122,56,.1); color: var(--forest); vertical-align: middle;
+    }
+
+    .beden-cell { min-width: 110px; }
+    .beden-cell-inner { display: flex; flex-direction: column; gap: 5px; }
+    .beden-cell select {
+      padding: 5px 7px; border: 1.5px solid var(--mist); border-radius: 4px;
+      font-family: 'Lora', serif; font-size: .78rem; background: var(--milk); color: var(--forest);
+    }
+    .beden-cell select:disabled { opacity: .5; }
+    .stock-cell-inner { display: flex; align-items: center; gap: 8px; }
+    .stock-btn {
+      width: 28px; height: 28px; border-radius: 4px; border: 1.5px solid var(--mist);
+      background: var(--milk); cursor: pointer; font-size: 1rem; color: var(--forest);
+    }
+    .stock-btn:hover { background: var(--offwhite); }
+    .stock-input {
+      width: 64px; padding: 6px; text-align: center;
+      border: 1.5px solid var(--mist); border-radius: 4px; font-family: 'Lora', serif;
+    }
+    .btn-save-stock {
+      padding: 6px 14px; background: var(--forest); color: #fff; border: none;
+      border-radius: 4px; font-size: .78rem; cursor: pointer;
+    }
+    .btn-save-stock:hover { background: var(--pine); }
+    .btn-del-record {
+      padding: 6px 12px; background: none; color: var(--danger); border: 1.5px solid var(--danger);
+      border-radius: 4px; font-size: .76rem; cursor: pointer; white-space: nowrap;
+    }
+    .btn-del-record:hover { background: var(--danger); color: #fff; }
+
+    /* ── FORMS ── */
+    .form-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    @media (max-width: 860px) { .form-cols { grid-template-columns: 1fr; } }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: .78rem; color: #6a8060; letter-spacing: .04em; margin-bottom: 5px; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 10px 12px; border: 1.5px solid var(--mist); border-radius: 4px;
+      font-family: 'Lora', serif; font-size: .9rem; background: var(--milk);
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--sage); }
+    .product-search-results {
+      position: absolute; top: 100%; left: 0; right: 0; z-index: 20; margin-top: 2px;
+      background: var(--white); border: 1.5px solid var(--sage); border-radius: 4px;
+      max-height: 260px; overflow-y: auto; box-shadow: 0 10px 24px rgba(0,0,0,.1);
+      display: none;
+    }
+    .product-search-results.open { display: block; }
+    .product-search-item { padding: 9px 12px; cursor: pointer; font-family: 'Lora', serif; font-size: .85rem; border-bottom: 1px solid var(--offwhite); }
+    .product-search-item:last-child { border-bottom: none; }
+    .product-search-item:hover, .product-search-item.active { background: var(--offwhite); }
+    .product-search-item .grp { font-size: .66rem; color: #6a8060; text-transform: uppercase; letter-spacing: .06em; margin-right: 6px; }
+    .product-search-empty { padding: 10px 12px; color: #8fa080; font-size: .82rem; font-style: italic; }
+    .total-display { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--forest); font-weight: 700; }
+    .btn-add-cart {
+      width: 100%; padding: 10px; margin-bottom: 16px; background: none; color: var(--forest);
+      border: 1.5px dashed var(--sage); border-radius: 4px; cursor: pointer;
+      font-family: 'Cinzel', serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+      transition: background .2s;
+    }
+    .btn-add-cart:hover { background: rgba(74,122,56,.08); }
+    .sale-cart { border: 1.5px solid var(--mist); border-radius: 4px; padding: 12px 14px; margin-bottom: 16px; background: var(--milk); }
+    .sale-cart-title { font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: #6a8060; margin-bottom: 8px; }
+    .sale-cart-list { display: flex; flex-direction: column; gap: 6px; }
+    .cart-empty { font-size: .8rem; color: #8fa080; font-style: italic; font-family: 'Lora', serif; }
+    .cart-item {
+      display: flex; align-items: center; gap: 8px; background: var(--white);
+      border: 1px solid var(--offwhite); border-radius: 4px; padding: 7px 10px;
+    }
+    .cart-item-name { flex: 1; font-family: 'Lora', serif; font-size: .84rem; color: var(--dark); }
+    .cart-item-amt { font-family: 'Playfair Display', serif; font-size: .84rem; color: var(--forest); font-weight: 700; white-space: nowrap; }
+    .cart-item-del {
+      background: none; border: none; color: var(--danger); cursor: pointer; font-size: .9rem;
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    }
+    .cart-item-del:hover { background: var(--danger-bg); }
+    .sale-cart-total { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--mist); font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--forest); text-align: right; }
+    .submit-btn {
+      padding: 12px 28px; background: var(--forest); color: #fff; border: none; border-radius: 4px;
+      font-family: 'Cinzel', serif; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+      cursor: pointer; transition: background .2s;
+    }
+    .submit-btn:hover { background: var(--pine); }
+    .flash-msg { color: var(--forest); font-size: .82rem; margin-top: 10px; opacity: 0; transition: opacity .3s; }
+
+    /* ── ANALYSIS ── */
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+    @media (max-width: 700px) { .stat-grid { grid-template-columns: 1fr; } }
+    .stat-card { background: var(--white); border: 1px solid var(--mist); border-radius: 6px; padding: 22px 24px; }
+    .stat-card .lbl { font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: #6a8060; }
+    .stat-card .val { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--forest); margin-top: 8px; }
+    .stat-card.income .val { color: var(--forest); }
+    .stat-card.expense .val { color: var(--danger); }
+    .stat-card.net .val { color: var(--accent); }
+    .stat-card.net.negative .val { color: var(--danger); }
+
+    .stat-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 900px) { .stat-grid-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .stat-grid-4 { grid-template-columns: 1fr; } }
+    .stat-grid-4 .val { font-size: 1.4rem; }
+    .stat-grid-5 { grid-template-columns: repeat(5, 1fr); }
+    @media (max-width: 1100px) { .stat-grid-5 { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 700px) { .stat-grid-5 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .stat-grid-5 { grid-template-columns: 1fr; } }
+    .stat-grid-5 .val { font-size: 1.4rem; }
+    .stat-card.company .val { color: #7a4fa0; }
+    .stat-card.kk .val { color: #4a6fa5; }
+    .stat-card.havale .val { color: #8a6d3b; }
+    .stat-card.cash .val { color: var(--forest); }
+    .stat-card.net-cash .val { color: var(--accent); }
+    .stat-card.net-cash.negative .val { color: var(--danger); }
+
+    .chart-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 24px; }
+
+    .view-toggle { display: flex; border: 1.5px solid var(--mist); border-radius: 4px; overflow: hidden; }
+    .view-toggle-btn {
+      padding: 9px 20px; background: var(--white); border: none; cursor: pointer;
+      font-family: 'Lora', serif; font-size: .85rem; color: #6a8060;
+      border-right: 1.5px solid var(--mist); transition: all .2s;
+    }
+    .view-toggle-btn:last-child { border-right: none; }
+    .view-toggle-btn.active { background: var(--forest); color: #fff; }
+    .view-toggle-btn:hover:not(.active) { background: var(--offwhite); }
+    .chart-box { position: relative; height: 280px; }
+    .chart-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .chart-row2 { grid-template-columns: 1fr; } }
+
+    .tag { padding: 2px 10px; border-radius: 20px; font-size: .7rem; letter-spacing: .04em; }
+    .tag-income { background: rgba(74,122,56,.12); color: var(--forest); }
+    .tag-expense { background: var(--danger-bg); color: var(--danger); }
+    .amt-pos { color: var(--forest); font-weight: 600; }
+    .amt-neg { color: var(--danger); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <h1>Başkent Av Galerisi</h1>
+      <h2>Yönetim Paneli</h2>
+      <input type="email" id="loginEmail" placeholder="E-posta" autocomplete="username" />
+      <input type="password" id="loginPwd" placeholder="Şifre" autocomplete="current-password" />
+      <button class="login-btn" id="loginBtn">Giriş Yap</button>
+      <div class="login-err" id="loginErr"></div>
+    </div>
+  </div>
+
+  <div id="panelApp">
+    <div class="topbar">
+      <div class="brand">BAŞKENT AV GALERİSİ · <span>YÖNETİM PANELİ</span></div>
+      <button class="logout-btn" id="logoutBtn">Çıkış Yap</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="stok">Stok</button>
+      <button class="tab-btn" data-tab="giris">Satış / Gider Ekle</button>
+      <button class="tab-btn" data-tab="analiz">Analiz</button>
+      <button class="tab-btn" data-tab="borclar">Firma Borçları</button>
+    </div>
+
+    <main>
+      <!-- STOK -->
+      <section class="tab-panel active" id="tab-stok">
+        <h3 class="panel-title">Stok Durumu</h3>
+        <div class="card">
+          <div class="toolbar">
+            <select id="stockCatFilter">
+              <option value="all">Tüm Kategoriler</option>
+              <option value="tufekler">Av Tüfekleri</option>
+              <option value="giyim">Giyim &amp; Ekipman</option>
+              <option value="aksesuar">Silah Aksesuarları</option>
+              <option value="balik">Balık Avı</option>
+              <option value="fisek">Av Fişekleri</option>
+            </select>
+            <input type="text" id="stockSearch" placeholder="Ürün ara…" />
+            <div class="qty-range">
+              <input type="number" id="stockQtyMin" placeholder="Min adet" min="0" />
+              <span>–</span>
+              <input type="number" id="stockQtyMax" placeholder="Max adet" min="0" />
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Kategori</th><th>Ürün</th><th>Beden</th><th>Stok</th><th></th></tr>
+            </thead>
+            <tbody id="stockTableBody">
+              <tr><td colspan="5" class="empty-row">Yükleniyor…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SATIŞ / GİDER EKLE -->
+      <section class="tab-panel" id="tab-giris">
+        <h3 class="panel-title">Satış / Gider Ekle</h3>
+        <div class="form-cols">
+          <div class="card">
+            <h4 style="margin-bottom:16px;color:var(--forest);font-family:'Playfair Display',serif;">Satış Ekle</h4>
+            <form id="saleForm">
+              <div class="field" style="position:relative;">
+                <label for="saleProductSearch">Ürün</label>
+                <input type="text" id="saleProductSearch" placeholder="Ürün adı yazarak arayın…" autocomplete="off" />
+                <div class="product-search-results" id="saleProductResults"></div>
+                <select id="saleProduct" style="display:none;"><option value="manual">— Listede yok, elle yaz —</option></select>
+              </div>
+              <div class="field" id="manualNameWrap">
+                <label for="manualName">Ürün Adı</label>
+                <input type="text" id="manualName" placeholder="Örn: Beretta A400 Xcel" />
+              </div>
+              <div class="field" id="manualCatWrap">
+                <label for="manualCat">Kategori</label>
+                <select id="manualCat">
+                  <option value="tufekler">Av Tüfekleri</option>
+                  <option value="giyim">Giyim &amp; Ekipman</option>
+                  <option value="aksesuar">Silah Aksesuarları</option>
+                  <option value="balik">Balık Avı</option>
+                  <option value="fisek">Av Fişekleri</option>
+                  <option value="diger">Diğer</option>
+                </select>
+              </div>
+              <div class="field" id="saleBedenWrap" style="display:none;">
+                <label for="saleBeden">Beden / Ölçü</label>
+                <select id="saleBeden"></select>
+              </div>
+              <div class="field">
+                <label for="saleQty">Adet</label>
+                <input type="number" id="saleQty" min="1" step="1" value="1" />
+              </div>
+              <div class="field">
+                <label for="salePrice">Satış Fiyatı (₺, birim)</label>
+                <input type="number" id="salePrice" min="0" step="0.01" />
+              </div>
+              <div class="field">Bu kalem: <span class="total-display" id="saleTotalDisplay">0 ₺</span></div>
+              <button type="button" class="btn-add-cart" id="saleAddItemBtn">+ Sepete Ekle</button>
+
+              <div class="sale-cart">
+                <div class="sale-cart-title">Sepetteki Ürünler <span id="saleCartCount"></span></div>
+                <div class="sale-cart-list" id="saleCartList">
+                  <div class="cart-empty">Sepet boş. Yukarıdaki ürünü "Sepete Ekle" ile ekleyin (müşteri tek ürün alsa bile) — birden fazla ürün alan müşteride her ürünü ayrı ayrı ekleyip sonra tek seferde kaydedebilirsiniz.</div>
+                </div>
+                <div class="sale-cart-total">Sepet Toplamı: <span id="saleCartTotal">0 ₺</span></div>
+              </div>
+
+              <div class="field">
+                <label for="salePayment">Ödeme Yöntemi</label>
+                <select id="salePayment">
+                  <option value="Nakit">Nakit</option>
+                  <option value="KK">Kredi Kartı</option>
+                  <option value="Havale">Havale</option>
+                </select>
+                <div style="font-size:.72rem;color:#8fa080;margin-top:4px;">Ödeme doğrudan bir tedarikçi firmaya gittiyse listeden o firmayı seçin — tutar o firmanın borcundan otomatik düşülür.</div>
+              </div>
+              <div class="field">
+                <label for="saleDate">Tarih</label>
+                <input type="date" id="saleDate" required />
+              </div>
+              <div class="field">
+                <label for="saleNote">Not (opsiyonel)</label>
+                <input type="text" id="saleNote" placeholder="Örn: müşteri adı, taksit vb." />
+              </div>
+              <button type="submit" class="submit-btn" id="saleSubmitBtn">Satışı Kaydet</button>
+              <div class="flash-msg" id="saleMsg"></div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h4 style="margin-bottom:16px;color:var(--danger);font-family:'Playfair Display',serif;">Gider Ekle</h4>
+            <form id="expenseForm">
+              <div class="field">
+                <label for="expDesc">Açıklama</label>
+                <input type="text" id="expDesc" placeholder="Örn: fişek stoğu alımı" required />
+              </div>
+              <div class="field">
+                <label for="expCat">Kategori</label>
+                <select id="expCat">
+                  <option value="Ürün Alımı">Ürün Alımı</option>
+                  <option value="Kargo">Kargo</option>
+                  <option value="Yemek">Yemek</option>
+                  <option value="Fatura">Fatura</option>
+                  <option value="Diğer">Diğer</option>
+                </select>
+              </div>
+              <div class="field" id="expCompanyWrap" style="display:none;">
+                <label for="expCompany">Firma (borç ödemesiyse)</label>
+                <select id="expCompany"><option value="">— Seçiniz —</option></select>
+                <div style="font-size:.72rem;color:#8fa080;margin-top:4px;">Kendi kartımızla bir firmaya borç ödemesi yapıyorsak firmayı seçin — tutar hem gider olarak, hem de o firmanın borcundan düşülerek kaydedilir.</div>
+              </div>
+              <div class="field">
+                <label for="expAmount">Tutar (₺)</label>
+                <input type="number" id="expAmount" min="0" step="0.01" required />
+              </div>
+              <div class="field">
+                <label for="expDate">Tarih</label>
+                <input type="date" id="expDate" required />
+              </div>
+              <button type="submit" class="submit-btn" style="background:var(--danger);" id="expSubmitBtn">Gideri Kaydet</button>
+              <div class="flash-msg" id="expMsg"></div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALİZ -->
+      <section class="tab-panel" id="tab-analiz">
+        <h3 class="panel-title">Gelir / Gider Analizi</h3>
+        <div class="card">
+          <div class="toolbar">
+            <div class="view-toggle">
+              <button type="button" class="view-toggle-btn" data-mode="day" id="viewModeDay">Günlük</button>
+              <button type="button" class="view-toggle-btn active" data-mode="month" id="viewModeMonth">Aylık</button>
+            </div>
+            <input type="date" id="analysisDay" style="display:none;" />
+            <input type="month" id="analysisMonth" />
+          </div>
+
+          <div class="stat-grid">
+            <div class="stat-card income"><div class="lbl" id="statIncomeLbl">Toplam Gelir</div><div class="val" id="statIncome">0 ₺</div></div>
+            <div class="stat-card expense"><div class="lbl" id="statExpenseLbl">Toplam Gider</div><div class="val" id="statExpense">0 ₺</div></div>
+            <div class="stat-card net"><div class="lbl" id="statNetLbl">Net</div><div class="val" id="statNet">0 ₺</div></div>
+          </div>
+
+          <div class="stat-grid stat-grid-5">
+            <div class="stat-card kk"><div class="lbl">KK Toplam</div><div class="val" id="statKK">0 ₺</div></div>
+            <div class="stat-card havale"><div class="lbl">Havale Toplam</div><div class="val" id="statHavale">0 ₺</div></div>
+            <div class="stat-card cash"><div class="lbl">Nakit Toplam</div><div class="val" id="statCash">0 ₺</div></div>
+            <div class="stat-card company"><div class="lbl">Firmalara Ödenen</div><div class="val" id="statCompany">0 ₺</div></div>
+            <div class="stat-card net-cash"><div class="lbl">Net Nakit (Giderler Düşülmüş)</div><div class="val" id="statNetCash">0 ₺</div></div>
+          </div>
+
+          <div class="chart-grid" id="chartGrid">
+            <div class="chart-box" id="dailyChartBox"><canvas id="dailyChart"></canvas></div>
+          </div>
+          <div class="chart-row2">
+            <div class="chart-box"><canvas id="expenseCategoryChart"></canvas></div>
+            <div class="chart-box"><canvas id="topProductsChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:14px;color:var(--deep);font-family:'Playfair Display',serif;" id="recordsTitle">Bu Ayki Kayıtlar</h4>
+          <table>
+            <thead><tr><th>Tarih</th><th>Tür</th><th>Açıklama</th><th>Tutar</th><th></th></tr></thead>
+            <tbody id="recordsBody"><tr><td colspan="5" class="empty-row">Yükleniyor…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- FİRMA BORÇLARI -->
+      <section class="tab-panel" id="tab-borclar">
+        <h3 class="panel-title">Firma Borçları</h3>
+        <div class="card">
+          <h4 style="margin-bottom:16px;color:var(--forest);font-family:'Playfair Display',serif;">Yeni Borç Ekle</h4>
+          <form id="debtForm">
+            <div style="display:flex;gap:14px;flex-wrap:wrap;">
+              <div class="field" style="flex:2;min-width:200px;">
+                <label for="debtCompany">Firma Adı</label>
+                <input type="text" id="debtCompany" placeholder="Örn: Sarsılmaz Silah San." required />
+              </div>
+              <div class="field" style="flex:1;min-width:140px;">
+                <label for="debtAmount">Borç Tutarı (₺)</label>
+                <input type="number" id="debtAmount" min="0" step="0.01" required />
+              </div>
+              <div class="field" style="flex:1;min-width:140px;">
+                <label for="debtDate">Tarih</label>
+                <input type="date" id="debtDate" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="debtNote">Not (opsiyonel)</label>
+              <input type="text" id="debtNote" placeholder="Örn: vade tarihi, açıklama vb." />
+            </div>
+            <button type="submit" class="submit-btn" id="debtSubmitBtn">Borcu Kaydet</button>
+            <div class="flash-msg" id="debtMsg"></div>
+          </form>
+        </div>
+
+        <div class="stat-grid" style="grid-template-columns: 240px; margin-bottom: 20px;">
+          <div class="stat-card expense"><div class="lbl">Toplam Borç</div><div class="val" id="debtTotal">0 ₺</div></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+            <h4 style="color:var(--deep);font-family:'Playfair Display',serif;margin:0;">Borç Listesi</h4>
+            <div class="view-toggle">
+              <button type="button" class="view-toggle-btn active" data-debtview="borc">Borçlar</button>
+              <button type="button" class="view-toggle-btn" data-debtview="odeme">Ödemeler</button>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>Firma</th><th>Tarih</th><th>Not</th><th>Tutar</th><th></th></tr></thead>
+            <tbody id="debtsBody"><tr><td colspan="5" class="empty-row">Yükleniyor…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",
+      authDomain:"baskentavgalerisi.firebaseapp.com",
+      projectId:"baskentavgalerisi",
+      storageBucket:"baskentavgalerisi.firebasestorage.app",
+      messagingSenderId:"248185539120",
+      appId:"1:248185539120:web:cc66fbaf497fe47b13fbf5"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const COLLECTIONS = [
+      { col:'tufekler', label:'Av Tüfekleri' },
+      { col:'giyim',    label:'Giyim & Ekipman' },
+      { col:'aksesuar', label:'Silah Aksesuarları' },
+      { col:'balik',    label:'Balık Avı' },
+      { col:'fisek',    label:'Av Fişekleri' },
+    ];
+    const LOW_STOCK_THRESHOLD = 3;
+
+    let allProducts = [];
+    let charts = {};
+    let salesCache = {};
+
+    function todayStr(){ return new Date().toISOString().slice(0,10); }
+    function fmtTL(n){ return (n||0).toLocaleString('tr-TR',{maximumFractionDigits:0}) + ' ₺'; }
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function flashMsg(id, msg){
+      const el = document.getElementById(id);
+      el.textContent = msg; el.style.opacity = 1;
+      setTimeout(()=>{ el.style.opacity = 0; }, 2500);
+    }
+
+    // ── INIT (default dates, before auth) ──
+    document.getElementById('saleDate').value = todayStr();
+    document.getElementById('expDate').value = todayStr();
+    document.getElementById('debtDate').value = todayStr();
+    document.getElementById('analysisMonth').value = todayStr().slice(0,7);
+    document.getElementById('analysisDay').value = todayStr();
+
+    // ── AUTH ──
+    async function doLogin(){
+      const email = document.getElementById('loginEmail').value.trim();
+      const pwd = document.getElementById('loginPwd').value;
+      const errEl = document.getElementById('loginErr');
+      errEl.textContent = '';
+      if(!email || !pwd){ errEl.textContent = 'E-posta ve şifre girin.'; return; }
+      const btn = document.getElementById('loginBtn');
+      btn.disabled = true; btn.textContent = 'Giriş yapılıyor…';
+      try{
+        await signInWithEmailAndPassword(auth, email, pwd);
+      }catch(e){
+        errEl.textContent = 'Giriş başarısız. E-posta veya şifre hatalı.';
+      }finally{
+        btn.disabled = false; btn.textContent = 'Giriş Yap';
+      }
+    }
+    document.getElementById('loginBtn').addEventListener('click', doLogin);
+    document.getElementById('loginPwd').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+    document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+    onAuthStateChanged(auth, async (user) => {
+      if(user){
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('panelApp').style.display = 'block';
+        await loadAllProducts();
+        renderStockTable();
+        populateProductSelect();
+        await loadAnalysis();
+        await loadDebts();
+      } else {
+        document.getElementById('loginOverlay').style.display = 'flex';
+        document.getElementById('panelApp').style.display = 'none';
+      }
+    });
+
+    // ── TABS ──
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ── STOK ──
+    const BEDEN_OPTIONS = {
+      ust: ['S','M','L','XL','2XL'],
+      alt: ['36','38','40','42','44','46','48','50','52','54'],
+      ayakkabi: ['40','41','42','43','44','45','46'],
+    };
+    // Giyim dışındaki kategoriler: tip seçimi yok, sabit tek bir ölçü listesi
+    const FIXED_SIZE_OPTIONS = {
+      tufekler: ['66','71'],
+      fisek: ['24','28','30','32','34','36'],
+    };
+    const FIXED_SIZE_UNIT = { tufekler: 'cm', fisek: 'gr' };
+
+    function bedenOptionsHtml(tip, selected){
+      const list = BEDEN_OPTIONS[tip] || [];
+      if(!list.length) return '<option value="">—</option>';
+      return list.map(v => `<option value="${v}" ${v===selected?'selected':''}>${v}</option>`).join('');
+    }
+    function fixedSizeOptionsHtml(col, selected){
+      const list = FIXED_SIZE_OPTIONS[col] || [];
+      const unit = FIXED_SIZE_UNIT[col] || '';
+      return list.map(v => `<option value="${v}" ${v===selected?'selected':''}>${v} ${unit}</option>`).join('');
+    }
+    function resolveDefaultBeden(p){
+      if(p.col==='giyim'){
+        if(!p.bedenTipi) return '';
+        const list = BEDEN_OPTIONS[p.bedenTipi] || [];
+        if(p.beden && list.includes(p.beden)) return p.beden;
+        return list[0] || '';
+      }
+      if(FIXED_SIZE_OPTIONS[p.col]){
+        const list = FIXED_SIZE_OPTIONS[p.col];
+        if(p.beden && list.includes(p.beden)) return p.beden;
+        return list[0];
+      }
+      return '';
+    }
+    function productUsesSizes(p){
+      return (p.col==='giyim' && !!p.bedenTipi) || !!FIXED_SIZE_OPTIONS[p.col];
+    }
+    function qtyInfo(p, beden){
+      if(beden){
+        const has = !!(p.stokMap && typeof p.stokMap[beden]==='number');
+        return { qty: has ? p.stokMap[beden] : 0, has };
+      }
+      return { qty: p.stok ?? 0, has: p.stok !== null };
+    }
+    function totalQty(p){
+      if(productUsesSizes(p) && p.stokMap){
+        return Object.values(p.stokMap).reduce((a,b)=> a + (typeof b==='number'?b:0), 0);
+      }
+      return p.stok ?? 0;
+    }
+
+    async function loadAllProducts(){
+      allProducts = [];
+      for(const c of COLLECTIONS){
+        const snap = await getDocs(collection(db, c.col));
+        snap.forEach(d=>{
+          const data = d.data();
+          allProducts.push({
+            id: d.id, col: c.col, colLabel: c.label,
+            name: data.name || '(İsimsiz ürün)',
+            stok: typeof data.stok === 'number' ? data.stok : null,
+            bedenTipi: data.bedenTipi || '',
+            beden: data.beden || '',
+            stokMap: data.stokMap || {},
+          });
+        });
+      }
+      allProducts.sort((a,b)=>a.name.localeCompare(b.name,'tr'));
+    }
+
+    function renderStockTable(){
+      const filterCol = document.getElementById('stockCatFilter').value;
+      const search = document.getElementById('stockSearch').value.trim().toLowerCase();
+      const qtyMinRaw = document.getElementById('stockQtyMin').value;
+      const qtyMaxRaw = document.getElementById('stockQtyMax').value;
+      const qtyMin = qtyMinRaw!=='' ? parseInt(qtyMinRaw) : null;
+      const qtyMax = qtyMaxRaw!=='' ? parseInt(qtyMaxRaw) : null;
+      const tbody = document.getElementById('stockTableBody');
+      const list = allProducts.filter(p => {
+        const qty = totalQty(p);
+        const matchesQty =
+          (qtyMin===null || qty>=qtyMin) &&
+          (qtyMax===null || qty<=qtyMax);
+        return (filterCol==='all' || p.col===filterCol) &&
+          (!search || p.name.toLowerCase().includes(search)) &&
+          matchesQty;
+      });
+      if(list.length===0){
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Ürün bulunamadı.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = list.map(p => {
+        const activeBeden = resolveDefaultBeden(p);
+        const info = qtyInfo(p, activeBeden);
+        const low = info.has && info.qty<=LOW_STOCK_THRESHOLD;
+        let bedenCell;
+        if(p.col==='giyim'){
+          bedenCell = `
+          <div class="beden-cell-inner">
+            <select class="beden-tipi-select" data-col="${p.col}" data-id="${p.id}">
+              <option value="" ${!p.bedenTipi?'selected':''}>Yok</option>
+              <option value="ust" ${p.bedenTipi==='ust'?'selected':''}>Üst Giyim</option>
+              <option value="alt" ${p.bedenTipi==='alt'?'selected':''}>Alt Giyim</option>
+              <option value="ayakkabi" ${p.bedenTipi==='ayakkabi'?'selected':''}>Ayakkabı</option>
+            </select>
+            <select class="beden-select" data-col="${p.col}" data-id="${p.id}" ${!p.bedenTipi?'disabled':''}>
+              ${bedenOptionsHtml(p.bedenTipi, activeBeden)}
+            </select>
+          </div>`;
+        } else if(FIXED_SIZE_OPTIONS[p.col]){
+          bedenCell = `
+          <select class="beden-select" data-col="${p.col}" data-id="${p.id}">
+            ${fixedSizeOptionsHtml(p.col, activeBeden)}
+          </select>`;
+        } else {
+          bedenCell = '—';
+        }
+        return `<tr class="${low?'low-stock':''}">
+          <td>${escapeHtml(p.colLabel)}</td>
+          <td>${escapeHtml(p.name)}</td>
+          <td class="beden-cell">${bedenCell}</td>
+          <td class="stock-cell">
+            <div class="stock-cell-inner">
+              <button class="stock-btn" data-act="dec" data-col="${p.col}" data-id="${p.id}">−</button>
+              <input type="number" class="stock-input" data-col="${p.col}" data-id="${p.id}" value="${info.qty}" min="0" />
+              <button class="stock-btn" data-act="inc" data-col="${p.col}" data-id="${p.id}">+</button>
+            </div>
+          </td>
+          <td><button class="btn-save-stock" data-col="${p.col}" data-id="${p.id}">Kaydet</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    document.getElementById('stockCatFilter').addEventListener('change', renderStockTable);
+    document.getElementById('stockSearch').addEventListener('input', renderStockTable);
+    document.getElementById('stockQtyMin').addEventListener('input', renderStockTable);
+    document.getElementById('stockQtyMax').addEventListener('input', renderStockTable);
+
+    document.getElementById('stockTableBody').addEventListener('change', (e) => {
+      const col = e.target.dataset.col, id = e.target.dataset.id;
+      if(!col || !id) return;
+      const p = allProducts.find(x=>x.col===col && x.id===id);
+      if(!p) return;
+      const input = document.querySelector(`.stock-input[data-col="${col}"][data-id="${id}"]`);
+
+      if(e.target.classList.contains('beden-tipi-select')){
+        const tip = e.target.value;
+        const bedenSel = document.querySelector(`.beden-select[data-col="${col}"][data-id="${id}"]`);
+        bedenSel.disabled = !tip;
+        const list = BEDEN_OPTIONS[tip] || [];
+        const defaultBeden = list[0] || '';
+        bedenSel.innerHTML = bedenOptionsHtml(tip, defaultBeden);
+        input.value = qtyInfo(p, tip ? defaultBeden : '').qty;
+        return;
+      }
+
+      if(e.target.classList.contains('beden-select')){
+        input.value = qtyInfo(p, e.target.value).qty;
+      }
+    });
+
+    document.getElementById('stockTableBody').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const col = btn.dataset.col, id = btn.dataset.id;
+      if(!col || !id) return;
+      const input = document.querySelector(`.stock-input[data-col="${col}"][data-id="${id}"]`);
+
+      if(btn.classList.contains('stock-btn')){
+        const delta = btn.dataset.act==='inc' ? 1 : -1;
+        input.value = Math.max(0, (parseInt(input.value)||0) + delta);
+        return;
+      }
+
+      if(btn.classList.contains('btn-save-stock')){
+        const val = Math.max(0, parseInt(input.value)||0);
+        btn.textContent = '…'; btn.disabled = true;
+        try{
+          const p = allProducts.find(p=>p.col===col && p.id===id);
+          const payload = {};
+          let tip = '', beden = '';
+          if(col==='giyim'){
+            const tipSel = document.querySelector(`.beden-tipi-select[data-col="${col}"][data-id="${id}"]`);
+            const bedenSel = document.querySelector(`.beden-select[data-col="${col}"][data-id="${id}"]`);
+            tip = tipSel.value;
+            beden = tip ? bedenSel.value : '';
+            payload.bedenTipi = tip;
+          } else if(FIXED_SIZE_OPTIONS[col]){
+            const bedenSel = document.querySelector(`.beden-select[data-col="${col}"][data-id="${id}"]`);
+            beden = bedenSel.value;
+          }
+          payload.beden = beden;
+          if(beden){
+            payload[`stokMap.${beden}`] = val;
+          } else {
+            payload.stok = val;
+          }
+          await updateDoc(doc(db, col, id), payload);
+          if(p){
+            p.beden = beden;
+            if(col==='giyim') p.bedenTipi = tip;
+            if(beden){
+              p.stokMap = p.stokMap || {};
+              p.stokMap[beden] = val;
+            } else {
+              p.stok = val;
+            }
+          }
+          populateProductSelect();
+          btn.textContent = '✓';
+          setTimeout(()=>{ btn.textContent = 'Kaydet'; btn.disabled = false; }, 900);
+        }catch(err){
+          alert('Hata: ' + err.message);
+          btn.textContent = 'Kaydet'; btn.disabled = false;
+        }
+      }
+    });
+
+    // ── SATIŞ FORMU ──
+    let saleProductIndex = [];
+    function populateProductSelect(){
+      const sel = document.getElementById('saleProduct');
+      const prevVal = sel.value;
+      sel.innerHTML = '<option value="manual">— Listede yok, elle yaz —</option>';
+      saleProductIndex = [{ value:'manual', label:'— Listede yok, elle yaz —', group:'' }];
+      COLLECTIONS.forEach(c => {
+        const group = document.createElement('optgroup');
+        group.label = c.label;
+        allProducts.filter(p=>p.col===c.col).forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = `${p.col}::${p.id}`;
+          const qtyLabel = productUsesSizes(p) ? ` (toplam stok: ${totalQty(p)})` : (p.stok!==null ? ` (stok: ${p.stok})` : '');
+          opt.textContent = p.name + qtyLabel;
+          group.appendChild(opt);
+          saleProductIndex.push({ value: opt.value, label: opt.textContent, group: c.label });
+        });
+        if(group.children.length) sel.appendChild(group);
+      });
+      if([...sel.options].some(o=>o.value===prevVal)) sel.value = prevVal;
+      toggleManualFields();
+      updateSaleBedenField();
+      syncSaleProductSearchLabel();
+    }
+
+    function syncSaleProductSearchLabel(){
+      const sel = document.getElementById('saleProduct');
+      const search = document.getElementById('saleProductSearch');
+      const opt = sel.options[sel.selectedIndex];
+      search.value = (opt && opt.value !== 'manual') ? opt.textContent : '';
+    }
+
+    function renderSaleProductResults(query){
+      const box = document.getElementById('saleProductResults');
+      const q = query.trim().toLocaleLowerCase('tr');
+      const matches = saleProductIndex.filter(item => item.value==='manual' || !q || item.label.toLocaleLowerCase('tr').includes(q));
+      if(!matches.length){
+        box.innerHTML = '<div class="product-search-empty">Sonuç bulunamadı.</div>';
+      } else {
+        box.innerHTML = matches.slice(0,60).map(item => `
+          <div class="product-search-item" data-value="${item.value}">
+            ${item.group?`<span class="grp">${escapeHtml(item.group)}</span>`:''}${escapeHtml(item.label)}
+          </div>
+        `).join('');
+      }
+      box.classList.add('open');
+    }
+
+    function selectSaleProduct(value){
+      const sel = document.getElementById('saleProduct');
+      sel.value = value;
+      sel.dispatchEvent(new Event('change', { bubbles:true }));
+      syncSaleProductSearchLabel();
+      document.getElementById('saleProductResults').classList.remove('open');
+    }
+
+    document.getElementById('saleProductSearch').addEventListener('input', (e) => {
+      renderSaleProductResults(e.target.value);
+    });
+    document.getElementById('saleProductSearch').addEventListener('focus', (e) => {
+      renderSaleProductResults(e.target.value);
+    });
+    document.getElementById('saleProductSearch').addEventListener('keydown', (e) => {
+      if(e.key === 'Escape'){
+        document.getElementById('saleProductResults').classList.remove('open');
+      } else if(e.key === 'Enter'){
+        e.preventDefault();
+        const first = document.querySelector('#saleProductResults .product-search-item');
+        if(first) selectSaleProduct(first.dataset.value);
+      }
+    });
+    document.getElementById('saleProductResults').addEventListener('click', (e) => {
+      const item = e.target.closest('.product-search-item');
+      if(!item) return;
+      selectSaleProduct(item.dataset.value);
+    });
+    document.addEventListener('click', (e) => {
+      if(!e.target.closest('#saleProductSearch') && !e.target.closest('#saleProductResults')){
+        document.getElementById('saleProductResults').classList.remove('open');
+      }
+    });
+
+    function toggleManualFields(){
+      const manual = document.getElementById('saleProduct').value === 'manual';
+      document.getElementById('manualNameWrap').style.display = manual ? 'block' : 'none';
+      document.getElementById('manualCatWrap').style.display = manual ? 'block' : 'none';
+    }
+    function updateSaleBedenField(){
+      const selVal = document.getElementById('saleProduct').value;
+      const wrap = document.getElementById('saleBedenWrap');
+      const sel = document.getElementById('saleBeden');
+      if(selVal==='manual'){ wrap.style.display='none'; sel.innerHTML=''; return; }
+      const [col,id] = selVal.split('::');
+      const p = allProducts.find(x=>x.col===col && x.id===id);
+      if(!p || !productUsesSizes(p)){ wrap.style.display='none'; sel.innerHTML=''; return; }
+      const opts = p.col==='giyim' ? (BEDEN_OPTIONS[p.bedenTipi]||[]) : (FIXED_SIZE_OPTIONS[p.col]||[]);
+      const unit = p.col==='giyim' ? '' : (' '+(FIXED_SIZE_UNIT[p.col]||''));
+      sel.innerHTML = opts.map(v=>{
+        const qty = (p.stokMap && typeof p.stokMap[v]==='number') ? p.stokMap[v] : 0;
+        return `<option value="${v}">${v}${unit} (stok: ${qty})</option>`;
+      }).join('');
+      wrap.style.display = 'block';
+    }
+    document.getElementById('saleProduct').addEventListener('change', () => { toggleManualFields(); updateSaleBedenField(); });
+
+    function recalcSaleTotal(){
+      const qty = parseFloat(document.getElementById('saleQty').value) || 0;
+      const price = parseFloat(document.getElementById('salePrice').value) || 0;
+      document.getElementById('saleTotalDisplay').textContent = fmtTL(qty*price);
+    }
+    document.getElementById('saleQty').addEventListener('input', recalcSaleTotal);
+    document.getElementById('salePrice').addEventListener('input', recalcSaleTotal);
+
+    // ── SEPET (bir müşterinin tek seferde aldığı birden fazla ürün) ──
+    let saleCart = [];
+
+    function buildCurrentItem(){
+      const selVal = document.getElementById('saleProduct').value;
+      const qty = parseFloat(document.getElementById('saleQty').value);
+      const price = parseFloat(document.getElementById('salePrice').value);
+      if(!qty || qty<=0 || isNaN(price) || price<0) return { error: 'Geçerli bir adet ve fiyat girin.' };
+
+      let productCol = null, productId = null, productName, category, beden = '';
+      if(selVal === 'manual'){
+        productName = document.getElementById('manualName').value.trim();
+        category = document.getElementById('manualCat').value;
+        if(!productName) return { error: 'Ürün adı girin.' };
+      } else {
+        [productCol, productId] = selVal.split('::');
+        const p = allProducts.find(p=>p.col===productCol && p.id===productId);
+        productName = p ? p.name : '(bilinmiyor)';
+        category = productCol;
+        if(p && productUsesSizes(p)){
+          beden = document.getElementById('saleBeden').value;
+          if(!beden) return { error: 'Lütfen beden/ölçü seçin.' };
+        }
+      }
+      return { item: { productCol, productId, productName, category, beden, quantity: qty, unitPrice: price } };
+    }
+
+    function clearCurrentItemFields(){
+      document.getElementById('saleQty').value = '1';
+      document.getElementById('salePrice').value = '';
+      document.getElementById('manualName').value = '';
+      selectSaleProduct('manual');
+      recalcSaleTotal();
+    }
+
+    function renderSaleCart(){
+      const box = document.getElementById('saleCartList');
+      const countEl = document.getElementById('saleCartCount');
+      countEl.textContent = saleCart.length ? `(${saleCart.length})` : '';
+      if(!saleCart.length){
+        box.innerHTML = '<div class="cart-empty">Sepet boş. Yukarıdaki ürünü "Sepete Ekle" ile ekleyin (müşteri tek ürün alsa bile) — birden fazla ürün alan müşteride her ürünü ayrı ayrı ekleyip sonra tek seferde kaydedebilirsiniz.</div>';
+      } else {
+        box.innerHTML = saleCart.map((it,i)=>`
+          <div class="cart-item">
+            <span class="cart-item-name">${escapeHtml(it.productName)}${it.beden?' ('+escapeHtml(it.beden)+')':''} ×${it.quantity}</span>
+            <span class="cart-item-amt">${fmtTL(it.quantity*it.unitPrice)}</span>
+            <button type="button" class="cart-item-del" data-i="${i}">✕</button>
+          </div>
+        `).join('');
+      }
+      const total = saleCart.reduce((s,it)=>s+it.quantity*it.unitPrice, 0);
+      document.getElementById('saleCartTotal').textContent = fmtTL(total);
+    }
+
+    document.getElementById('saleAddItemBtn').addEventListener('click', () => {
+      const result = buildCurrentItem();
+      if(result.error){ alert(result.error); return; }
+      saleCart.push(result.item);
+      renderSaleCart();
+      clearCurrentItemFields();
+    });
+
+    document.getElementById('saleCartList').addEventListener('click', (e) => {
+      const btn = e.target.closest('.cart-item-del');
+      if(!btn) return;
+      saleCart.splice(parseInt(btn.dataset.i, 10), 1);
+      renderSaleCart();
+    });
+
+    document.getElementById('saleForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const date = document.getElementById('saleDate').value || todayStr();
+      const note = document.getElementById('saleNote').value.trim();
+      const paymentMethod = document.getElementById('salePayment').value;
+
+      if(!saleCart.length){ alert('Sepete en az bir ürün ekleyin (yukarıdaki "Sepete Ekle" butonuyla).'); return; }
+
+      const btn = document.getElementById('saleSubmitBtn');
+      btn.disabled = true; btn.textContent = 'Kaydediliyor…';
+      try{
+        const items = saleCart.map(it => ({
+          productCol: it.productCol, productId: it.productId, productName: it.productName,
+          category: it.category, beden: it.beden || null,
+          quantity: it.quantity, unitPrice: it.unitPrice, total: it.quantity*it.unitPrice,
+        }));
+        const total = items.reduce((s,it)=>s+it.total, 0);
+
+        const saleRef = await addDoc(collection(db,'satislar'), { date, note, paymentMethod, items, total, createdAt: Date.now() });
+
+        for(const it of items){
+          if(!it.productCol || !it.productId) continue;
+          const p = allProducts.find(p=>p.col===it.productCol && p.id===it.productId);
+          if(it.beden){
+            await updateDoc(doc(db, it.productCol, it.productId), { [`stokMap.${it.beden}`]: increment(-it.quantity) });
+            if(p){
+              p.stokMap = p.stokMap || {};
+              p.stokMap[it.beden] = Math.max(0, (p.stokMap[it.beden]||0) - it.quantity);
+            }
+          } else {
+            await updateDoc(doc(db, it.productCol, it.productId), { stok: increment(-it.quantity) });
+            if(p) p.stok = Math.max(0, (p.stok||0) - it.quantity);
+          }
+        }
+        renderStockTable();
+        populateProductSelect();
+
+        // Ödeme doğrudan bir firmaya gittiyse (Nakit/KK/Havale değilse), tutar o firmanın borcundan düşülür
+        const isCompanyPayment = paymentMethod && !['Nakit','KK','Havale'].includes(paymentMethod);
+        if(isCompanyPayment){
+          await addDoc(collection(db,'borclar'), {
+            company: paymentMethod, amount: -total, date, note: note || 'Satıştan yapılan ödeme',
+            kind: 'payment', saleId: saleRef.id, createdAt: Date.now(),
+          });
+          await loadDebts();
+        }
+
+        saleCart = [];
+        renderSaleCart();
+        document.getElementById('saleForm').reset();
+        document.getElementById('saleDate').value = todayStr();
+        recalcSaleTotal();
+        await loadAnalysis();
+        flashMsg('saleMsg', 'Satış kaydedildi.');
+      }catch(err){
+        alert('Hata: ' + err.message);
+      }finally{
+        btn.disabled = false; btn.textContent = 'Satışı Kaydet';
+      }
+    });
+
+    // ── GİDER FORMU ──
+    function toggleExpCompanyField(){
+      const isPurchase = document.getElementById('expCat').value === 'Ürün Alımı';
+      document.getElementById('expCompanyWrap').style.display = isPurchase ? 'block' : 'none';
+    }
+    document.getElementById('expCat').addEventListener('change', toggleExpCompanyField);
+
+    function populateExpCompanyOptions(){
+      const sel = document.getElementById('expCompany');
+      const prevVal = sel.value;
+      const companies = [...new Set(debts.map(d=>d.company).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'tr'));
+      sel.innerHTML = '<option value="">— Seçiniz —</option>' + companies.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+      if([...sel.options].some(o=>o.value===prevVal)) sel.value = prevVal;
+    }
+
+    document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const description = document.getElementById('expDesc').value.trim();
+      const category = document.getElementById('expCat').value;
+      const amount = parseFloat(document.getElementById('expAmount').value);
+      const date = document.getElementById('expDate').value || todayStr();
+      const expCompany = category === 'Ürün Alımı' ? document.getElementById('expCompany').value : '';
+
+      if(!description){ alert('Açıklama girin.'); return; }
+      if(!amount || amount<=0){ alert('Geçerli bir tutar girin.'); return; }
+
+      const btn = document.getElementById('expSubmitBtn');
+      btn.disabled = true; btn.textContent = 'Kaydediliyor…';
+      try{
+        const expRef = await addDoc(collection(db,'giderler'), { description, category, amount, date, isDebtPayment: !!expCompany, createdAt: Date.now() });
+
+        // Kendi kartımızla bir firmaya borç ödemesi yapıldıysa: hem gider olarak kaydedilir, hem de o firmanın borcundan düşülür
+        if(expCompany){
+          await addDoc(collection(db,'borclar'), {
+            company: expCompany, amount: -amount, date, note: description || 'Kendi kartımızla yapılan ödeme',
+            kind: 'payment', expenseId: expRef.id, createdAt: Date.now(),
+          });
+          await loadDebts();
+        }
+
+        document.getElementById('expenseForm').reset();
+        document.getElementById('expDate').value = todayStr();
+        toggleExpCompanyField();
+        await loadAnalysis();
+        flashMsg('expMsg', 'Gider kaydedildi.');
+      }catch(err){
+        alert('Hata: ' + err.message);
+      }finally{
+        btn.disabled = false; btn.textContent = 'Gideri Kaydet';
+      }
+    });
+
+    // ── FİRMA BORÇLARI ──
+    let debts = [];
+    let debtViewMode = 'borc'; // 'borc' | 'odeme'
+
+    async function loadDebts(){
+      const tbody = document.getElementById('debtsBody');
+      try{
+        const snap = await getDocs(collection(db,'borclar'));
+        debts = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+        renderDebts();
+        populateSalePaymentOptions();
+        populateExpCompanyOptions();
+      }catch(e){
+        console.error('Borç listesi yüklenemedi:', e);
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Yükleme hatası. Sayfayı yenileyin.</td></tr>';
+      }
+    }
+
+    document.querySelectorAll('.view-toggle-btn[data-debtview]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-toggle-btn[data-debtview]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        debtViewMode = btn.dataset.debtview;
+        renderDebts();
+      });
+    });
+
+    // Her firmanın ödemelerini, o firmaya ait borç kayıtlarından (en eskiden başlayarak) düşer;
+    // böylece "Borçlar" listesindeki tutar, o firmaya zaten yapılmış ödemeler çıkarılmış "kalan borç" olur.
+    function computeDebtRemaining(){
+      const byCompany = {};
+      debts.forEach(d => {
+        const c = d.company || '';
+        if(!byCompany[c]) byCompany[c] = { entries: [], paymentPool: 0 };
+        if(d.kind === 'payment') byCompany[c].paymentPool += Math.abs(d.amount||0);
+        else byCompany[c].entries.push(d);
+      });
+      const remaining = {};
+      Object.values(byCompany).forEach(info => {
+        const sorted = info.entries.slice().sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+        let pool = info.paymentPool;
+        sorted.forEach(d => {
+          const orig = d.amount||0;
+          const applied = Math.min(pool, orig);
+          pool -= applied;
+          remaining[d.id] = orig - applied;
+        });
+      });
+      return remaining;
+    }
+
+    function renderDebts(){
+      const tbody = document.getElementById('debtsBody');
+      const total = debts.reduce((s,d)=>s+(d.amount||0), 0);
+      document.getElementById('debtTotal').textContent = fmtTL(total);
+
+      // Borçlar: kalan tutara göre en çoktan en aza | Ödemeler: en yeni tarihten en eskiye
+      const isPayment = d => d.kind === 'payment';
+      let list;
+      if(debtViewMode === 'odeme'){
+        list = debts.filter(isPayment).slice()
+          .sort((a,b)=> (b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0));
+      } else {
+        const remainingMap = computeDebtRemaining();
+        list = debts.filter(d=>!isPayment(d)).map(d => ({ ...d, displayAmount: remainingMap[d.id] }));
+        list.sort((a,b)=> (b.displayAmount||0)-(a.displayAmount||0));
+      }
+
+      if(!list.length){
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-row">${debtViewMode==='odeme'?'Henüz ödeme kaydı yok.':'Henüz borç kaydı yok.'}</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = list.map(d => {
+        const shownAmount = debtViewMode === 'odeme' ? d.amount : d.displayAmount;
+        return `
+        <tr>
+          <td>${escapeHtml(d.company||'')}</td>
+          <td>${d.date||'-'}</td>
+          <td>${escapeHtml(d.note||(d.kind==='payment'?'Satıştan yapılan ödeme':''))}</td>
+          <td class="${shownAmount<0?'amt-pos':'amt-neg'}">${fmtTL(shownAmount)}</td>
+          <td><button class="btn-del-record" data-id="${d.id}">Sil</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Ödeme yöntemi listesine mevcut firmaları da ekler (borcu doğrudan firmaya giden ödemeler için)
+    function populateSalePaymentOptions(){
+      const sel = document.getElementById('salePayment');
+      const prevVal = sel.value;
+      const companies = [...new Set(debts.map(d=>d.company).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'tr'));
+      sel.innerHTML = `
+        <option value="Nakit">Nakit</option>
+        <option value="KK">Kredi Kartı</option>
+        <option value="Havale">Havale</option>
+      `;
+      if(companies.length){
+        const group = document.createElement('optgroup');
+        group.label = 'Firma Hesabına Ödeme';
+        companies.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c; opt.textContent = c;
+          group.appendChild(opt);
+        });
+        sel.appendChild(group);
+      }
+      if([...sel.options].some(o=>o.value===prevVal)) sel.value = prevVal;
+    }
+
+    document.getElementById('debtForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const company = document.getElementById('debtCompany').value.trim();
+      const amount = parseFloat(document.getElementById('debtAmount').value);
+      const date = document.getElementById('debtDate').value || todayStr();
+      const note = document.getElementById('debtNote').value.trim();
+
+      if(!company){ alert('Firma adı girin.'); return; }
+      if(!amount || amount<=0){ alert('Geçerli bir tutar girin.'); return; }
+
+      const btn = document.getElementById('debtSubmitBtn');
+      btn.disabled = true; btn.textContent = 'Kaydediliyor…';
+      try{
+        await addDoc(collection(db,'borclar'), { company, amount, date, note, createdAt: Date.now() });
+        document.getElementById('debtForm').reset();
+        document.getElementById('debtDate').value = todayStr();
+        await loadDebts();
+        flashMsg('debtMsg', 'Borç kaydedildi.');
+      }catch(err){
+        alert('Hata: ' + err.message);
+      }finally{
+        btn.disabled = false; btn.textContent = 'Borcu Kaydet';
+      }
+    });
+
+    document.getElementById('debtsBody').addEventListener('click', async (e) => {
+      const btn = e.target.closest('.btn-del-record');
+      if(!btn) return;
+      if(!confirm('Bu borç kaydını silmek istediğinize emin misiniz?')) return;
+      btn.disabled = true; btn.textContent = '…';
+      try{
+        await deleteDoc(doc(db,'borclar', btn.dataset.id));
+        await loadDebts();
+      }catch(err){
+        alert('Silme hatası: ' + err.message);
+        btn.disabled = false; btn.textContent = 'Sil';
+      }
+    });
+
+    // ── ANALİZ ──
+    let analysisMode = 'month'; // 'day' | 'month'
+
+    function setAnalysisMode(mode){
+      analysisMode = mode;
+      document.getElementById('viewModeDay').classList.toggle('active', mode==='day');
+      document.getElementById('viewModeMonth').classList.toggle('active', mode==='month');
+      document.getElementById('analysisDay').style.display = mode==='day' ? 'block' : 'none';
+      document.getElementById('analysisMonth').style.display = mode==='month' ? 'block' : 'none';
+      document.getElementById('chartGrid').style.display = mode==='day' ? 'none' : 'grid';
+      loadAnalysis();
+    }
+    document.getElementById('viewModeDay').addEventListener('click', () => setAnalysisMode('day'));
+    document.getElementById('viewModeMonth').addEventListener('click', () => setAnalysisMode('month'));
+    document.getElementById('analysisDay').addEventListener('change', loadAnalysis);
+    document.getElementById('analysisMonth').addEventListener('change', loadAnalysis);
+
+    function daysInMonth(month){
+      const [y,m] = month.split('-').map(Number);
+      return new Date(y, m, 0).getDate();
+    }
+
+    function drawChart(canvasId, type, labels, datasets, horizontal){
+      const ctx = document.getElementById(canvasId);
+      if(charts[canvasId]) charts[canvasId].destroy();
+      if(type === 'bar'){
+        datasets = datasets.map(ds => ({
+          ...ds, maxBarThickness: 34, categoryPercentage: 0.5, barPercentage: 0.7, borderRadius: 4,
+        }));
+      }
+      const valueAxis = horizontal ? 'x' : 'y';
+      const categoryAxis = horizontal ? 'y' : 'x';
+      const categoryScale = { grid: { display: false } };
+      if(horizontal){
+        // Uzun etiketleri (ürün adı, açıklama) eksende kısalt; tam metin tooltip'te görünür.
+        categoryScale.ticks = { callback: function(value){
+          const lbl = String(this.getLabelForValue(value));
+          return lbl.length > 26 ? lbl.slice(0,25) + '…' : lbl;
+        }};
+      }
+      charts[canvasId] = new Chart(ctx, {
+        type, data: { labels, datasets },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          indexAxis: horizontal ? 'y' : 'x',
+          plugins: { legend: { labels: { font: { family: 'Lora' } } } },
+          scales: {
+            [valueAxis]: { beginAtZero: true },
+            [categoryAxis]: categoryScale,
+          },
+        }
+      });
+    }
+
+    async function loadAnalysis(){
+      const monthInput = document.getElementById('analysisMonth');
+      const dayInput = document.getElementById('analysisDay');
+      if(!monthInput.value) monthInput.value = todayStr().slice(0,7);
+      if(!dayInput.value) dayInput.value = todayStr();
+
+      const isDay = analysisMode === 'day';
+      const scopeKey = isDay ? dayInput.value : monthInput.value; // 'YYYY-MM-DD' ya da 'YYYY-MM'
+
+      const [salesSnap, expSnap] = await Promise.all([
+        getDocs(collection(db,'satislar')),
+        getDocs(collection(db,'giderler')),
+      ]);
+      const allSales = salesSnap.docs.map(d=>({ id:d.id, ...d.data() }));
+      const allExpenses = expSnap.docs.map(d=>({ id:d.id, ...d.data() }));
+      salesCache = {};
+      allSales.forEach(s => { salesCache[s.id] = s; });
+
+      const scopeSales = isDay
+        ? allSales.filter(s => s.date === scopeKey)
+        : allSales.filter(s => (s.date||'').startsWith(scopeKey));
+      // Firma borcuna kendi kredi kartımızla yapılan ödemeler günlük giderde gösterilmez, diğer tüm giderler günlükte de aylıkta da normal görünür
+      const scopeExp = isDay
+        ? allExpenses.filter(x => x.date === scopeKey && !x.isDebtPayment)
+        : allExpenses.filter(x => (x.date||'').startsWith(scopeKey));
+
+      const totalIncome = scopeSales.reduce((s,x)=>s+(x.total||0), 0);
+      const totalExpense = scopeExp.reduce((s,x)=>s+(x.amount||0), 0);
+      const net = totalIncome - totalExpense;
+
+      const scopeLbl = isDay ? 'Günlük' : 'Aylık';
+      document.getElementById('statIncomeLbl').textContent = scopeLbl + ' Gelir';
+      document.getElementById('statExpenseLbl').textContent = scopeLbl + ' Gider';
+      document.getElementById('recordsTitle').textContent = isDay ? 'Bu Günkü Kayıtlar' : 'Bu Ayki Kayıtlar';
+
+      document.getElementById('statIncome').textContent = fmtTL(totalIncome);
+      document.getElementById('statExpense').textContent = fmtTL(totalExpense);
+      const netEl = document.getElementById('statNet');
+      netEl.textContent = fmtTL(net);
+      netEl.closest('.stat-card').classList.toggle('negative', net<0);
+
+      // Kasa dağılımı: ödeme yöntemine göre gelir kırılımı + net nakit (giderler nakitten düşülür)
+      // Not: ödeme doğrudan bir firmaya gittiyse (KK/Havale/Nakit değilse) kasaya hiç girmemiştir, bu üçüne dahil edilmez.
+      let kkTotal = 0, havaleTotal = 0, cashTotal = 0, companyTotal = 0;
+      scopeSales.forEach(s => {
+        const pm = s.paymentMethod || 'Nakit';
+        if(pm === 'KK') kkTotal += s.total || 0;
+        else if(pm === 'Havale') havaleTotal += s.total || 0;
+        else if(pm === 'Nakit') cashTotal += s.total || 0;
+        else companyTotal += s.total || 0;
+      });
+      const netCash = cashTotal - totalExpense;
+      document.getElementById('statKK').textContent = fmtTL(kkTotal);
+      document.getElementById('statHavale').textContent = fmtTL(havaleTotal);
+      document.getElementById('statCash').textContent = fmtTL(cashTotal);
+      document.getElementById('statCompany').textContent = fmtTL(companyTotal);
+      const netCashEl = document.getElementById('statNetCash');
+      netCashEl.textContent = fmtTL(netCash);
+      netCashEl.closest('.stat-card').classList.toggle('negative', netCash<0);
+
+      // Günlük gelir/gider (sadece Aylık modda: ayın günlerine göre kırılım)
+      if(!isDay){
+        const nDays = daysInMonth(scopeKey);
+        const incomeByDay = Array(nDays).fill(0);
+        const expenseByDay = Array(nDays).fill(0);
+        scopeSales.forEach(s=>{ const d=parseInt((s.date||'').split('-')[2],10); if(d>=1&&d<=nDays) incomeByDay[d-1]+=s.total||0; });
+        scopeExp.forEach(x=>{ const d=parseInt((x.date||'').split('-')[2],10); if(d>=1&&d<=nDays) expenseByDay[d-1]+=x.amount||0; });
+        drawChart('dailyChart','line', Array.from({length:nDays},(_,i)=>String(i+1)), [
+          { label:'Gelir', data:incomeByDay, borderColor:'#4a7a38', backgroundColor:'rgba(74,122,56,.15)', tension:.3, fill:true },
+          { label:'Gider', data:expenseByDay, borderColor:'#b23a3a', backgroundColor:'rgba(178,58,58,.12)', tension:.3, fill:true },
+        ]);
+      } else if(charts['dailyChart']){
+        charts['dailyChart'].destroy();
+        delete charts['dailyChart'];
+      }
+
+      // En büyük N kalemi ayrı bar yapar, gerisini tek "+N kalem" barında toplar
+      // (ay ilerledikçe onlarca farklı ürün/açıklama birikse bile grafik okunaklı kalır).
+      function topNWithRest(entries, n, restLabel){
+        const sorted = entries.slice().sort((a,b)=>b[1]-a[1]);
+        const top = sorted.slice(0, n);
+        const rest = sorted.slice(n);
+        if(rest.length){
+          top.push([`${restLabel} (+${rest.length} kalem)`, rest.reduce((s,x)=>s+x[1],0)]);
+        }
+        return top;
+      }
+
+      // Gider kategori dağılımı ("Diğer" kategorisinde ne olduğu görünsün diye açıklama kullanılır)
+      const byCat = {};
+      scopeExp.forEach(x=>{
+        const c = x.category || 'Diğer';
+        const label = c === 'Diğer' ? (x.description || 'Diğer') : c;
+        byCat[label] = (byCat[label]||0) + (x.amount||0);
+      });
+      const topCat = topNWithRest(Object.entries(byCat), 5, 'Diğer');
+      drawChart('expenseCategoryChart','bar', topCat.map(x=>x[0]), [
+        { label:'Gider', data:topCat.map(x=>x[1]), backgroundColor:'#c8a832' },
+      ], true);
+
+      // En çok satan ürünler
+      const byProduct = {};
+      scopeSales.forEach(s=>{
+        if(s.items && s.items.length){
+          s.items.forEach(it=>{ const n=it.productName||'?'; byProduct[n]=(byProduct[n]||0)+(it.total||0); });
+        } else {
+          const n=s.productName||'?'; byProduct[n]=(byProduct[n]||0)+(s.total||0);
+        }
+      });
+      const topProducts = topNWithRest(Object.entries(byProduct), 5, 'Diğer ürünler');
+      drawChart('topProductsChart','bar', topProducts.map(x=>x[0]), [
+        { label:'Ciro', data:topProducts.map(x=>x[1]), backgroundColor:'#2e5c22' },
+      ], true);
+
+      // Kayıt tablosu (bir satış kaydı tek ürün olabilir veya "items" dizisiyle birden fazla ürün içerebilir)
+      function fmtTime(ts){
+        return ts ? new Date(ts).toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' }) : '';
+      }
+      const rows = [
+        ...scopeSales.map(s=>{
+          if(s.items && s.items.length){
+            const desc = s.items.map(it=>`${it.productName} ×${it.quantity}`).join(', ') + (s.note?' — '+s.note:'');
+            return { id:s.id, kind:'satis', date:s.date, createdAt:s.createdAt||0, type:'Satış', desc, amount:s.total, sign:1, payment:s.paymentMethod||'' };
+          }
+          return {
+            id:s.id, kind:'satis', date:s.date, createdAt:s.createdAt||0, type:'Satış',
+            desc:`${s.productName} ×${s.quantity}${s.note?' — '+s.note:''}`, amount:s.total, sign:1, payment:s.paymentMethod||'',
+          };
+        }),
+        ...scopeExp.map(x=>({ id:x.id, kind:'gider', date:x.date, createdAt:x.createdAt||0, type:'Gider', desc:`${x.description} (${x.category})`, amount:x.amount, sign:-1, payment:'' })),
+      ].sort((a,b)=> (b.createdAt||0) - (a.createdAt||0) || (b.date||'').localeCompare(a.date||''));
+      const tbody = document.getElementById('recordsBody');
+      const emptyMsg = isDay ? 'Bu gün için kayıt yok.' : 'Bu ay için kayıt yok.';
+      tbody.innerHTML = rows.length ? rows.map(r=>`
+        <tr>
+          <td>${r.date||'-'}${r.createdAt?` <span class="record-time">${fmtTime(r.createdAt)}</span>`:''}</td>
+          <td><span class="tag ${r.sign>0?'tag-income':'tag-expense'}">${r.type}</span></td>
+          <td>${escapeHtml(r.desc)}</td>
+          <td class="${r.sign>0?'amt-pos':'amt-neg'}">${r.sign>0?'+':'−'}${fmtTL(r.amount)}${r.payment?` <span class="payment-tag">${escapeHtml(r.payment)}</span>`:''}</td>
+          <td><button class="btn-del-record" data-kind="${r.kind}" data-id="${r.id}">Sil</button></td>
+        </tr>`).join('') : `<tr><td colspan="5" class="empty-row">${emptyMsg}</td></tr>`;
+    }
+
+    document.getElementById('recordsBody').addEventListener('click', async (e) => {
+      const btn = e.target.closest('.btn-del-record');
+      if(!btn) return;
+      const { kind, id } = btn.dataset;
+      if(!confirm('Bu kaydı silmek istediğinize emin misiniz?')) return;
+      btn.disabled = true; btn.textContent = '…';
+      try{
+        if(kind === 'satis'){
+          const s = salesCache[id];
+          await deleteDoc(doc(db,'satislar', id));
+          // Eski kayıtlar (items dizisi olmayan, tek ürünlü) ile yeni sepet kayıtlarını (items dizili) aynı şekilde geri al
+          const items = s ? (s.items && s.items.length ? s.items : [{
+            productCol: s.productCol, productId: s.productId, beden: s.beden, quantity: s.quantity,
+          }]) : [];
+          for(const it of items){
+            if(!it.productCol || !it.productId) continue;
+            if(it.beden){
+              await updateDoc(doc(db, it.productCol, it.productId), { [`stokMap.${it.beden}`]: increment(it.quantity||0) });
+            } else {
+              await updateDoc(doc(db, it.productCol, it.productId), { stok: increment(it.quantity||0) });
+            }
+          }
+          // Bu satış bir firmaya doğrudan ödemeyse, o firmanın borcundan düşülen kaydı da geri al
+          const linkedPayments = debts.filter(d => d.kind==='payment' && d.saleId===id);
+          for(const dp of linkedPayments){
+            await deleteDoc(doc(db,'borclar', dp.id));
+          }
+          if(linkedPayments.length) await loadDebts();
+        } else {
+          await deleteDoc(doc(db,'giderler', id));
+          // Bu gider bir firmaya borç ödemesiyse, o firmanın borcundan düşülen kaydı da geri al
+          const linkedExpPayments = debts.filter(d => d.kind==='payment' && d.expenseId===id);
+          for(const dp of linkedExpPayments){
+            await deleteDoc(doc(db,'borclar', dp.id));
+          }
+          if(linkedExpPayments.length) await loadDebts();
+        }
+        await loadAllProducts();
+        renderStockTable();
+        populateProductSelect();
+        await loadAnalysis();
+      }catch(err){
+        alert('Silme hatası: ' + err.message);
+        btn.disabled = false; btn.textContent = 'Sil';
+      }
+    });
+  </script>
+</body>
+</html>
