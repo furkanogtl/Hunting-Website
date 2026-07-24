@@ -912,6 +912,7 @@ const brands = [
 ];
 
 let activeBrand=null,activeCat='',activeMain='',activeSub='',minP=null,maxP=null,allProducts=[],brandCounts={},editingId=null;
+const defaultToolbarTitle=document.getElementById('toolbarTitle')?document.getElementById('toolbarTitle').textContent:'';
 let existingImgs=[],newImgFiles=[];
 function renderImgGallery(){
   const box=document.getElementById('imgGallery');
@@ -984,6 +985,17 @@ function filterSidebar(q){
 }
 
 function selectBrand(slug){
+  if(activeBrand && activeBrand.slug===slug){
+    activeBrand=null;
+    activeCat='';activeMain='';activeSub='';minP=null;maxP=null;
+    const bcBrand=document.getElementById('bcBrand'); if(bcBrand) bcBrand.textContent='';
+    const toolbarTitle=document.getElementById('toolbarTitle'); if(toolbarTitle) toolbarTitle.textContent=defaultToolbarTitle;
+    const headerSearch=document.getElementById('headerSearch'); if(headerSearch) headerSearch.value='';
+    const sortSelect=document.getElementById('sortSelect'); if(sortSelect) sortSelect.value='';
+    renderSidebar(brands);
+    loadAllProducts();
+    return;
+  }
   activeBrand=brands.find(b=>b.slug===slug);
   activeCat='';activeMain='';activeSub='';minP=null;maxP=null;
   const bcBrand=document.getElementById('bcBrand'); if(bcBrand) bcBrand.textContent=' › '+activeBrand.name;
