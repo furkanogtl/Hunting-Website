@@ -1233,6 +1233,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escJs(s){ return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"'); }
 
 // Koleksiyonlar ve sayfa linkleri
 const COLLECTIONS = [
@@ -1288,15 +1290,15 @@ function makePopCard(id, p) {
   card.innerHTML = `
     <button class="prod-card-del" onclick="event.stopPropagation();window.removePopular('${id}',this)" title="Kaldır">&#x2715;</button>
     <div class="prod-card-img">
-      <img src="${p.img||'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&q=70'}" alt="${p.name||''}" loading="lazy"/>
+      <img src="${esc(p.img||'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&q=70')}" alt="${esc(p.name||'')}" loading="lazy"/>
     </div>
     <div class="prod-card-info">
-      <div class="prod-category">${p.col_label||''}</div>
-      <h4>${p.name||''}</h4>
-      <p>${p.desc||''}</p>
+      <div class="prod-category">${esc(p.col_label||'')}</div>
+      <h4>${esc(p.name||'')}</h4>
+      <p>${esc(p.desc||'')}</p>
     </div>
     <div class="prod-card-price-row">
-      ${p.price ? `<span class="prod-card-price">${p.price}</span>` : '<span class="prod-card-price-note">Fiyat için arayın</span>'}
+      ${p.price ? `<span class="prod-card-price">${esc(p.price)}</span>` : '<span class="prod-card-price-note">Fiyat için arayın</span>'}
     </div>
     <div class="prod-card-footer">
       <span class="prod-badge">&#x2714; Stokta</span>
@@ -1359,14 +1361,14 @@ function renderPicker(q) {
     return;
   }
   list.innerHTML = items.map(p => `
-    <div class="picker-item" onclick="window.addToPopular('${p.id}','${p.col}','${p.col_label}','${(p.name||'').replace(/'/g,"\'")}','${(p.desc||'').replace(/'/g,"\'")}','${(p.img||'')}','${(p.price||'').replace(/'/g,"\'")}')">
+    <div class="picker-item" onclick="window.addToPopular('${escJs(p.id)}','${escJs(p.col)}','${escJs(p.col_label)}','${escJs(p.name)}','${escJs(p.desc)}','${escJs(p.img)}','${escJs(p.price)}')">
       <div class="picker-img">
-        ${p.img ? `<img src="${p.img}" alt="${p.name}" loading="lazy"/>` : '<span style="font-size:1.4rem;">📦</span>'}
+        ${p.img ? `<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy"/>` : '<span style="font-size:1.4rem;">📦</span>'}
       </div>
       <div class="picker-info">
-        <div class="picker-label">${p.col_label}</div>
-        <div class="picker-name">${p.name||'—'}</div>
-        ${p.price ? `<div class="picker-price">${p.price}</div>` : ''}
+        <div class="picker-label">${esc(p.col_label)}</div>
+        <div class="picker-name">${esc(p.name||'—')}</div>
+        ${p.price ? `<div class="picker-price">${esc(p.price)}</div>` : ''}
       </div>
       <div class="picker-add">+ Ekle</div>
     </div>
@@ -1374,6 +1376,7 @@ function renderPicker(q) {
 }
 
 window.addToPopular = async function(id, col, col_label, name, desc, img, price) {
+  if (!isAdmin()) return;
   const docId = col + '_' + id;
   const itemEl = event.currentTarget; // await'ten önce yakala, sonra global event değişmiş/kaybolmuş olabilir
   try {

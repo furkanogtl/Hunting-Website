@@ -859,6 +859,7 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
+function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 const db=getFirestore(app);
 const PAGE_COL='tufekler';
 
@@ -1116,17 +1117,17 @@ function renderProducts(list){
     <div class="product-card" style="animation:fadeInUp .3s ease ${i*0.05}s both;">
       <div class="card-badges">
         ${isSecond?'<span class="badge badge-second">İkinci El</span>':'<span class="badge badge-new">Sıfır</span>'}
-        ${pc.sub?`<span class="badge" style="background:#555;color:#fff;margin-top:2px;">${pc.sub}</span>`:''}
+        ${pc.sub?`<span class="badge" style="background:#555;color:#fff;margin-top:2px;">${esc(pc.sub)}</span>`:''}
       </div>
       <div class="card-img" onclick="location.href='urun-detay.html?col=tufekler&id=${p.id}'" style="cursor:pointer;">
-        ${p.img?`<img src="${p.img}" alt="${p.name}"/>`:`<div class="no-img">🔫</div>`}
+        ${p.img?`<img src="${esc(p.img)}" alt="${esc(p.name)}"/>`:`<div class="no-img">🔫</div>`}
       </div>
       <div class="card-body">
-        <div class="card-brand">${brandName}</div>
-        <div class="card-name">${p.name}</div>
-        <div class="card-cat">${catLabel}</div>
-        
-        ${p.price?`<div class="card-price-row"><span class="card-price">${p.price}</span></div>`:'<div class="card-price-row"><span class="card-price-note">Fiyat için arayın</span></div>'}
+        <div class="card-brand">${esc(brandName)}</div>
+        <div class="card-name">${esc(p.name)}</div>
+        <div class="card-cat">${esc(catLabel)}</div>
+
+        ${p.price?`<div class="card-price-row"><span class="card-price">${esc(p.price)}</span></div>`:'<div class="card-price-row"><span class="card-price-note">Fiyat için arayın</span></div>'}
       </div>
       <div class="card-footer">
         <a class="btn-info" href="urun-detay.html?col=tufekler&id=${p.id}" style="text-decoration:none;text-align:center;">Detay</a>
@@ -1169,7 +1170,7 @@ function openEditModal(docId){
   document.getElementById('f-subcat').value = parsedCat.sub || 'Yarı Otomatik';
   currentImgUrl=p.img||null;
   if(p.img){
-    document.getElementById('imgDrop').innerHTML=`<img src="${p.img}"/>`;
+    document.getElementById('imgDrop').innerHTML=`<img src="${esc(p.img)}"/>`;
   } else {
     document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
   }
