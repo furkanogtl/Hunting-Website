@@ -262,6 +262,7 @@
     .tag { padding: 2px 10px; border-radius: 20px; font-size: .7rem; letter-spacing: .04em; }
     .tag-income { background: rgba(74,122,56,.12); color: var(--forest); }
     .tag-expense { background: var(--danger-bg); color: var(--danger); }
+    .tag-kasa { background: rgba(138,173,58,.15); color: var(--gold); }
     .amt-pos { color: var(--forest); font-weight: 600; }
     .amt-neg { color: var(--danger); font-weight: 600; }
   </style>
@@ -286,15 +287,15 @@
     </div>
 
     <div class="tabs">
-      <button class="tab-btn active" data-tab="stok">Stok</button>
-      <button class="tab-btn" data-tab="giris">Satış / Gider Ekle</button>
+      <button class="tab-btn" data-tab="stok">Stok</button>
+      <button class="tab-btn active" data-tab="giris">Satış / Gider Ekle</button>
       <button class="tab-btn" data-tab="analiz">Analiz</button>
       <button class="tab-btn" data-tab="borclar">Firma Borçları</button>
     </div>
 
     <main>
       <!-- STOK -->
-      <section class="tab-panel active" id="tab-stok">
+      <section class="tab-panel" id="tab-stok">
         <h3 class="panel-title">Stok Durumu</h3>
         <div class="card">
           <div class="toolbar">
@@ -325,7 +326,7 @@
       </section>
 
       <!-- SATIŞ / GİDER EKLE -->
-      <section class="tab-panel" id="tab-giris">
+      <section class="tab-panel active" id="tab-giris">
         <h3 class="panel-title">Satış / Gider Ekle</h3>
         <div class="form-cols">
           <div class="card">
@@ -380,7 +381,11 @@
                 <select id="salePayment">
                   <option value="Nakit">Nakit</option>
                   <option value="KK">Kredi Kartı</option>
-                  <option value="Havale">Havale</option>
+                  <optgroup label="Havale">
+                    <option value="Havale - Ziraat">Ziraat</option>
+                    <option value="Havale - Yapı Kredi">Yapı Kredi</option>
+                    <option value="Havale - Fatih">Fatih Havale</option>
+                  </optgroup>
                 </select>
                 <div style="font-size:.72rem;color:#8fa080;margin-top:4px;">Ödeme doğrudan bir tedarikçi firmaya gittiyse listeden o firmayı seçin — tutar o firmanın borcundan otomatik düşülür.</div>
               </div>
@@ -430,6 +435,23 @@
               <button type="submit" class="submit-btn" style="background:var(--danger);" id="expSubmitBtn">Gideri Kaydet</button>
               <div class="flash-msg" id="expMsg"></div>
             </form>
+
+            <div style="margin-top:22px;padding-top:18px;border-top:1px dashed var(--mist);">
+              <h5 style="margin-bottom:4px;color:var(--pine);font-family:'Playfair Display',serif;font-size:.92rem;">Kasa Değeri (Gün Başı)</h5>
+              <div style="font-size:.72rem;color:#8fa080;margin-bottom:10px;">Dükkan kapanırken ertesi gün için kasada bırakılan tutar — gelir sayılmaz; girildiği güne Net/Nakit Toplam/Net Nakit olarak eklenir, bir önceki günün Net Nakit'inden (patrona verilen paradan) ise düşülür.</div>
+              <form id="kasaForm" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+                <div class="field" style="flex:1;min-width:130px;margin:0;">
+                  <label for="kasaDate">Tarih</label>
+                  <input type="date" id="kasaDate" required />
+                </div>
+                <div class="field" style="flex:1;min-width:130px;margin:0;">
+                  <label for="kasaAmount">Tutar (₺)</label>
+                  <input type="number" id="kasaAmount" min="0" step="0.01" required />
+                </div>
+                <button type="submit" class="submit-btn" style="width:auto;padding:10px 18px;margin:0;">Kaydet</button>
+              </form>
+              <div class="flash-msg" id="kasaMsg"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -440,11 +462,11 @@
         <div class="card">
           <div class="toolbar">
             <div class="view-toggle">
-              <button type="button" class="view-toggle-btn" data-mode="day" id="viewModeDay">Günlük</button>
-              <button type="button" class="view-toggle-btn active" data-mode="month" id="viewModeMonth">Aylık</button>
+              <button type="button" class="view-toggle-btn active" data-mode="day" id="viewModeDay">Günlük</button>
+              <button type="button" class="view-toggle-btn" data-mode="month" id="viewModeMonth">Aylık</button>
             </div>
-            <input type="date" id="analysisDay" style="display:none;" />
-            <input type="month" id="analysisMonth" />
+            <input type="date" id="analysisDay" />
+            <input type="month" id="analysisMonth" style="display:none;" />
           </div>
 
           <div class="stat-grid">
@@ -461,7 +483,7 @@
             <div class="stat-card net-cash"><div class="lbl">Net Nakit (Giderler Düşülmüş)</div><div class="val" id="statNetCash">0 ₺</div></div>
           </div>
 
-          <div class="chart-grid" id="chartGrid">
+          <div class="chart-grid" id="chartGrid" style="display:none;">
             <div class="chart-box" id="dailyChartBox"><canvas id="dailyChart"></canvas></div>
           </div>
           <div class="chart-row2">
@@ -531,7 +553,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDocs, addDoc, setDoc, updateDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -558,8 +580,15 @@
     let allProducts = [];
     let charts = {};
     let salesCache = {};
+    let kasaDurumu = [];
 
     function todayStr(){ return new Date().toISOString().slice(0,10); }
+    function addDaysStr(dateStr, n){
+      const dt = new Date(dateStr+'T00:00:00');
+      dt.setDate(dt.getDate()+n);
+      const y = dt.getFullYear(), m = String(dt.getMonth()+1).padStart(2,'0'), d = String(dt.getDate()).padStart(2,'0');
+      return `${y}-${m}-${d}`;
+    }
     function fmtTL(n){ return (n||0).toLocaleString('tr-TR',{maximumFractionDigits:0}) + ' ₺'; }
     function escapeHtml(s){
       return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -574,6 +603,7 @@
     document.getElementById('saleDate').value = todayStr();
     document.getElementById('expDate').value = todayStr();
     document.getElementById('debtDate').value = todayStr();
+    document.getElementById('kasaDate').value = todayStr();
     document.getElementById('analysisMonth').value = todayStr().slice(0,7);
     document.getElementById('analysisDay').value = todayStr();
 
@@ -605,6 +635,8 @@
         await loadAllProducts();
         renderStockTable();
         populateProductSelect();
+        await loadKasa();
+        fillKasaAmountForDate();
         await loadAnalysis();
         await loadDebts();
       } else {
@@ -1065,7 +1097,7 @@
         populateProductSelect();
 
         // Ödeme doğrudan bir firmaya gittiyse (Nakit/KK/Havale değilse), tutar o firmanın borcundan düşülür
-        const isCompanyPayment = paymentMethod && !['Nakit','KK','Havale'].includes(paymentMethod);
+        const isCompanyPayment = paymentMethod && !['Nakit','KK'].includes(paymentMethod) && !paymentMethod.startsWith('Havale');
         if(isCompanyPayment){
           await addDoc(collection(db,'borclar'), {
             company: paymentMethod, amount: -total, date, note: note || 'Satıştan yapılan ödeme',
@@ -1137,6 +1169,39 @@
         alert('Hata: ' + err.message);
       }finally{
         btn.disabled = false; btn.textContent = 'Gideri Kaydet';
+      }
+    });
+
+    // ── KASA DEĞERİ (gün başı, elle girilen) ──
+    async function loadKasa(){
+      const snap = await getDocs(collection(db,'kasaDurumu'));
+      kasaDurumu = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    }
+    function fillKasaAmountForDate(){
+      const dateVal = document.getElementById('kasaDate').value;
+      const rec = kasaDurumu.find(k => k.date === dateVal);
+      document.getElementById('kasaAmount').value = rec ? rec.amount : '';
+    }
+    document.getElementById('kasaDate').addEventListener('change', fillKasaAmountForDate);
+    document.getElementById('kasaForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const date = document.getElementById('kasaDate').value || todayStr();
+      const amount = parseFloat(document.getElementById('kasaAmount').value);
+      if(isNaN(amount) || amount<0){ alert('Geçerli bir tutar girin.'); return; }
+
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = 'Kaydediliyor…';
+      try{
+        await setDoc(doc(db,'kasaDurumu', date), { date, amount, updatedAt: Date.now() });
+        const idx = kasaDurumu.findIndex(k => k.date === date);
+        if(idx>=0) kasaDurumu[idx].amount = amount;
+        else kasaDurumu.push({ id:date, date, amount });
+        await loadAnalysis();
+        flashMsg('kasaMsg', 'Kasa değeri kaydedildi.');
+      }catch(err){
+        alert('Hata: ' + err.message);
+      }finally{
+        btn.disabled = false; btn.textContent = 'Kaydet';
       }
     });
 
@@ -1233,7 +1298,11 @@
       sel.innerHTML = `
         <option value="Nakit">Nakit</option>
         <option value="KK">Kredi Kartı</option>
-        <option value="Havale">Havale</option>
+        <optgroup label="Havale">
+          <option value="Havale - Ziraat">Ziraat</option>
+          <option value="Havale - Yapı Kredi">Yapı Kredi</option>
+          <option value="Havale - Fatih">Fatih Havale</option>
+        </optgroup>
       `;
       if(companies.length){
         const group = document.createElement('optgroup');
@@ -1288,7 +1357,7 @@
     });
 
     // ── ANALİZ ──
-    let analysisMode = 'month'; // 'day' | 'month'
+    let analysisMode = 'day'; // 'day' | 'month'
 
     function setAnalysisMode(mode){
       analysisMode = mode;
@@ -1369,7 +1438,15 @@
 
       const totalIncome = scopeSales.reduce((s,x)=>s+(x.total||0), 0);
       const totalExpense = scopeExp.reduce((s,x)=>s+(x.amount||0), 0);
-      const net = totalIncome - totalExpense;
+      // Kasa değeri (gün başı elle girilen nakit) gelir değildir; sadece Net, Nakit Toplam ve Net Nakit'e eklenir
+      const scopeKasa = isDay
+        ? kasaDurumu.filter(k => k.date === scopeKey).reduce((s,k)=>s+(k.amount||0), 0)
+        : kasaDurumu.filter(k => (k.date||'').startsWith(scopeKey)).reduce((s,k)=>s+(k.amount||0), 0);
+      // Ertesi gün için kapanışta ayrılıp kasada bırakılan tutar, bugünün Net Nakit'inden (patrona verilen paradan) düşülür
+      const scopeKasaOut = isDay
+        ? kasaDurumu.filter(k => k.date === addDaysStr(scopeKey,1)).reduce((s,k)=>s+(k.amount||0), 0)
+        : kasaDurumu.filter(k => addDaysStr(k.date||'',-1).startsWith(scopeKey)).reduce((s,k)=>s+(k.amount||0), 0);
+      const net = totalIncome - totalExpense + scopeKasa;
 
       const scopeLbl = isDay ? 'Günlük' : 'Aylık';
       document.getElementById('statIncomeLbl').textContent = scopeLbl + ' Gelir';
@@ -1388,14 +1465,14 @@
       scopeSales.forEach(s => {
         const pm = s.paymentMethod || 'Nakit';
         if(pm === 'KK') kkTotal += s.total || 0;
-        else if(pm === 'Havale') havaleTotal += s.total || 0;
+        else if(pm.startsWith('Havale')) havaleTotal += s.total || 0;
         else if(pm === 'Nakit') cashTotal += s.total || 0;
         else companyTotal += s.total || 0;
       });
-      const netCash = cashTotal - totalExpense;
+      const netCash = cashTotal + scopeKasa - totalExpense - scopeKasaOut;
       document.getElementById('statKK').textContent = fmtTL(kkTotal);
       document.getElementById('statHavale').textContent = fmtTL(havaleTotal);
-      document.getElementById('statCash').textContent = fmtTL(cashTotal);
+      document.getElementById('statCash').textContent = fmtTL(cashTotal + scopeKasa);
       document.getElementById('statCompany').textContent = fmtTL(companyTotal);
       const netCashEl = document.getElementById('statNetCash');
       netCashEl.textContent = fmtTL(netCash);
@@ -1471,13 +1548,15 @@
           };
         }),
         ...scopeExp.map(x=>({ id:x.id, kind:'gider', date:x.date, createdAt:x.createdAt||0, type:'Gider', desc:`${x.description} (${x.category})`, amount:x.amount, sign:-1, payment:'' })),
+        ...(isDay ? kasaDurumu.filter(k=>k.date===scopeKey) : kasaDurumu.filter(k=>(k.date||'').startsWith(scopeKey)))
+          .map(k=>({ id:k.id, kind:'kasa', date:k.date, createdAt:k.updatedAt||0, type:'Kasa', desc:'Kasa', amount:k.amount, sign:1, payment:'' })),
       ].sort((a,b)=> (b.createdAt||0) - (a.createdAt||0) || (b.date||'').localeCompare(a.date||''));
       const tbody = document.getElementById('recordsBody');
       const emptyMsg = isDay ? 'Bu gün için kayıt yok.' : 'Bu ay için kayıt yok.';
       tbody.innerHTML = rows.length ? rows.map(r=>`
         <tr>
           <td>${r.date||'-'}${r.createdAt?` <span class="record-time">${fmtTime(r.createdAt)}</span>`:''}</td>
-          <td><span class="tag ${r.sign>0?'tag-income':'tag-expense'}">${r.type}</span></td>
+          <td><span class="tag ${r.kind==='kasa'?'tag-kasa':(r.sign>0?'tag-income':'tag-expense')}">${r.type}</span></td>
           <td>${escapeHtml(r.desc)}</td>
           <td class="${r.sign>0?'amt-pos':'amt-neg'}">${r.sign>0?'+':'−'}${fmtTL(r.amount)}${r.payment?` <span class="payment-tag">${escapeHtml(r.payment)}</span>`:''}</td>
           <td><button class="btn-del-record" data-kind="${r.kind}" data-id="${r.id}">Sil</button></td>
@@ -1512,6 +1591,10 @@
             await deleteDoc(doc(db,'borclar', dp.id));
           }
           if(linkedPayments.length) await loadDebts();
+        } else if(kind === 'kasa'){
+          await deleteDoc(doc(db,'kasaDurumu', id));
+          kasaDurumu = kasaDurumu.filter(k => k.id !== id);
+          fillKasaAmountForDate();
         } else {
           await deleteDoc(doc(db,'giderler', id));
           // Bu gider bir firmaya borç ödemesiyse, o firmanın borcundan düşülen kaydı da geri al

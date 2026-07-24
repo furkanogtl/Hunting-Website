@@ -345,7 +345,7 @@ a.contact-val:hover{color:var(--green);}
 .lb-close:hover{background:rgba(255,255,255,.25);}
 
 /* ── MODAL ── */
-.modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(20,50,12,.6);align-items:center;justify-content:center;}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(10,26,6,.93);align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--white);border-radius:6px;padding:36px 30px;max-width:440px;width:92%;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35);}
 .modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.3rem;color:var(--grey2);cursor:pointer;}
@@ -503,7 +503,7 @@ footer{background:#1c3d13;padding:24px 48px;display:flex;flex-wrap:wrap;gap:14px
   width: 100%;
   height: 100%;
 }
-body > *:not(.page-bg-pattern) {
+body > *:not(.page-bg-pattern):not(.main-nav):not(.mobile-menu):not(.modal-overlay):not(#lightbox):not(.wa-float) {
   position: relative;
   z-index: 1;
 }
@@ -697,16 +697,17 @@ function openContact(name,waLink){
   document.getElementById('c-title').textContent='"'+name+'" Hakkında Bilgi Al';
   document.getElementById('modalWaLink').href=waLink||'https://wa.me/905354177744';
   document.getElementById('contactModal').classList.add('open');
+  document.body.style.overflow='hidden';
 }
-function closeModal(id){document.getElementById(id).classList.remove('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
 function switchTab(id){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   document.querySelector('[data-tab="'+id+'"]').classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();document.getElementById('contactModal').classList.remove('open');}});
-document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();closeModal('contactModal');}});
+document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',function(e){if(e.target===this)closeModal(this.id);});});
 </script>
 
 <script type="module">
@@ -758,7 +759,9 @@ async function load(){
     const waMsg=encodeURIComponent('Merhaba, "'+p.name+'" ürünü hakkında bilgi almak istiyorum.');
     const waLink='https://wa.me/905354177744?text='+waMsg;
     const isSecond=(p.cat||'').toLowerCase().includes('ikinci');
-    const brandDisplay=p.brand?(p.brand.charAt(0).toUpperCase()+p.brand.slice(1).replace(/-/g,' ')):'';
+    let brandSlug=p.brand||'';
+    if(colName==='fisek'&&brandSlug.startsWith('f-')) brandSlug=brandSlug.slice(2);
+    const brandDisplay=brandSlug?(brandSlug.charAt(0).toUpperCase()+brandSlug.slice(1).replace(/-/g,' ')):'';
 
     // Spec satırları: sadece dolu olanları göster
     const specs=[
@@ -871,7 +874,6 @@ Detaylı bilgi almak veya satın alma süreci hakkında destek almak için bizim
         <div class="tab-content active" id="tab-desc">
           ${(()=>{
             const specFields=[
-              {key:'brand',label:'Marka'},
               {key:'model',label:'Model'},
               {key:'sistem',label:'Sistem'},
               {key:'kalibre',label:'Kalibre'},
@@ -882,7 +884,6 @@ Detaylı bilgi almak veya satın alma süreci hakkında destek almak için bizim
               {key:'mobilSok',label:'Mobil Şok'},
               {key:'renk',label:'Renk'},
               {key:'malzeme',label:'Malzeme'},
-              {key:'beden',label:'Beden'},
               {key:'uzunluk',label:'Uzunluk'},
               {key:'kapasite',label:'Kapasite'},
               {key:'tip',label:'Tip'},
