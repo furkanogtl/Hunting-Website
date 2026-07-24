@@ -118,6 +118,17 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 }
 .main-photo:hover .zoom-badge{opacity:1;}
 
+/* Fotoğraf galerisi küçük resim şeridi */
+.photo-thumbs{display:flex;gap:10px;flex-wrap:wrap;}
+.photo-thumb{
+  width:64px;height:64px;border-radius:4px;overflow:hidden;cursor:pointer;
+  border:2px solid transparent;background:var(--white);box-shadow:0 4px 12px rgba(46,92,34,.1);
+  transition:border-color .2s,opacity .2s;opacity:.72;flex-shrink:0;
+}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;}
+.photo-thumb:hover{opacity:1;}
+.photo-thumb.active{border-color:var(--green);opacity:1;}
+
 /* Küçük fotoğraf şeridi (tek fotoğraf için marka etiketi) */
 .photo-meta{
   display:flex;align-items:center;justify-content:space-between;
@@ -693,6 +704,17 @@ body > *:not(.page-bg-pattern):not(.main-nav):not(.mobile-menu):not(.modal-overl
 function toggleMenu(){const m=document.getElementById('mobileMenu');const h=document.getElementById('hamburger');m.classList.toggle('open');h.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 function openLightbox(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+let currentImages=[],currentPhotoIdx=0;
+function setMainPhoto(idx){
+  if(!currentImages[idx])return;
+  currentPhotoIdx=idx;
+  const el=document.getElementById('mainPhotoImg');
+  if(el) el.src=currentImages[idx];
+  document.querySelectorAll('.photo-thumb').forEach((t,i)=>t.classList.toggle('active',i===idx));
+}
+function openMainLightbox(){
+  if(currentImages.length) openLightbox(currentImages[currentPhotoIdx]);
+}
 function openContact(name,waLink){
   document.getElementById('c-title').textContent='"'+name+'" Hakkında Bilgi Al';
   document.getElementById('modalWaLink').href=waLink||'https://wa.me/905354177744';
@@ -763,6 +785,9 @@ async function load(){
     if(colName==='fisek'&&brandSlug.startsWith('f-')) brandSlug=brandSlug.slice(2);
     const brandDisplay=brandSlug?(brandSlug.charAt(0).toUpperCase()+brandSlug.slice(1).replace(/-/g,' ')):'';
 
+    currentImages = (p.images&&p.images.length) ? p.images : (p.img?[p.img]:[]);
+    currentPhotoIdx = 0;
+
     // Spec satırları: sadece dolu olanları göster
     const specs=[
       {label:'Marka',val:brandDisplay},
@@ -784,9 +809,9 @@ async function load(){
 
         <!-- SOL: FOTOĞRAF -->
         <div class="photo-col">
-          <div class="main-photo" ${p.img?`onclick="openLightbox('${escJs(p.img)}')"`:''}>
-            ${p.img
-              ?`<img src="${esc(p.img)}" alt="${esc(p.name)}"/>
+          <div class="main-photo" ${currentImages.length?`onclick="openMainLightbox()"`:''}>
+            ${currentImages.length
+              ?`<img id="mainPhotoImg" src="${esc(currentImages[0])}" alt="${esc(p.name)}"/>
                 <div class="zoom-badge">Büyütmek için tıklayın</div>`
               :`<div class="photo-no-img">
                   <span class="ni-icon">${meta.icon}</span>
@@ -794,9 +819,11 @@ async function load(){
                 </div>`
             }
           </div>
+          ${currentImages.length>1?`<div class="photo-thumbs">${currentImages.map((img,i)=>`
+            <div class="photo-thumb ${i===0?'active':''}" onclick="setMainPhoto(${i})"><img src="${esc(img)}" alt=""/></div>`).join('')}</div>`:''}
           <div class="photo-meta">
             <span class="photo-meta-brand">${esc(brandDisplay||meta.label)}</span>
-            ${p.img?`<span class="photo-meta-zoom" onclick="openLightbox('${escJs(p.img)}')">Tam ekran görüntüle</span>`:''}
+            ${currentImages.length?`<span class="photo-meta-zoom" onclick="openMainLightbox()">Tam ekran görüntüle</span>`:''}
           </div>
         </div>
 

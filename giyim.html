@@ -230,6 +230,12 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 }
 .img-drop:hover{border-color:var(--green);}
 .img-drop img{width:100%;height:100%;object-fit:cover;}
+.img-gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.img-thumb{position:relative;width:66px;height:66px;border-radius:4px;overflow:hidden;border:1.5px solid var(--border);flex-shrink:0;}
+.img-thumb img{width:100%;height:100%;object-fit:cover;}
+.img-thumb-del{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(20,50,12,.65);color:#fff;border:none;font-size:.65rem;line-height:18px;text-align:center;cursor:pointer;padding:0;}
+.img-thumb-add{width:66px;height:66px;border-radius:4px;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--grey2);cursor:pointer;flex-shrink:0;transition:border-color .2s,color .2s;}
+.img-thumb-add:hover{border-color:var(--green);color:var(--green);}
 .btn-save{
   width:100%;margin-top:16px;padding:13px;
   background:var(--green);color:#fff;border:none;
@@ -586,11 +592,9 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
       </div>
     </div>
     <div class="form-row">
-      <label>Ürün Fotoğrafı</label>
-      <div class="img-drop" id="imgDrop" onclick="document.getElementById('f-img').click()">
-        📷 Fotoğraf seçmek için tıklayın
-      </div>
-      <input type="file" id="f-img" accept="image/*" style="display:none" onchange="previewImg(this)"/>
+      <label>Ürün Fotoğrafları (istediğiniz kadar ekleyebilirsiniz)</label>
+      <div class="img-gallery" id="imgGallery"></div>
+      <input type="file" id="f-img" accept="image/*" multiple style="display:none" onchange="previewImg(this)"/>
     </div>
     <button class="btn-save" onclick="saveProduct()">Ürünü Kaydet</button>
   </div>
@@ -674,7 +678,26 @@ async function uploadToCloudinary(file){
 
 const brands = [];
 
-let activeBrand=null,activeCat='',minP=null,maxP=null,imgFile=null,allProducts=[],brandCounts={},editingId=null,currentImgUrl=null;
+let activeBrand=null,activeCat='',minP=null,maxP=null,allProducts=[],brandCounts={},editingId=null;
+let existingImgs=[],newImgFiles=[];
+function renderImgGallery(){
+  const box=document.getElementById('imgGallery');
+  const newPreviews=newImgFiles.map(f=>f.__previewUrl);
+  const all=[...existingImgs.map(u=>({url:u,kind:'existing'})),...newPreviews.map(u=>({url:u,kind:'new'}))];
+  box.innerHTML = all.map((it,i)=>`
+    <div class="img-thumb">
+      <img src="${esc(it.url)}"/>
+      <button type="button" class="img-thumb-del" data-kind="${it.kind}" data-idx="${it.kind==='existing'?existingImgs.indexOf(it.url):newImgFiles.findIndex(f=>f.__previewUrl===it.url)}">✕</button>
+    </div>`).join('') + `<div class="img-thumb-add" onclick="document.getElementById('f-img').click()">＋</div>`;
+  box.querySelectorAll('.img-thumb-del').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const idx=parseInt(btn.dataset.idx,10);
+      if(btn.dataset.kind==='existing') existingImgs.splice(idx,1);
+      else newImgFiles.splice(idx,1);
+      renderImgGallery();
+    });
+  });
+}
 
 function skeletonGridHtml(n){
   return Array.from({length:n}).map(()=>`
@@ -846,8 +869,7 @@ function openAddModal(){
   document.getElementById('f-desc').value='';
   document.getElementById('f-price').value='';
   document.getElementById('f-cat').value='Kamuflaj Kıyafet';
-  document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
-  imgFile=null;currentImgUrl=null;
+  existingImgs=[];newImgFiles=[];renderImgGallery();
   document.getElementById('addModal').classList.add('open');
 }
 function openEditModal(docId){
@@ -861,23 +883,28 @@ function openEditModal(docId){
   document.getElementById('f-desc').value=p.desc||'';
   document.getElementById('f-price').value=p.price||'';
   document.getElementById('f-cat').value=p.cat||'Kamuflaj Kıyafet';
-  currentImgUrl=p.img||null;
-  if(p.img){
-    document.getElementById('imgDrop').innerHTML=`<img src="${esc(p.img)}"/>`;
-  } else {
-    document.getElementById('imgDrop').innerHTML='📷 Fotoğraf seçmek için tıklayın';
-  }
-  imgFile=null;
+  existingImgs = (p.images&&p.images.length) ? p.images.slice() : (p.img?[p.img]:[]);
+  newImgFiles=[];
+  renderImgGallery();
   document.getElementById('addModal').classList.add('open');
 }
 function closeAddModal(){document.getElementById('addModal').classList.remove('open');editingId=null;}
 
 function previewImg(input){
-  if(!input.files||!input.files[0])return;
-  imgFile=input.files[0];
-  const reader=new FileReader();
-  reader.onload=e=>{document.getElementById('imgDrop').innerHTML=`<img src="${e.target.result}"/>`;};
-  reader.readAsDataURL(imgFile);
+  if(!input.files||!input.files.length)return;
+  const files=Array.from(input.files);
+  let pending=files.length;
+  files.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      f.__previewUrl=e.target.result;
+      newImgFiles.push(f);
+      pending--;
+      if(pending===0) renderImgGallery();
+    };
+    reader.readAsDataURL(f);
+  });
+  input.value='';
 }
 
 async function saveProduct(){
@@ -887,15 +914,15 @@ async function saveProduct(){
   const btn=document.querySelector('.btn-save');
   btn.textContent='⏳ Kaydediliyor…';btn.disabled=true;
   try{
-    let imgUrl=currentImgUrl||null;
-    if(imgFile) imgUrl=await uploadToCloudinary(imgFile);
+    const uploadedUrls=await Promise.all(newImgFiles.map(f=>uploadToCloudinary(f)));
+    const finalImages=[...existingImgs,...uploadedUrls];
     if(editingId){
       await updateDoc(doc(db,PAGE_COL,editingId),{
         name,
         desc:document.getElementById('f-desc').value.trim(),
         cat:document.getElementById('f-cat').value,
         price:document.getElementById('f-price').value.trim(),
-        ...(imgUrl!==undefined?{img:imgUrl}:{}),
+        img:finalImages[0]||null,images:finalImages,
         updatedAt:Date.now(),
       });
     } else {
@@ -904,7 +931,7 @@ async function saveProduct(){
         desc:document.getElementById('f-desc').value.trim(),
         cat:document.getElementById('f-cat').value,
         price:document.getElementById('f-price').value.trim(),
-        img:imgUrl,createdAt:Date.now(),
+        img:finalImages[0]||null,images:finalImages,createdAt:Date.now(),
       });
     }
     closeAddModal();
