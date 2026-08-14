@@ -748,7 +748,7 @@ async function loadProducts(slug){
     const q=query(collection(db,PAGE_COL),where('brand','==',slug));
     const snap=await getDocs(q);
     allProducts=snap.docs.map(d=>({id:d.id,...d.data()}));
-    renderProducts(allProducts);
+    applyFilters();
     await updateAllCounts();
   }catch(e){
     console.error(e);
@@ -815,7 +815,7 @@ function applyFilters(){
   if(activeCat) list=list.filter(p=>p.cat===activeCat);
   if(minP!==null) list=list.filter(p=>parsePrice(p.price)>=minP);
   if(maxP!==null) list=list.filter(p=>parsePrice(p.price)<=maxP);
-  renderProducts(list);
+  renderProducts(applySearchAndSort(list));
 }
 
 function parsePrice(str){
@@ -835,25 +835,38 @@ function clearPriceFilter(){
   applyFilters();
 }
 
-function filterProducts(q){
-  if(!activeBrand)return;
-  let list=[...allProducts];
+// Türkçe karakterleri sadeleştirir: "sarsilmaz" yazınca "Sarsılmaz" da bulunur
+function normText(s){
+  return String(s||'').toLocaleLowerCase('tr')
+    .replace(/ı/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g')
+    .replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c');
+}
+
+// Arama + sıralama, aktif kategori/fiyat filtrelerinden geçmiş listeye uygulanır
+// (marka seçili olmasa da çalışır; değerler doğrudan alanlardan okunur)
+function applySearchAndSort(list){
+  const input=document.getElementById('headerSearch');
+  const q=normText(input?input.value:'').trim();
   if(q) list=list.filter(p=>
-    p.name.toLowerCase().includes(q.toLowerCase())||
-    p.cat.toLowerCase().includes(q.toLowerCase())||
-    (p.desc&&p.desc.toLowerCase().includes(q.toLowerCase()))
+    normText(p.name).includes(q)||
+    normText(p.cat).includes(q)||
+    normText(p.brand).includes(q)||
+    normText(p.desc).includes(q)
   );
-  renderProducts(list);
+  const sel=document.getElementById('sortSelect');
+  const v=sel?sel.value:'';
+  if(v==='price-asc') list.sort((a,b)=>parsePrice(a.price)-parsePrice(b.price));
+  if(v==='price-desc') list.sort((a,b)=>parsePrice(b.price)-parsePrice(a.price));
+  if(v==='name-asc') list.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'tr'));
+  return list;
+}
+
+function filterProducts(){
+  applyFilters();
 }
 
 function applySort(){
-  if(!activeBrand)return;
-  let list=[...allProducts];
-  const v=document.getElementById('sortSelect').value;
-  if(v==='price-asc') list.sort((a,b)=>parsePrice(a.price)-parsePrice(b.price));
-  if(v==='price-desc') list.sort((a,b)=>parsePrice(b.price)-parsePrice(a.price));
-  if(v==='name-asc') list.sort((a,b)=>a.name.localeCompare(b.name,'tr'));
-  renderProducts(list);
+  applyFilters();
 }
 
 function renderProducts(list){
@@ -1045,7 +1058,7 @@ async function loadAllProducts() {
     allProducts = activeBrand
       ? allDocs.filter(d => d.brand === activeBrand.slug)
       : allDocs;
-    renderProducts(allProducts);
+    applyFilters();
   } catch(e) {
     console.error('Firebase yükleme hatası:', e);
     grid.innerHTML = '<div class="empty-state"><div style="font-size:2rem">⚠️</div><p>Bağlantı hatası. Sayfayı yenileyin.</p></div>';
