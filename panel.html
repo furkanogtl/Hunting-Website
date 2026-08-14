@@ -162,6 +162,19 @@
       border-radius: 4px; font-size: .76rem; cursor: pointer; white-space: nowrap;
     }
     .btn-del-record:hover { background: var(--danger); color: #fff; }
+    .btn-add-debt {
+      padding: 6px 12px; background: none; color: var(--forest); border: 1.5px solid var(--sage);
+      border-radius: 4px; font-size: .76rem; cursor: pointer; white-space: nowrap;
+      font-family: 'Lora', serif; transition: background .2s, color .2s;
+    }
+    .btn-add-debt:hover { background: var(--forest); border-color: var(--forest); color: #fff; }
+    .debt-preview {
+      background: var(--milk); border: 1.5px solid var(--mist); border-left: 3px solid var(--sage);
+      border-radius: 4px; padding: 10px 14px; margin-bottom: 14px;
+      font-family: 'Lora', serif; font-size: .84rem; color: #4a6040; line-height: 1.6;
+    }
+    .debt-preview b { color: var(--forest); }
+    .debt-preview .new-total { color: var(--danger); font-weight: 700; }
 
     /* ── FORMS ── */
     .form-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
@@ -509,11 +522,17 @@
           <form id="debtForm">
             <div style="display:flex;gap:14px;flex-wrap:wrap;">
               <div class="field" style="flex:2;min-width:200px;">
-                <label for="debtCompany">Firma Adı</label>
-                <input type="text" id="debtCompany" placeholder="Örn: Sarsılmaz Silah San." required />
+                <label for="debtCompanySel">Firma</label>
+                <select id="debtCompanySel">
+                  <option value="__new">＋ Yeni firma ekle…</option>
+                </select>
+              </div>
+              <div class="field" id="debtNewCompanyWrap" style="flex:2;min-width:200px;">
+                <label for="debtCompany">Yeni Firma Adı</label>
+                <input type="text" id="debtCompany" placeholder="Örn: Sarsılmaz Silah San." />
               </div>
               <div class="field" style="flex:1;min-width:140px;">
-                <label for="debtAmount">Borç Tutarı (₺)</label>
+                <label for="debtAmount">Eklenecek Borç (₺)</label>
                 <input type="number" id="debtAmount" min="0" step="0.01" required />
               </div>
               <div class="field" style="flex:1;min-width:140px;">
@@ -521,6 +540,7 @@
                 <input type="date" id="debtDate" required />
               </div>
             </div>
+            <div class="debt-preview" id="debtPreview" style="display:none;"></div>
             <div class="field">
               <label for="debtNote">Not (opsiyonel)</label>
               <input type="text" id="debtNote" placeholder="Örn: vade tarihi, açıklama vb." />
@@ -532,6 +552,14 @@
 
         <div class="stat-grid" style="grid-template-columns: 240px; margin-bottom: 20px;">
           <div class="stat-card expense"><div class="lbl">Toplam Borç</div><div class="val" id="debtTotal">0 ₺</div></div>
+        </div>
+
+        <div class="card">
+          <h4 style="color:var(--deep);font-family:'Playfair Display',serif;margin:0 0 14px;">Firma Bazlı Borç Durumu</h4>
+          <table>
+            <thead><tr><th>Firma</th><th>Toplam Borç</th><th>Ödenen</th><th>Kalan Borç</th><th></th></tr></thead>
+            <tbody id="companyDebtsBody"><tr><td colspan="5" class="empty-row">Yükleniyor…</td></tr></tbody>
+          </table>
         </div>
 
         <div class="card">
@@ -662,11 +690,11 @@
       ayakkabi: ['40','41','42','43','44','45','46'],
     };
     // Giyim dışındaki kategoriler: tip seçimi yok, sabit tek bir ölçü listesi
+    // (Av fişeklerinde gramaj seçimi kaldırıldı — gram bilgisi ürün adında yazılı, stok tek sayı olarak tutulur)
     const FIXED_SIZE_OPTIONS = {
       tufekler: ['66','71'],
-      fisek: ['24','28','30','32','34','36'],
     };
-    const FIXED_SIZE_UNIT = { tufekler: 'cm', fisek: 'gr' };
+    const FIXED_SIZE_UNIT = { tufekler: 'cm' };
 
     function bedenOptionsHtml(tip, selected){
       const list = BEDEN_OPTIONS[tip] || [];
@@ -700,13 +728,18 @@
         const has = !!(p.stokMap && typeof p.stokMap[beden]==='number');
         return { qty: has ? p.stokMap[beden] : 0, has };
       }
+      // Ölçü takibi kaldırılan ürünlerde (ör. av fişekleri) eski ölçü bazlı stoklar tek toplam olarak gösterilir
+      if(p.stok === null && p.stokMap){
+        const eski = Object.values(p.stokMap).reduce((a,b)=> a + (typeof b==='number'?b:0), 0);
+        if(eski > 0) return { qty: eski, has: true };
+      }
       return { qty: p.stok ?? 0, has: p.stok !== null };
     }
     function totalQty(p){
       if(productUsesSizes(p) && p.stokMap){
         return Object.values(p.stokMap).reduce((a,b)=> a + (typeof b==='number'?b:0), 0);
       }
-      return p.stok ?? 0;
+      return qtyInfo(p, '').qty;
     }
 
     async function loadAllProducts(){
@@ -1215,11 +1248,14 @@
         const snap = await getDocs(collection(db,'borclar'));
         debts = snap.docs.map(d=>({ id:d.id, ...d.data() }));
         renderDebts();
+        renderCompanyDebts();
+        populateDebtCompanyOptions();
         populateSalePaymentOptions();
         populateExpCompanyOptions();
       }catch(e){
         console.error('Borç listesi yüklenemedi:', e);
         tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Yükleme hatası. Sayfayı yenileyin.</td></tr>';
+        document.getElementById('companyDebtsBody').innerHTML = '<tr><td colspan="5" class="empty-row">Yükleme hatası. Sayfayı yenileyin.</td></tr>';
       }
     }
 
@@ -1290,6 +1326,83 @@
       }).join('');
     }
 
+    // Firma bazlı toplam borç / ödenen / kalan
+    function companySummaries(){
+      const map = {};
+      debts.forEach(d => {
+        const c = d.company || '';
+        if(!c) return;
+        if(!map[c]) map[c] = { company: c, total: 0, paid: 0 };
+        if(d.kind === 'payment') map[c].paid += Math.abs(d.amount||0);
+        else map[c].total += (d.amount||0);
+      });
+      return Object.values(map)
+        .map(s => ({ ...s, remaining: s.total - s.paid }))
+        .sort((a,b) => b.remaining - a.remaining || a.company.localeCompare(b.company,'tr'));
+    }
+
+    function renderCompanyDebts(){
+      const tbody = document.getElementById('companyDebtsBody');
+      const rows = companySummaries();
+      if(!rows.length){
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Henüz firma kaydı yok.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(s => `
+        <tr>
+          <td>${escapeHtml(s.company)}</td>
+          <td>${fmtTL(s.total)}</td>
+          <td class="amt-pos">${fmtTL(s.paid)}</td>
+          <td class="${s.remaining > 0 ? 'amt-neg' : 'amt-pos'}">${fmtTL(s.remaining)}</td>
+          <td><button class="btn-add-debt" data-company="${escapeHtml(s.company)}">＋ Borç Ekle</button></td>
+        </tr>`).join('');
+    }
+
+    // Borç formundaki firma listesi (mevcut bir firmanın borcunu artırmak için)
+    function populateDebtCompanyOptions(){
+      const sel = document.getElementById('debtCompanySel');
+      const prevVal = sel.value;
+      const companies = [...new Set(debts.map(d=>d.company).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'tr'));
+      sel.innerHTML = '<option value="__new">＋ Yeni firma ekle…</option>'
+        + companies.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+      sel.value = [...sel.options].some(o=>o.value===prevVal) ? prevVal : '__new';
+      toggleDebtCompanyField();
+    }
+
+    function toggleDebtCompanyField(){
+      const isNew = document.getElementById('debtCompanySel').value === '__new';
+      document.getElementById('debtNewCompanyWrap').style.display = isNew ? 'block' : 'none';
+      if(!isNew) document.getElementById('debtCompany').value = '';
+      updateDebtPreview();
+    }
+
+    // Seçili firmanın mevcut kalan borcunu ve kayıt sonrası oluşacak tutarı gösterir
+    function updateDebtPreview(){
+      const box = document.getElementById('debtPreview');
+      const company = document.getElementById('debtCompanySel').value;
+      if(company === '__new'){ box.style.display = 'none'; return; }
+      const s = companySummaries().find(x => x.company === company);
+      if(!s){ box.style.display = 'none'; return; }
+      const add = parseFloat(document.getElementById('debtAmount').value) || 0;
+      box.style.display = 'block';
+      box.innerHTML = `<b>${escapeHtml(company)}</b> firmasının mevcut kalan borcu: <b>${fmtTL(s.remaining)}</b>`
+        + (add > 0 ? ` → kayıttan sonra: <span class="new-total">${fmtTL(s.remaining + add)}</span>` : '');
+    }
+
+    document.getElementById('debtCompanySel').addEventListener('change', toggleDebtCompanyField);
+    document.getElementById('debtAmount').addEventListener('input', updateDebtPreview);
+
+    // Firma özet tablosundaki "Borç Ekle" — formu o firmayla doldurur
+    document.getElementById('companyDebtsBody').addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-add-debt');
+      if(!btn) return;
+      const sel = document.getElementById('debtCompanySel');
+      sel.value = btn.dataset.company;
+      toggleDebtCompanyField();
+      document.getElementById('debtForm').scrollIntoView({ behavior:'smooth', block:'center' });
+      document.getElementById('debtAmount').focus();
+    });
+
     // Ödeme yöntemi listesine mevcut firmaları da ekler (borcu doğrudan firmaya giden ödemeler için)
     function populateSalePaymentOptions(){
       const sel = document.getElementById('salePayment');
@@ -1319,22 +1432,40 @@
 
     document.getElementById('debtForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const company = document.getElementById('debtCompany').value.trim();
+      const sel = document.getElementById('debtCompanySel');
+      const isNew = sel.value === '__new';
+      let company = isNew ? document.getElementById('debtCompany').value.trim() : sel.value;
       const amount = parseFloat(document.getElementById('debtAmount').value);
       const date = document.getElementById('debtDate').value || todayStr();
       const note = document.getElementById('debtNote').value.trim();
 
-      if(!company){ alert('Firma adı girin.'); return; }
+      if(!company){ alert('Firma seçin veya yeni firma adı girin.'); return; }
       if(!amount || amount<=0){ alert('Geçerli bir tutar girin.'); return; }
+
+      // Aynı isimde firma zaten varsa yeni firma olarak değil, mevcut firmanın borcuna eklenir
+      if(isNew){
+        const existing = [...new Set(debts.map(d=>d.company).filter(Boolean))]
+          .find(c => c.toLocaleLowerCase('tr') === company.toLocaleLowerCase('tr'));
+        if(existing){
+          const s = companySummaries().find(x => x.company === existing);
+          if(!confirm(`"${existing}" firması zaten kayıtlı (kalan borç: ${fmtTL(s ? s.remaining : 0)}).\n\nBu tutar mevcut firmanın borcuna eklensin mi?`)) return;
+          company = existing; // isim yazımı farklı olsa da aynı firmada birleşsin
+        }
+      }
 
       const btn = document.getElementById('debtSubmitBtn');
       btn.disabled = true; btn.textContent = 'Kaydediliyor…';
       try{
         await addDoc(collection(db,'borclar'), { company, amount, date, note, createdAt: Date.now() });
-        document.getElementById('debtForm').reset();
+        document.getElementById('debtAmount').value = '';
+        document.getElementById('debtNote').value = '';
+        document.getElementById('debtCompany').value = '';
         document.getElementById('debtDate').value = todayStr();
         await loadDebts();
-        flashMsg('debtMsg', 'Borç kaydedildi.');
+        // Kayıttan sonra aynı firma seçili kalsın (arka arkaya borç girilebilsin)
+        const sel2 = document.getElementById('debtCompanySel');
+        if([...sel2.options].some(o=>o.value===company)){ sel2.value = company; toggleDebtCompanyField(); }
+        flashMsg('debtMsg', isNew ? 'Borç kaydedildi.' : `"${company}" firmasının borcuna eklendi.`);
       }catch(err){
         alert('Hata: ' + err.message);
       }finally{
