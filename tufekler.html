@@ -139,12 +139,18 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 .badge-second{background:rgba(200,168,50,.9);color:#fff;}
 
 .card-img{
-  height:170px;background:#f8f8f8;overflow:hidden;
+  height:180px;overflow:hidden;isolation:isolate;
+  background:linear-gradient(160deg,#fdfdfb 0%,#f3f6ef 100%);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;position:relative;
+  cursor:pointer;position:relative;padding:12px;
 }
-.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
-.card-img:hover img{transform:scale(1.07);}
+/* Fotoğraf oranı ne olursa olsun ürün tamamen görünsün, kırpılmasın.
+   multiply: fotoğrafın içine gömülü beyaz zemin kartın zeminiyle kaynaşır. */
+.card-img img{
+  width:100%;height:100%;object-fit:contain;transition:transform .4s;
+  mix-blend-mode:multiply;
+}
+.card-img:hover img{transform:scale(1.06);}
 .card-img .no-img{font-size:3rem;opacity:.15;}
 .zoom-btn{
   position:absolute;bottom:8px;right:8px;
@@ -415,18 +421,49 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   .main { width: 100% !important; transition: transform .3s ease; }
   .sidebar.open ~ .main { transform: translateX(230px); }
 
-  /* Toolbar */
-  .toolbar { flex-direction: column !important; align-items: stretch !important; gap: 8px; padding: 10px !important; }
-  .toolbar-right { flex-wrap: wrap !important; gap: 8px !important; }
-  .toolbar-right input { min-width: 0 !important; width: 100% !important; }
-  .sort-select { width: 100% !important; }
-  .btn-add-admin { width: 100% !important; text-align: center; }
+  /* Toolbar — baslik ustte, arama ile siralama tek satirda */
+  .toolbar { padding: 12px !important; gap: 10px !important; border-radius: 12px; }
+  .toolbar-left { width: 100%; justify-content: space-between; }
+  .toolbar-title { font-size: 1.05rem !important; }
+  .toolbar-right { width: 100%; flex-wrap: wrap !important; gap: 8px !important; }
+  .toolbar-right > div { flex: 1 1 auto; min-width: 0; }
+  /* 16px: iOSta arama kutusuna dokununca sayfanin yakinlasmasini onler */
+  .toolbar-right input { min-width: 0 !important; width: 100% !important; font-size: 16px !important; }
+  .sort-select { flex: 0 0 auto; width: auto !important; max-width: 46%; }
+  .btn-add-admin { flex: 1 0 100%; width: 100% !important; justify-content: center; text-align: center; }
+  .mobile-filter-btn { border-radius: 10px; }
 
-  /* Product grid */
+  /* Urun grid — telefonda da iki sutun kalsin */
   .product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-  .prod-img { height: 140px !important; }
-  .prod-name { font-size: .9rem !important; }
-  .prod-price { font-size: .85rem !important; }
+
+  .product-card { border-radius: 12px; }
+  /* Dokunmatikte hover efekti takili kalmasin */
+  .product-card:hover { transform: none; box-shadow: 0 2px 10px rgba(46,92,34,.08); }
+  .card-img:hover img { transform: none; }
+  .zoom-btn { display: none; }
+
+  /* Gorsel, kart genisligine gore kare oranda */
+  .card-img { height: auto !important; aspect-ratio: 1 / 1; padding: 10px; }
+  .card-badges { top: 6px; left: 6px; gap: 3px; }
+  .badge { font-size: .52rem; padding: 3px 8px; letter-spacing: .06em; }
+
+  .card-body { padding: 9px 10px 0 !important; }
+  .card-brand { font-size: .58rem; letter-spacing: .08em; }
+  /* Isim iki satirda kirpilir ki kart yukseklikleri esit kalsin */
+  .card-name {
+    font-size: .82rem; margin-top: 2px; line-height: 1.3;
+    display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card-cat { font-size: .66rem; margin-top: 2px; }
+  .card-desc { display: none; }
+  .card-price-row { padding-top: 6px; }
+  .card-price { font-size: .95rem; }
+  .card-price-note { font-size: .64rem; }
+
+  .card-footer { padding: 8px 10px 10px !important; gap: 5px; }
+  .btn-info { padding: 9px 4px; font-size: .6rem; letter-spacing: .04em; }
+  .btn-edit, .btn-del { padding: 7px 8px; font-size: .75rem; }
 
   /* Breadcrumb */
   .breadcrumb { padding: 10px 14px !important; font-size: .75rem; }
@@ -435,8 +472,13 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   footer { flex-direction: column !important; text-align: center !important; padding: 24px 16px !important; }
 }
 
-@media (max-width: 400px) {
-  .product-grid { grid-template-columns: 1fr !important; }
+/* Dar telefonlarda da iki sutun korunur, sadece olculer kisilir */
+@media (max-width: 380px) {
+  .product-grid { gap: 8px !important; }
+  .card-body { padding: 8px 9px 0 !important; }
+  .card-name { font-size: .78rem; }
+  .card-price { font-size: .88rem; }
+  .btn-info { font-size: .56rem; padding: 8px 3px; }
 }
 
 

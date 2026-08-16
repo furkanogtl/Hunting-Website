@@ -111,7 +111,7 @@ body{
   aspect-ratio:4/3;
   display:flex;align-items:center;justify-content:center;
   cursor:zoom-in;
-  position:relative;
+  position:relative;isolation:isolate;
   box-shadow:var(--sh-lg);
   transition:box-shadow .4s var(--ease);
 }
@@ -120,11 +120,13 @@ body{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
   pointer-events:none;
 }
+/* multiply: fotoğrafın içine gömülü beyaz zemin kartın zeminiyle kaynaşır */
 .main-photo img{
   width:100%;height:100%;
   object-fit:contain;
   padding:36px;
   transition:transform .6s var(--ease);
+  mix-blend-mode:multiply;
 }
 .main-photo:hover img{transform:scale(1.05);}
 .main-photo:has(.photo-no-img){cursor:default;box-shadow:var(--sh-md);}
@@ -328,11 +330,16 @@ body{
 }
 .similar-card:hover{border-color:rgba(74,122,56,.35);transform:translateY(-6px);box-shadow:var(--sh-lg);}
 .similar-card-img{
-  height:150px;flex-shrink:0;overflow:hidden;
+  height:150px;flex-shrink:0;overflow:hidden;padding:12px;isolation:isolate;
   background:linear-gradient(160deg,#fbfdf8,#eef3e8);
   display:flex;align-items:center;justify-content:center;
 }
-.similar-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease);}
+/* Fotoğraf oranı ne olursa olsun ürün tamamen görünsün, kırpılmasın.
+   multiply: fotoğrafın içine gömülü beyaz zemin kartın zeminiyle kaynaşır. */
+.similar-card-img img{
+  width:100%;height:100%;object-fit:contain;transition:transform .5s var(--ease);
+  mix-blend-mode:multiply;
+}
 .similar-card:hover .similar-card-img img{transform:scale(1.06);}
 .similar-card-body{padding:14px 16px 6px;flex:1;min-height:0;overflow:hidden;}
 .similar-card-brand{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);font-family:'Cinzel',serif;}
@@ -894,9 +901,7 @@ async function load(){
     const waMsg=encodeURIComponent('Merhaba, "'+p.name+'" ürünü hakkında bilgi almak istiyorum.');
     const waLink='https://wa.me/905354177744?text='+waMsg;
     const isSecond=(p.cat||'').toLowerCase().includes('ikinci');
-    let brandSlug=p.brand||'';
-    if(colName==='fisek'&&brandSlug.startsWith('f-')) brandSlug=brandSlug.slice(2);
-    const brandDisplay=brandSlug?(brandSlug.charAt(0).toUpperCase()+brandSlug.slice(1).replace(/-/g,' ')):'';
+    const brandDisplay=brandLabel(p.brand);
 
     currentImages = (p.images&&p.images.length) ? p.images : (p.img?[p.img]:[]);
     currentPhotoIdx = 0;
@@ -1109,8 +1114,15 @@ async function load(){
   }
 }
 
+// Kayıttaki slug'ı yazımından farklı olan markalar için görünen ad
+const BRAND_NAME_OVERRIDES={ starling:'Sterling' };
+
 function brandLabel(brand){
-  return brand ? brand.charAt(0).toUpperCase()+brand.slice(1).replace(/-/g,' ') : '';
+  let slug=brand||'';
+  if(colName==='fisek'&&slug.startsWith('f-')) slug=slug.slice(2);
+  if(!slug) return '';
+  return BRAND_NAME_OVERRIDES[slug.toLowerCase()]
+    || (slug.charAt(0).toUpperCase()+slug.slice(1).replace(/-/g,' '));
 }
 
 async function loadSimilarProducts(col, currentId, p){
