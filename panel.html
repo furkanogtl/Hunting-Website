@@ -690,11 +690,20 @@
       ayakkabi: ['40','41','42','43','44','45','46'],
     };
     // Giyim dışındaki kategoriler: tip seçimi yok, sabit tek bir ölçü listesi
-    // (Av fişeklerinde gramaj seçimi kaldırıldı — gram bilgisi ürün adında yazılı, stok tek sayı olarak tutulur)
+    // (Av fişeklerinde gramaj yerine saçma numarası kullanılır — gram bilgisi ürün adında yazılı)
     const FIXED_SIZE_OPTIONS = {
       tufekler: ['66','71'],
+      fisek: ['1','2','3','4','5','6','7','8','9','10'],
     };
-    const FIXED_SIZE_UNIT = { tufekler: 'cm' };
+    const FIXED_SIZE_UNIT = { tufekler: 'cm', fisek: 'No' };
+    // Tüfekte "71 cm" gibi son ek, fişekte "No 7" gibi ön ek okunur
+    const FIXED_SIZE_UNIT_BEFORE = { fisek: true };
+
+    function sizeLabel(col, v){
+      const unit = FIXED_SIZE_UNIT[col] || '';
+      if(!unit) return String(v);
+      return FIXED_SIZE_UNIT_BEFORE[col] ? `${unit} ${v}` : `${v} ${unit}`;
+    }
 
     function bedenOptionsHtml(tip, selected){
       const list = BEDEN_OPTIONS[tip] || [];
@@ -703,8 +712,7 @@
     }
     function fixedSizeOptionsHtml(col, selected){
       const list = FIXED_SIZE_OPTIONS[col] || [];
-      const unit = FIXED_SIZE_UNIT[col] || '';
-      return list.map(v => `<option value="${v}" ${v===selected?'selected':''}>${v} ${unit}</option>`).join('');
+      return list.map(v => `<option value="${v}" ${v===selected?'selected':''}>${sizeLabel(col, v)}</option>`).join('');
     }
     function resolveDefaultBeden(p){
       if(p.col==='giyim'){
@@ -728,7 +736,7 @@
         const has = !!(p.stokMap && typeof p.stokMap[beden]==='number');
         return { qty: has ? p.stokMap[beden] : 0, has };
       }
-      // Ölçü takibi kaldırılan ürünlerde (ör. av fişekleri) eski ölçü bazlı stoklar tek toplam olarak gösterilir
+      // Ölçü takibi bırakılmış ürünlerde eskiden ölçü bazlı girilmiş stoklar tek toplam olarak gösterilir
       if(p.stok === null && p.stokMap){
         const eski = Object.values(p.stokMap).reduce((a,b)=> a + (typeof b==='number'?b:0), 0);
         if(eski > 0) return { qty: eski, has: true };
@@ -1006,10 +1014,10 @@
       const p = allProducts.find(x=>x.col===col && x.id===id);
       if(!p || !productUsesSizes(p)){ wrap.style.display='none'; sel.innerHTML=''; return; }
       const opts = p.col==='giyim' ? (BEDEN_OPTIONS[p.bedenTipi]||[]) : (FIXED_SIZE_OPTIONS[p.col]||[]);
-      const unit = p.col==='giyim' ? '' : (' '+(FIXED_SIZE_UNIT[p.col]||''));
       sel.innerHTML = opts.map(v=>{
         const qty = (p.stokMap && typeof p.stokMap[v]==='number') ? p.stokMap[v] : 0;
-        return `<option value="${v}">${v}${unit} (stok: ${qty})</option>`;
+        const label = p.col==='giyim' ? v : sizeLabel(p.col, v);
+        return `<option value="${v}">${label} (stok: ${qty})</option>`;
       }).join('');
       wrap.style.display = 'block';
     }
