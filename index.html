@@ -872,8 +872,8 @@
   <!-- HERO ARAMA -->
   <div class="hero-search-wrap">
     <div class="hero-search-box">
-      <input type="text" id="heroSearch" placeholder="Tüfek markası veya ürün arayın…" oninput="heroSearchFn(this.value)" onkeydown="if(event.key==='Enter')heroSearchFn(this.value)" autocomplete="off" />
-      <button onclick="heroSearchFn(document.getElementById('heroSearch').value)">Ara</button>
+      <input type="text" id="heroSearch" placeholder="Tüfek markası veya ürün arayın…" oninput="heroSearchFn(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();heroSearchGo(this.value);}" autocomplete="off" />
+      <button onclick="heroSearchGo(document.getElementById('heroSearch').value)">Ara</button>
     </div>
     <div class="hero-search-results" id="heroResults"></div>
   </div>
@@ -1540,28 +1540,81 @@ function productSearchText(p) {
   return normTr([p.name, p.desc, p.col_label, p.brand, p.cat].filter(Boolean).join(' '));
 }
 
-let heroSearchToken = 0;
-window.heroSearchFn = async function(qRaw) {
-  const resultsBox = document.getElementById('heroResults');
-  const q = (qRaw||'').trim();
-  if (!q) { resultsBox.innerHTML = ''; return; }
-  const myToken = ++heroSearchToken;
-  resultsBox.innerHTML = '<div class="hero-result-item"><span class="ri-name" style="color:#9a9a8a">Aranıyor…</span></div>';
+// Kayıttaki marka slug'ından görünen adı üretir
+function brandDisplayName(col, slug) {
+  let s = slug || '';
+  if (col === 'fisek' && s.startsWith('f-')) s = s.slice(2);
+  const known = brands.find(b => b.slug === s);
+  if (known) return known.name;
+  if (s === 'starling') return 'Sterling';
+  return s.split('-').map(w => w.charAt(0).toLocaleUpperCase('tr') + w.slice(1)).join(' ');
+}
 
+// Aramayla eşleşen markalar — "bene" yazınca Benelli'nin ürün listesine götürür.
+// Markalar ürün önbelleğinden türetilir, yani yalnızca gerçekten ürünü olanlar çıkar.
+function matchedBrands(nq) {
+  const map = new Map();
+  allProductsCache.forEach(p => {
+    if (!p.brand) return;
+    const key = p.col + '|' + p.brand;
+    if (!map.has(key)) {
+      const name = brandDisplayName(p.col, p.brand);
+      const known = brands.find(b => b.name === name);
+      map.set(key, {
+        col: p.col, colLabel: p.col_label, href: p.href || (p.col + '.html'),
+        slug: p.brand, name, flag: known ? known.flag : '🏷️', count: 0,
+      });
+    }
+    map.get(key).count++;
+  });
+  return [...map.values()]
+    .filter(b => normTr(b.name).includes(nq) || normTr(b.slug).includes(nq))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'tr'))
+    .slice(0, 4);
+}
+
+// Boşluk, tire ve noktalama farklarını yok sayar: "a 400", "a-400" ve "a400" aynı sayılır
+function normLoose(s) { return normTr(s).replace(/[^0-9a-zçğıöşü]/g, ''); }
+
+// Ürünün sorguya ne kadar uyduğu — yüksek puan daha isabetli eşleşme demek
+function productScore(p, nq, qLoose, qTokens) {
+  const nameLoose = normLoose(p.name);
+  const textLoose = normLoose(productSearchText(p));
+  let s = 0;
+  if (nameLoose === qLoose) s += 100;
+  else if (nameLoose.startsWith(qLoose)) s += 60;
+  else if (nameLoose.includes(qLoose)) s += 40;
+  if (textLoose.includes(qLoose)) s += 15;
+  // Sorgudaki her kelime ayrı ayrı geçiyorsa sıra önemli olmasın
+  const hits = qTokens.filter(t => textLoose.includes(normLoose(t))).length;
+  if (qTokens.length && hits === qTokens.length) s += 20;
+  s += hits * 5;
+  return s;
+}
+
+// Hem açılır liste hem de Enter aynı sonucu kullansın diye ortak hesaplama
+async function computeHeroResults(q) {
   await ensureProductsCache();
-  if (myToken !== heroSearchToken) return; // daha yeni bir arama başladıysa bunu yok say
-
   const nq = normTr(q);
-  let matched = allProductsCache.filter(p => productSearchText(p).includes(nq));
+  const qLoose = normLoose(q);
+  const qTokens = nq.split(/\s+/).filter(Boolean);
+  const brandHits = matchedBrands(nq);
+
+  let matched = allProductsCache
+    .map(p => ({ p, score: productScore(p, nq, qLoose, qTokens) }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8)
+    .map(x => x.p);
   let isFuzzy = false;
 
+  // Hiç eşleşme yoksa yazım hatasına toleranslı benzerlik aramasına düş
   if (matched.length === 0) {
     isFuzzy = true;
-    const qWords = nq.split(/\s+/).filter(Boolean);
     matched = allProductsCache.map(p => {
       const textWords = productSearchText(p).split(/\s+/).filter(Boolean);
       let best = 0;
-      qWords.forEach(qw => {
+      qTokens.forEach(qw => {
         textWords.forEach(tw => {
           const s = wordSimilarity(qw, tw);
           if (s > best) best = s;
@@ -1572,9 +1625,40 @@ window.heroSearchFn = async function(qRaw) {
       .sort((a, b) => b.score - a.score)
       .slice(0, 8)
       .map(x => x.p);
-  } else {
-    matched = matched.slice(0, 8);
   }
+  return { brandHits, matched, isFuzzy };
+}
+
+// Enter / "Ara": en isabetli sonuca doğrudan git — marka varsa o markanın listesine
+window.heroSearchGo = async function(qRaw) {
+  const q = (qRaw||'').trim();
+  if (!q) return;
+  const { brandHits, matched } = await computeHeroResults(q);
+  if (brandHits.length) {
+    const b = brandHits[0];
+    sessionStorage.setItem('activeBrand', b.slug);
+    location.href = b.href + '#' + b.slug;
+    return;
+  }
+  if (matched.length) {
+    const p = matched[0];
+    location.href = 'urun-detay.html?col=' + encodeURIComponent(p.col) + '&id=' + encodeURIComponent(p.id);
+    return;
+  }
+  heroSearchFn(q); // sonuç yoksa listeyi göster
+};
+
+let heroSearchToken = 0;
+window.heroSearchFn = async function(qRaw) {
+  const resultsBox = document.getElementById('heroResults');
+  const q = (qRaw||'').trim();
+  if (!q) { resultsBox.innerHTML = ''; return; }
+  const myToken = ++heroSearchToken;
+  resultsBox.innerHTML = '<div class="hero-result-item"><span class="ri-name" style="color:#9a9a8a">Aranıyor…</span></div>';
+
+  // Marka eşleşmesi listede gösterilmez, yalnızca Enter/Ara yönlendirmesinde kullanılır
+  const { matched, isFuzzy } = await computeHeroResults(q);
+  if (myToken !== heroSearchToken) return; // daha yeni bir arama başladıysa bunu yok say
 
   if (matched.length === 0) {
     resultsBox.innerHTML = '<div class="hero-result-item"><span class="ri-name" style="color:#9a9a8a">Sonuç bulunamadı</span></div>';

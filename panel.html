@@ -116,6 +116,14 @@
       padding: 10px 12px; border: 1.5px solid var(--mist); border-radius: 4px;
       font-family: 'Lora', serif; font-size: .85rem; background: var(--milk);
     }
+    .tag-second {
+      display: inline-block; margin-left: 8px; padding: 2px 8px;
+      background: rgba(200,168,50,.14); color: #8f7325;
+      border: 1px solid rgba(200,168,50,.35); border-radius: 20px;
+      font-family: 'Cinzel', serif; font-size: .58rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
+      vertical-align: middle;
+    }
     .qty-range { display: flex; align-items: center; gap: 6px; }
     .qty-range input[type="number"] {
       width: 90px; padding: 10px 12px; border: 1.5px solid var(--mist); border-radius: 4px;
@@ -319,6 +327,11 @@
               <option value="aksesuar">Silah Aksesuarları</option>
               <option value="balik">Balık Avı</option>
               <option value="fisek">Av Fişekleri</option>
+            </select>
+            <select id="stockCondFilter">
+              <option value="all">Sıfır + İkinci El</option>
+              <option value="sifir">Yalnızca Sıfır</option>
+              <option value="ikinci">Yalnızca İkinci El</option>
             </select>
             <input type="text" id="stockSearch" placeholder="Ürün ara…" />
             <div class="qty-range">
@@ -763,14 +776,21 @@
             bedenTipi: data.bedenTipi || '',
             beden: data.beden || '',
             stokMap: data.stokMap || {},
+            cat: data.cat || '',
           });
         });
       }
       allProducts.sort((a,b)=>a.name.localeCompare(b.name,'tr'));
     }
 
+    // Ürün "İkinci El" kategorisinde mi? (kategori "İkinci El > Yarı Otomatik" gibi de olabilir)
+    function isSecondHand(p){
+      return (p.cat||'').toLocaleLowerCase('tr').includes('ikinci');
+    }
+
     function renderStockTable(){
       const filterCol = document.getElementById('stockCatFilter').value;
+      const filterCond = document.getElementById('stockCondFilter').value;
       const search = document.getElementById('stockSearch').value.trim().toLowerCase();
       const qtyMinRaw = document.getElementById('stockQtyMin').value;
       const qtyMaxRaw = document.getElementById('stockQtyMax').value;
@@ -782,7 +802,12 @@
         const matchesQty =
           (qtyMin===null || qty>=qtyMin) &&
           (qtyMax===null || qty<=qtyMax);
+        const second = isSecondHand(p);
+        const matchesCond =
+          filterCond==='all' ||
+          (filterCond==='ikinci' ? second : !second);
         return (filterCol==='all' || p.col===filterCol) &&
+          matchesCond &&
           (!search || p.name.toLowerCase().includes(search)) &&
           matchesQty;
       });
@@ -818,7 +843,7 @@
         }
         return `<tr class="${low?'low-stock':''}">
           <td>${escapeHtml(p.colLabel)}</td>
-          <td>${escapeHtml(p.name)}</td>
+          <td>${escapeHtml(p.name)}${isSecondHand(p) ? '<span class="tag-second">İkinci El</span>' : ''}</td>
           <td class="beden-cell">${bedenCell}</td>
           <td class="stock-cell">
             <div class="stock-cell-inner">
@@ -833,6 +858,7 @@
     }
 
     document.getElementById('stockCatFilter').addEventListener('change', renderStockTable);
+    document.getElementById('stockCondFilter').addEventListener('change', renderStockTable);
     document.getElementById('stockSearch').addEventListener('input', renderStockTable);
     document.getElementById('stockQtyMin').addEventListener('input', renderStockTable);
     document.getElementById('stockQtyMax').addEventListener('input', renderStockTable);

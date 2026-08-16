@@ -218,6 +218,21 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 .empty-state p{color:var(--grey2);font-size:.95rem;line-height:1.7;}
 .empty-state strong{color:var(--green);}
 
+/* ── SAYFALAMA ── */
+.pager{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin:28px 0 10px;}
+.pager:empty{display:none;}
+.pager button{min-width:38px;height:38px;padding:0 11px;border:1px solid #dfe6d8;background:#fff;color:var(--grey);border-radius:10px;font-size:.9rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .18s ease;}
+.pager button:hover:not(:disabled):not(.active){background:var(--greenlt);border-color:var(--green);color:var(--green2);}
+.pager button.active{background:var(--green);border-color:var(--green);color:#fff;cursor:default;}
+.pager button:disabled{opacity:.35;cursor:not-allowed;}
+.pager .pager-gap{color:var(--grey2);padding:0 2px;user-select:none;}
+.pager .pager-info{width:100%;text-align:center;color:var(--grey2);font-size:.82rem;margin-top:8px;}
+@media(max-width:600px){
+  .pager{gap:5px;margin:22px 0 6px;}
+  .pager button{min-width:34px;height:34px;padding:0 8px;font-size:.85rem;}
+  .pager .pager-edge{display:none;}
+}
+
 /* ── LIGHTBOX ── */
 #lightbox{
   display:none;position:fixed;inset:0;z-index:2000;
@@ -269,6 +284,24 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   transition:background .2s;
 }
 .btn-save:hover{background:var(--green2);}
+.btn-save:disabled{opacity:.6;cursor:not-allowed;}
+
+/* Toplu ürün ekleme */
+.bulk-modal{max-width:760px;}
+.bulk-check{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-family:'Lora',serif;font-size:.82rem;color:var(--grey);cursor:pointer;}
+.bulk-check input{margin-top:3px;flex-shrink:0;}
+.bulk-check small{color:var(--grey2);font-style:italic;}
+.bulk-summary{background:var(--greenlt);border:1px solid var(--mist);border-radius:4px;padding:10px 14px;font-family:'Lora',serif;font-size:.82rem;color:var(--grey);margin-bottom:10px;}
+.bulk-table-wrap{max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;}
+.bulk-table{width:100%;border-collapse:collapse;font-family:'Lora',serif;font-size:.78rem;}
+.bulk-table th{position:sticky;top:0;background:var(--offwhite);text-align:left;padding:8px 10px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--grey2);border-bottom:1px solid var(--border);}
+.bulk-table td{padding:7px 10px;border-bottom:1px solid var(--offwhite);vertical-align:middle;}
+.bulk-table tr:last-child td{border-bottom:none;}
+.bulk-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.62rem;font-family:'Cinzel',serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.bulk-badge.yeni{background:rgba(74,122,56,.12);color:var(--green);}
+.bulk-badge.var{background:rgba(200,168,50,.16);color:#8f7325;}
+.bulk-badge.hata{background:#fdecea;color:#c0392b;}
+.bulk-log{margin-top:14px;max-height:220px;overflow-y:auto;background:#1c2b16;color:#cfe8b8;border-radius:4px;padding:12px 14px;font-family:ui-monospace,Consolas,monospace;font-size:.72rem;line-height:1.7;white-space:pre-wrap;}
 
 /* İletişim modal */
 .contact-wrap{text-align:center;padding-top:8px;}
@@ -712,6 +745,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
           <option value="name-asc">A → Z</option>
         </select>
         <button class="btn-add-admin" id="addBtn" onclick="openAddModal()">+ Ürün Ekle</button>
+        <button class="btn-add-admin" id="bulkBtn" onclick="openBulkModal()" style="background:var(--green);">⬆ Toplu Ekle</button>
       </div>
     </div>
 
@@ -721,6 +755,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
         <p>Sol panelden bir marka seçin</p>
       </div>
     </div>
+
+    <div class="pager" id="pager"></div>
 
   </div>
 </div>
@@ -843,6 +879,46 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
     </div>
 
     <button class="btn-save" onclick="saveProduct()">Ürünü Kaydet</button>
+  </div>
+</div>
+
+<!-- TOPLU ÜRÜN EKLEME MODAL -->
+<div class="modal-overlay" id="bulkModal">
+  <div class="modal bulk-modal">
+    <button class="modal-close" onclick="closeBulkModal()">✕</button>
+    <h3>Toplu Ürün Ekle</h3>
+    <p style="font-size:.8rem;color:#888;margin-top:3px;">
+      Ürün listesini JSON olarak yapıştırın, önizleyin, sonra aktarın.
+    </p>
+
+    <div class="form-row">
+      <label>Ürün Listesi (JSON)</label>
+      <textarea id="bulkJson" spellcheck="false" placeholder='[{"brand":"beretta","name":"Beretta 686 ...","cat":"Sıfır|Süperpoze","price":"210.400,00 TL","sistem":"Süperpoze","kalibre":"12 Kalibre","images":["https://..."]}]' style="min-height:150px;font-family:ui-monospace,Consolas,monospace;font-size:.76rem;"></textarea>
+    </div>
+
+    <label class="bulk-check">
+      <input type="checkbox" id="bulkCloudinary" checked />
+      <span>Görselleri Cloudinary'ye aktar <small>(kapatılırsa kaynak sitenin adresi kullanılır)</small></span>
+    </label>
+    <label class="bulk-check">
+      <input type="checkbox" id="bulkSkipDupes" checked />
+      <span>Aynı isimde ürün varsa atla</span>
+    </label>
+
+    <button class="btn-save" onclick="bulkPreview()" style="background:var(--grey);">Önizle</button>
+
+    <div id="bulkPreviewWrap" style="display:none;margin-top:16px;">
+      <div class="bulk-summary" id="bulkSummary"></div>
+      <div class="bulk-table-wrap">
+        <table class="bulk-table">
+          <thead><tr><th><input type="checkbox" id="bulkAll" checked onchange="bulkToggleAll(this.checked)"/></th><th>Ürün</th><th>Kategori</th><th>Fiyat</th><th>Foto</th><th>Durum</th></tr></thead>
+          <tbody id="bulkTableBody"></tbody>
+        </table>
+      </div>
+      <button class="btn-save" id="bulkRunBtn" onclick="bulkRun()">Seçilenleri Aktar</button>
+    </div>
+
+    <div class="bulk-log" id="bulkLog" style="display:none;"></div>
   </div>
 </div>
 
@@ -1127,6 +1203,7 @@ function applyFilters(){
   }
   if(minP!==null) list=list.filter(p=>parsePrice(p.price)>=minP);
   if(maxP!==null) list=list.filter(p=>parsePrice(p.price)<=maxP);
+  currentPage = 1;
   renderProducts(applySearchAndSort(list));
 }
 
@@ -1181,10 +1258,71 @@ function applySort(){
   applyFilters();
 }
 
+
+/* ── SAYFALAMA ──────────────────────────────────────────────
+   Tüm ürünler tek seferde basılmıyor; sayfa sayfa gösteriliyor.
+   Böylece çok ürünlü markalarda sayfa hızlı açılıyor. */
+const PAGE_SIZE = 20;
+let currentPage = 1;
+let filteredCache = [];
+
+// Cloudinary görselleri kart boyutunda küçültülmüş olarak indirilir
+function thumbUrl(u, w){
+  if(!u || u.indexOf('res.cloudinary.com') < 0) return u;
+  if(/\/upload\/(c_|w_|h_|q_|f_)/.test(u)) return u;
+  return u.replace('/upload/', '/upload/w_' + (w || 420) + ',q_auto,f_auto/');
+}
+
+function renderPager(total, totalPages){
+  const el = document.getElementById('pager');
+  if(!el) return;
+  if(total <= PAGE_SIZE){ el.innerHTML = ''; return; }
+  const p = currentPage;
+  const nums = [];
+  const push = n => { if(n >= 1 && n <= totalPages && !nums.includes(n)) nums.push(n); };
+  push(1);
+  for(let i = p - 1; i <= p + 1; i++) push(i);
+  push(totalPages);
+  nums.sort((a, b) => a - b);
+  let html = `<button onclick="goToPage(${p-1})" ${p===1?'disabled':''} title="Önceki">‹<span class="pager-edge"> Önceki</span></button>`;
+  let prev = 0;
+  nums.forEach(n => {
+    if(prev && n - prev > 1) html += '<span class="pager-gap">…</span>';
+    html += `<button class="${n===p?'active':''}" onclick="goToPage(${n})">${n}</button>`;
+    prev = n;
+  });
+  html += `<button onclick="goToPage(${p+1})" ${p===totalPages?'disabled':''} title="Sonraki"><span class="pager-edge">Sonraki </span>›</button>`;
+  html += `<div class="pager-info">${totalPages} sayfadan ${p}. sayfa · toplam ${total} ürün</div>`;
+  el.innerHTML = html;
+}
+
+function goToPage(n){
+  const totalPages = Math.max(1, Math.ceil(filteredCache.length / PAGE_SIZE));
+  n = Math.min(Math.max(1, n), totalPages);
+  if(n === currentPage) return;
+  currentPage = n;
+  renderProducts(filteredCache);
+  const grid = document.getElementById('productGrid');
+  if(grid){
+    const y = grid.getBoundingClientRect().top + window.pageYOffset - 90;
+    window.scrollTo({ top: y < 0 ? 0 : y, behavior: 'smooth' });
+  }
+}
+window.goToPage = goToPage;
+
 function renderProducts(list){
+  filteredCache = list;
+  const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  if(currentPage > totalPages) currentPage = totalPages;
+  if(currentPage < 1) currentPage = 1;
+  renderPager(list.length, totalPages);
+  renderProductCards(list.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE), list.length);
+}
+
+function renderProductCards(list, totalMatched){
   const grid=document.getElementById('productGrid');
   const total=allProducts.length;
-  document.getElementById('toolbarCount').textContent=list.length>0?`(${list.length} ürün)`:'';
+  document.getElementById('toolbarCount').textContent=totalMatched>0?`(${totalMatched} ürün)`:'';
 
   if(list.length===0){
     if(total===0){
@@ -1204,13 +1342,13 @@ function renderProducts(list){
     const catLabel=pc.sub?pc.sub:(isSecond?'İkinci El':'Sıfır Tüfek');
     const brandName=activeBrand?activeBrand.name:(brands.find(b=>b.slug===p.brand)||{name:p.brand||''}).name;
     return `
-    <div class="product-card" style="animation:fadeInUp .3s ease ${i*0.05}s both;">
+    <div class="product-card" style="animation:fadeInUp .3s ease ${Math.min(i,9)*0.04}s both;">
       <div class="card-badges">
         ${isSecond?'<span class="badge badge-second">İkinci El</span>':'<span class="badge badge-new">Sıfır</span>'}
         ${pc.sub?`<span class="badge" style="background:#555;color:#fff;margin-top:2px;">${esc(pc.sub)}</span>`:''}
       </div>
       <div class="card-img" onclick="location.href='urun-detay.html?col=tufekler&id=${p.id}'" style="cursor:pointer;">
-        ${p.img?`<img src="${esc(p.img)}" alt="${esc(p.name)}"/>`:`<div class="no-img">🔫</div>`}
+        ${p.img?`<img src="${esc(thumbUrl(p.img))}" alt="${esc(p.name)}" loading="lazy" decoding="async"/>`:`<div class="no-img">🔫</div>`}
       </div>
       <div class="card-body">
         <div class="card-brand">${esc(brandName)}</div>
@@ -1360,6 +1498,134 @@ function logoutAdmin(){signOut(auth);}
 window.selectBrand=selectBrand;window.filterSidebar=filterSidebar;window.setCat=setCat;window.setCatFilter=setCatFilter;
 window.applyPriceFilter=applyPriceFilter;window.clearPriceFilter=clearPriceFilter;
 window.filterProducts=filterProducts;window.applySort=applySort;window.openAddModal=openAddModal;
+/* ── TOPLU ÜRÜN EKLEME ── */
+// Kayıtta bulunabilecek alanlar (teknik özellikler dahil)
+const BULK_FIELDS=['brand','name','desc','cat','price','sistem','kalibre','sarjorKapasitesi','namluBoyu','agirlik','fisekYatagi','mobilSok','renk'];
+let bulkRows=[];
+
+function openBulkModal(){
+  if(!isAdmin()){alert('Bu işlem için yönetici girişi gerekiyor.');return;}
+  document.getElementById('bulkPreviewWrap').style.display='none';
+  document.getElementById('bulkLog').style.display='none';
+  document.getElementById('bulkModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeBulkModal(){
+  document.getElementById('bulkModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function bulkLog(msg){
+  const el=document.getElementById('bulkLog');
+  el.style.display='block';
+  el.textContent+=msg+'\n';
+  el.scrollTop=el.scrollHeight;
+}
+// Karşılaştırma için ad normalleştirme (boşluk/noktalama farkı olanlar aynı sayılır)
+function bulkNormName(s){
+  return String(s||'').toLocaleLowerCase('tr').replace(/[^0-9a-zçğıöşü]/g,'');
+}
+
+function bulkPreview(){
+  let data;
+  try{ data=JSON.parse(document.getElementById('bulkJson').value); }
+  catch(e){ alert('JSON okunamadı: '+e.message); return; }
+  if(!Array.isArray(data)){ alert('Liste bir dizi (array) olmalı.'); return; }
+
+  const existing=new Set(allProducts.map(p=>bulkNormName(p.name)));
+  const skipDupes=document.getElementById('bulkSkipDupes').checked;
+  bulkRows=data.map(d=>{
+    const imgs=Array.isArray(d.images)?d.images.filter(Boolean):(d.img?[d.img]:[]);
+    const problem=!d.name?'ad yok':'';
+    const dupe=d.name&&existing.has(bulkNormName(d.name));
+    return { data:d, imgs, problem, dupe, include:!problem && !(dupe&&skipDupes) };
+  });
+
+  const yeni=bulkRows.filter(r=>!r.problem&&!r.dupe).length;
+  const varOlan=bulkRows.filter(r=>r.dupe).length;
+  const hatali=bulkRows.filter(r=>r.problem).length;
+  const ikinci=bulkRows.filter(r=>/ikinci/i.test(r.data.cat||'')).length;
+  document.getElementById('bulkSummary').innerHTML=
+    `Toplam <b>${bulkRows.length}</b> kayıt · Yeni <b>${yeni}</b> · Zaten var <b>${varOlan}</b>`+
+    (hatali?` · Hatalı <b>${hatali}</b>`:'')+
+    ` · İkinci el <b>${ikinci}</b> · Toplam <b>${bulkRows.reduce((s,r)=>s+r.imgs.length,0)}</b> fotoğraf`;
+
+  document.getElementById('bulkTableBody').innerHTML=bulkRows.map((r,i)=>`
+    <tr>
+      <td><input type="checkbox" data-bulk="${i}" ${r.include?'checked':''} ${r.problem?'disabled':''}/></td>
+      <td>${esc(r.data.name||'—')}</td>
+      <td>${esc((r.data.cat||'—').replace('|',' › '))}</td>
+      <td>${esc(r.data.price||'—')}</td>
+      <td>${r.imgs.length}</td>
+      <td>${r.problem?`<span class="bulk-badge hata">${esc(r.problem)}</span>`
+            :r.dupe?'<span class="bulk-badge var">zaten var</span>'
+            :'<span class="bulk-badge yeni">yeni</span>'}</td>
+    </tr>`).join('');
+  document.getElementById('bulkPreviewWrap').style.display='block';
+}
+
+function bulkToggleAll(on){
+  document.querySelectorAll('[data-bulk]').forEach(cb=>{ if(!cb.disabled) cb.checked=on; });
+}
+
+// Cloudinary uzak adresten kendisi indirir — tarayıcıda CORS sorunu olmaz
+async function uploadRemoteToCloudinary(url){
+  const fd=new FormData();
+  fd.append('file',url);
+  fd.append('upload_preset',CLD_PRESET);
+  const res=await fetch('https://api.cloudinary.com/v1_1/'+CLD_CLOUD+'/image/upload',{method:'POST',body:fd});
+  const data=await res.json();
+  if(!data.secure_url) throw new Error(JSON.stringify(data.error||data));
+  return data.secure_url;
+}
+
+async function bulkRun(){
+  if(!isAdmin()){alert('Yönetici girişi gerekiyor.');return;}
+  const chosen=[...document.querySelectorAll('[data-bulk]')]
+    .filter(cb=>cb.checked&&!cb.disabled)
+    .map(cb=>bulkRows[+cb.dataset.bulk]);
+  if(!chosen.length){alert('Aktarılacak ürün seçilmedi.');return;}
+  if(!confirm(chosen.length+' ürün eklenecek. Devam edilsin mi?')) return;
+
+  const useCloudinary=document.getElementById('bulkCloudinary').checked;
+  const btn=document.getElementById('bulkRunBtn');
+  btn.disabled=true;
+  document.getElementById('bulkLog').textContent='';
+
+  let ok=0, fail=0;
+  for(let i=0;i<chosen.length;i++){
+    const d=chosen[i].data;
+    btn.textContent=`Aktarılıyor… ${i+1}/${chosen.length}`;
+    try{
+      let images=chosen[i].imgs;
+      if(useCloudinary&&images.length){
+        const uploaded=[];
+        for(const u of images){
+          try{ uploaded.push(await uploadRemoteToCloudinary(u)); }
+          catch(e){ bulkLog('  ! görsel aktarılamadı, kaynak adres kullanılıyor'); uploaded.push(u); }
+        }
+        images=uploaded;
+      }
+      const rec={ img:images[0]||null, images, createdAt:Date.now() };
+      BULK_FIELDS.forEach(f=>{ if(d[f]) rec[f]=d[f]; });
+      if(!rec.brand) rec.brand=activeBrand?activeBrand.slug:'';
+      if(!rec.brand) throw new Error('marka belirsiz — kayıtta brand yok ve marka seçili değil');
+      if(!rec.desc) rec.desc='';
+      await addDoc(collection(db,PAGE_COL),rec);
+      ok++;
+      bulkLog(`✓ ${i+1}/${chosen.length}  ${d.name}`);
+    }catch(e){
+      fail++;
+      bulkLog(`✗ ${i+1}/${chosen.length}  ${d.name} — ${e.message}`);
+    }
+  }
+  bulkLog(`\nBitti. Eklenen: ${ok}${fail?'  ·  Hata: '+fail:''}`);
+  btn.disabled=false; btn.textContent='Seçilenleri Aktar';
+  if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
+}
+
+window.openBulkModal=openBulkModal;window.closeBulkModal=closeBulkModal;
+window.bulkPreview=bulkPreview;window.bulkRun=bulkRun;window.bulkToggleAll=bulkToggleAll;
+
 window.closeAddModal=closeAddModal;window.previewImg=previewImg;window.saveProduct=saveProduct;
 window.deleteProduct=deleteProduct;window.openContact=openContact;window.openLightbox=openLightbox;
 window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.logoutAdmin=logoutAdmin;
@@ -1370,6 +1636,7 @@ function setAdminUI(on){
   document.getElementById('adminLock').style.display=on?'none':'flex';
   document.getElementById('adminLogout').style.display=on?'block':'none';
   document.getElementById('addBtn').classList.toggle('visible',on);
+  document.getElementById('bulkBtn').classList.toggle('visible',on);
   document.querySelectorAll('.btn-del').forEach(b=>b.classList.toggle('visible',on));
   document.querySelectorAll('.btn-edit').forEach(b=>b.classList.toggle('visible',on));
 }
