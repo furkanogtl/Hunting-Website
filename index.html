@@ -8,8 +8,10 @@
   <meta name="keywords" content="av tüfekleri, av malzemeleri, silah aksesuarları, balık avı, av fişekleri, Finike, Antalya, Başkent Av Galerisi" />
   <meta property="og:title" content="Başkent Av Galerisi — Türkiye'nin Güvenilir Av Dünyası" />
   <meta property="og:description" content="Tüfekten ekipmana, yemden aksesuara — avın her detayı burada. 500+ ürün, 50+ marka." />
-  <meta property="og:image" content="https://calm-cranachan-71cada.netlify.app/ilkfoto.png" />
+  <meta property="og:image" content="https://calm-cranachan-71cada.netlify.app/ilkfoto-og.jpg" />
   <meta property="og:type" content="website" />
+  <!-- Kapak görseli CSS arka planı; erken indirilsin diye önceden bildiriliyor -->
+  <link rel="preload" as="image" href="ilkfoto.webp" />
   <meta property="og:locale" content="tr_TR" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <!-- Firebase sunucularına erken bağlan ve SDK'yı sayfa çözümlenirken indirmeye başla -->
@@ -82,7 +84,7 @@
     }
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
-      background: url('ilkfoto.png') center 60%/cover no-repeat;
+      background: url('ilkfoto.webp') center 60%/cover no-repeat;
     }
     .hero-bg::after {
       content: '';
@@ -990,7 +992,7 @@
     </div>
     <div class="cat-grid">
       <a class="cat-card" href="tufekler.html" style="text-decoration:none;display:block;">
-        <img src="tufek.png" alt="Tüfek" />
+        <img src="tufek.webp" alt="Tüfek" width="1100" height="602" loading="lazy" decoding="async" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
           <div class="cat-icon"></div>
@@ -1000,7 +1002,7 @@
         </div>
       </a>
       <a class="cat-card" href="giyim.html" style="text-decoration:none;display:block;">
-        <img src="giyim.png" alt="Giyim" />
+        <img src="giyim.webp" alt="Giyim" width="1100" height="602" loading="lazy" decoding="async" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
           <div class="cat-icon"></div>
@@ -1010,7 +1012,7 @@
         </div>
       </a>
       <a class="cat-card" href="aksesuar.html" style="text-decoration:none;display:block;">
-        <img src="aksesuar.png" alt="Aksesuar" />
+        <img src="aksesuar.webp" alt="Aksesuar" width="1100" height="602" loading="lazy" decoding="async" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
           <div class="cat-icon"></div>
@@ -1020,7 +1022,7 @@
         </div>
       </a>
       <a class="cat-card" href="balik.html" style="text-decoration:none;display:block;">
-        <img src="balık.png" alt="Balık Avı" />
+        <img src="balik.webp" alt="Balık Avı" width="1100" height="602" loading="lazy" decoding="async" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
           <div class="cat-icon"></div>
@@ -1030,7 +1032,7 @@
         </div>
       </a>
       <a class="cat-card" href="fisek.html" style="text-decoration:none;display:block;">
-        <img src="fişek.png" alt="Av Fişekleri" />
+        <img src="fisek.webp" alt="Av Fişekleri" width="1100" height="602" loading="lazy" decoding="async" />
         <div class="cat-card-overlay"></div>
         <div class="cat-card-body">
           <div class="cat-icon"></div>
@@ -1048,7 +1050,7 @@
 <section id="hakkimizda">
   <div class="about reveal">
     <div class="about-img">
-      <img src="nedenbiz.png" alt="Doğa" />
+      <img src="nedenbiz.webp" alt="Doğa" width="1500" height="790" loading="lazy" decoding="async" />
       <div class="about-badge">
         <strong>25+</strong>
         <span>Yıllık Deneyim</span>
