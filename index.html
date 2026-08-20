@@ -12,6 +12,13 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="tr_TR" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<!-- Firebase sunucularına erken bağlan ve SDK'yı sayfa çözümlenirken indirmeye başla -->
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://res.cloudinary.com"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1235,7 +1242,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, setDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, getDocs, setDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -1247,7 +1254,13 @@ const firebaseConfig = {
   appId:"1:248185539120:web:cc66fbaf497fe47b13fbf5"
 };
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Kalıcı önbellek: ürünler tarayıcıda saklanır, tekrar açılışlar anında olur
+let db;
+try{
+  db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+}catch(e){
+  db = getFirestore(app);
+}
 const auth = getAuth(app);
 function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function escJs(s){ return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"'); }
@@ -1332,15 +1345,15 @@ function makePopCard(id, p) {
 // ── ADMIN SEÇİM MODALİ ── tüm ürünleri yükle, seç
 let allProductsCache = [];
 
+// 5 koleksiyon sırayla değil, aynı anda indirilir (5 gidiş-geliş yerine 1)
 async function fetchAllProducts() {
+  const snaps = await Promise.all(COLLECTIONS.map(c => getDocs(collection(db, c.col))));
   const all = [];
-  for (const c of COLLECTIONS) {
-    const snap = await getDocs(collection(db, c.col));
-    snap.docs.forEach(d => {
-      const p = d.data();
-      all.push({ id: d.id, col: c.col, col_label: c.label, href: c.href, ...p });
+  COLLECTIONS.forEach((c, i) => {
+    snaps[i].docs.forEach(d => {
+      all.push({ id: d.id, col: c.col, col_label: c.label, href: c.href, ...d.data() });
     });
-  }
+  });
   return all;
 }
 

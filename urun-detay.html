@@ -9,6 +9,12 @@
 <meta property="og:image" content="https://calm-cranachan-71cada.netlify.app/ilkfoto.png" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="tr_TR" />
+<!-- Firebase sunucularına erken bağlan ve SDK'yı sayfa çözümlenirken indirmeye başla -->
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://res.cloudinary.com"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -854,10 +860,16 @@ document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('cl
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getFirestore,doc,getDoc,collection,getDocs}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import{getFirestore,initializeFirestore,persistentLocalCache,persistentMultipleTabManager,doc,getDoc,collection,getDocs,query,where,limit}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",authDomain:"baskentavgalerisi.firebaseapp.com",projectId:"baskentavgalerisi",storageBucket:"baskentavgalerisi.firebasestorage.app",messagingSenderId:"248185539120",appId:"1:248185539120:web:cc66fbaf497fe47b13fbf5"};
 const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
+// Kalıcı önbellek: ürünler tarayıcıda saklanır, tekrar açılışlar anında olur
+let db;
+try{
+  db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+}catch(e){
+  db = getFirestore(app);
+}
 
 const colMeta={
   tufekler:{label:'Av Tüfekleri',url:'tufekler.html',icon:'🔫'},
@@ -1125,21 +1137,26 @@ function brandLabel(brand){
     || (slug.charAt(0).toUpperCase()+slug.slice(1).replace(/-/g,' '));
 }
 
+// Benzer ürünler: eskiden bütün koleksiyon indiriliyordu (yüzlerce ürün).
+// Artık en fazla 12'şerlik sınırlı sorgular yapılır; genelde tek sorgu yeter.
 async function loadSimilarProducts(col, currentId, p){
   try{
-    const snap = await getDocs(collection(db, col));
-    const all = snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.id!==currentId);
-
-    let similar = all.filter(x=>x.cat && x.cat===p.cat);
-    if(similar.length < 4){
-      const byBrand = all.filter(x=>!similar.some(s=>s.id===x.id) && p.brand && x.brand===p.brand);
-      similar = similar.concat(byBrand);
-    }
-    if(similar.length < 4){
-      const rest = all.filter(x=>!similar.some(s=>s.id===x.id));
-      similar = similar.concat(rest);
-    }
-    similar = similar.slice(0, 10);
+    const base = collection(db, col);
+    const seen = new Set([currentId]);
+    const similar = [];
+    const take = async q => {
+      const snap = await getDocs(q);
+      snap.docs.forEach(d => {
+        if(similar.length >= 10 || seen.has(d.id)) return;
+        seen.add(d.id);
+        similar.push({ id: d.id, ...d.data() });
+      });
+    };
+    if(p.cat)   await take(query(base, where('cat',   '==', p.cat),   limit(12)));
+    if(similar.length < 4 && p.brand)
+                await take(query(base, where('brand', '==', p.brand), limit(12)));
+    if(similar.length < 4)
+                await take(query(base, limit(12)));
     if(!similar.length) return;
 
     const grid = document.getElementById('similarGrid');

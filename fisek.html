@@ -11,6 +11,13 @@
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="tr_TR" />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<!-- Firebase sunucularına erken bağlan ve SDK'yı sayfa çözümlenirken indirmeye başla -->
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://res.cloudinary.com"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -85,10 +92,90 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 .brand-item:hover{background:var(--greenlt);}
 .brand-item.active{background:var(--greenlt);border-left-color:var(--green);}
 .brand-item input[type=radio]{accent-color:var(--green);width:15px;height:15px;flex-shrink:0;}
-.brand-item label{flex:1;font-size:.83rem;font-family:'Lora',serif;color:var(--grey);cursor:pointer;}
+.brand-item label{flex:1;display:flex;align-items:center;gap:7px;font-size:.83rem;font-family:'Lora',serif;color:var(--grey);cursor:pointer;}
 .brand-item.active label{color:var(--green);font-weight:700;}
 .brand-count{font-size:.68rem;font-family:"Cinzel",serif;color:var(--grey2);background:var(--offwhite);padding:2px 8px;border-radius:10px;}
 .brand-list-inner{max-height:320px;overflow-y:auto;}
+
+/* ── GİRİŞTE ÇIKAN YASAL UYARI ── */
+.legal-modal{
+  position:fixed;inset:0;z-index:3000;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(20,35,14,.62);padding:20px;
+  animation:legalFade .25s ease;
+}
+.legal-modal.closed{display:none;}
+@keyframes legalFade{from{opacity:0}to{opacity:1}}
+.legal-modal-box{
+  background:linear-gradient(180deg,#fdf4f2,#fbecea);
+  border:1px solid #f0cfc9;border-top:5px solid #c0392b;
+  border-radius:14px;padding:32px 30px 26px;
+  width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
+  text-align:center;box-shadow:0 26px 70px rgba(0,0,0,.32);
+  animation:legalRise .32s cubic-bezier(.22,.61,.36,1);
+}
+@keyframes legalRise{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+.legal-modal-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:#c0392b;border-radius:999px;padding:7px 16px;margin-bottom:16px;
+}
+.legal-modal-badge::before{content:'⚠';font-size:.85rem;color:#fff;}
+.legal-modal-badge span{
+  font-family:'Cinzel',serif;font-weight:700;font-size:.62rem;color:#fff;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.legal-modal-box h3{
+  font-family:'Cinzel',serif;font-size:.82rem;color:#8e2b1f;
+  letter-spacing:.06em;line-height:1.65;margin-bottom:14px;font-weight:700;
+}
+.legal-modal-box p{
+  font-family:'Lora',serif;font-size:.88rem;color:#7c4038;
+  line-height:1.8;margin-bottom:11px;text-align:left;
+}
+.legal-modal-btn{
+  margin-top:14px;background:#c0392b;color:#fff;border:none;
+  border-radius:8px;padding:12px 40px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;transition:background .2s ease;
+}
+.legal-modal-btn:hover{background:#8e2b1f;}
+body.legal-open{overflow:hidden;}
+@media(max-width:600px){
+  .legal-modal-box{padding:26px 20px 22px;}
+  .legal-modal-box p{font-size:.85rem;}
+  .legal-modal-btn{width:100%;padding:13px;}
+}
+
+/* ── MARKA EKLEME (yalnızca yönetici) ── */
+.brand-add-row{display:none;padding:8px 10px 10px;border-top:1px solid var(--border);}
+.brand-add-row.visible{display:block;}
+.btn-brand-add{
+  width:100%;background:var(--greenlt);border:1px dashed var(--green);
+  color:var(--green2);border-radius:4px;padding:7px;font-family:'Lora',serif;
+  font-size:.82rem;cursor:pointer;transition:all .18s ease;
+}
+.btn-brand-add:hover{background:var(--green);color:#fff;border-style:solid;}
+.brand-del{
+  border:none;background:none;color:#b23a3a;cursor:pointer;
+  font-size:.8rem;opacity:.5;display:none;padding:0 4px;margin-left:2px;
+}
+.brand-del.visible{display:inline-block;}
+.brand-del:hover{opacity:1;}
+
+.brand-flag{
+  display:inline-block;width:1.35em;text-align:center;
+  font-size:.95rem;line-height:1;flex-shrink:0;
+}
+.brand-item.brand-hidden{opacity:.42;}
+.brand-item.brand-hidden label{text-decoration:line-through;}
+.brand-restore{
+  border:none;background:none;color:var(--green);cursor:pointer;
+  font-size:.85rem;opacity:.6;display:none;padding:0 4px;margin-left:2px;
+}
+.brand-restore.visible{display:inline-block;}
+.brand-restore:hover{opacity:1;}
+.brand-hint{font-size:.74rem;color:var(--grey2);line-height:1.55;margin-top:6px;}
+
 
 /* Fiyat filtresi */
 .price-filter{padding:12px 14px;}
@@ -151,6 +238,23 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   mix-blend-mode:multiply;
 }
 .card-img:hover img{transform:scale(1.06);}
+
+/* ── TÜKENEN ÜRÜNLER ── */
+.out-badge{
+  position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+  background:rgba(58,58,58,.84);color:#fff;
+  font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;text-align:center;
+  padding:6px 0;z-index:3;pointer-events:none;
+}
+.product-card.is-out .card-img img{filter:grayscale(.7);opacity:.5;}
+.product-card.is-out .card-img:hover img{transform:none;}
+.product-card.is-out .card-name{color:var(--grey2);}
+.product-card.is-out .card-price{color:var(--grey2);}
+@media(max-width:600px){
+  .out-badge{font-size:.58rem;letter-spacing:.12em;padding:5px 0;}
+}
+
 .card-img .no-img{font-size:3rem;opacity:.15;}
 .zoom-btn{
   position:absolute;bottom:8px;right:8px;
@@ -507,6 +611,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 /* ── SCROLL REVEAL ── */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+/* Kenar çubuğu ve ürün alanı ekranın üstünde: JS yüklenmesini beklemeden görünsün */
+.sidebar.reveal, .main.reveal { opacity: 1; transform: none; }
 
 /* ── SKELETON LOADER ── */
 @keyframes skelShimmer { 0%{background-position:-200% 0;} 100%{background-position:200% 0;} }
@@ -522,6 +628,32 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 </style>
 </head>
 <body>
+
+<!-- Sayfaya girer girmez çıkan yasal uyarı. Başlangıçta açık;
+     kapatma işini aşağıdaki küçük betik yapar. -->
+<div class="legal-modal" id="legalModal">
+  <div class="legal-modal-box">
+    <div class="legal-modal-badge"><span>Yasal Uyarı</span></div>
+    <h3>Av fişeklerinin internet üzerinden doğrudan satışı yapılamamaktadır.</h3>
+    <p>Web sitemizde yer alan fişekler sizlere bilgi vermek amacıyla paylaşılmaktadır. Satın alma işlemleri, yasal zorunluluklar kapsamında yalnızca mağazamızda, avcılık belgesi ve gerekli belgelerin kontrolü ile resmi işlemler tamamlandıktan sonra gerçekleştirilmektedir.</p>
+    <p>Detaylı bilgi almak veya satın alma süreci hakkında destek almak için bizimle iletişime geçebilirsiniz.</p>
+    <button class="legal-modal-btn" id="legalOkBtn">Anladım</button>
+  </div>
+</div>
+<script>
+(function(){
+  var m = document.getElementById('legalModal');
+  document.body.classList.add('legal-open');
+  function kapat(){
+    m.classList.add('closed');
+    document.body.classList.remove('legal-open');
+  }
+  document.getElementById('legalOkBtn').addEventListener('click', kapat);
+  m.addEventListener('click', function(e){ if(e.target === m) kapat(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') kapat(); });
+})();
+</script>
+
 
 <!-- NAV - Ana sayfayla aynı -->
 <nav class="main-nav">
@@ -665,6 +797,9 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
         <input type="text" id="brandSearchInput" placeholder="Marka ara…" oninput="filterSidebar(this.value)"/>
       </div>
       <div class="brand-list-inner" id="brandListEl"></div>
+      <div class="brand-add-row" id="brandAddRow">
+        <button class="btn-brand-add" onclick="openBrandModal()">+ Marka Ekle</button>
+      </div>
     </div>
 
     <!-- Fiyat filtresi -->
@@ -708,9 +843,78 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
     </div>
 
     <div class="product-grid" id="productGrid">
-      <div class="empty-state">
-        <div class="icon">🔫</div>
-        <p>Sol panelden bir marka seçin</p>
+<!-- Firebase yüklenene kadar görünen iskelet; JS ilk işinde bunu değiştirir -->
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
       </div>
     </div>
 
@@ -826,6 +1030,25 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 </div>
 
 <!-- İLETİŞİM MODAL -->
+
+<!-- Marka ekleme penceresi (yalnızca yönetici görür) -->
+<div class="modal-overlay" id="brandModal">
+  <div class="modal" style="max-width:380px;">
+    <button class="modal-close" onclick="closeModal('brandModal')">✕</button>
+    <h3>Yeni Marka Ekle</h3>
+    <div class="form-row">
+      <label>Marka Adı</label>
+      <input type="text" id="brandNameInput" placeholder="Örn: Zoli" autocomplete="off"/>
+    </div>
+    <div class="form-row">
+      <label>Bayrak (isteğe bağlı)</label>
+      <input type="text" id="brandFlagInput" placeholder="🇮🇹 veya TR" maxlength="8" autocomplete="off"/>
+    </div>
+    <div class="brand-hint" id="brandHint"></div>
+    <button class="btn-filter" style="margin-top:16px;" id="brandSaveBtn" onclick="saveBrand()">Markayı Ekle</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="contactModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('contactModal')">✕</button>
@@ -872,7 +1095,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocsFromCache, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",
@@ -885,7 +1108,13 @@ const firebaseConfig = {
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-const db=getFirestore(app);
+// Kalıcı önbellek: ürünler tarayıcıda saklanır, sayfalar arası geçiş anında olur
+let db;
+try{
+  db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+}catch(e){
+  db = getFirestore(app);
+}
 const PAGE_COL='fisek';
 
 const CLD_CLOUD='djo5epyko';
@@ -949,37 +1178,191 @@ function skeletonGridHtml(n){
     </div>`).join('');
 }
 
-async function loadProducts(slug){
-  document.getElementById('productGrid').innerHTML = skeletonGridHtml(6);
-  try{
-    const q=query(collection(db,PAGE_COL),where('brand','==',slug));
-    const snap=await getDocs(q);
-    allProducts=snap.docs.map(d=>({id:d.id,...d.data()}));
-    applyFilters();
-    await updateAllCounts();
-  }catch(e){
-    console.error(e);
-    document.getElementById('productGrid').innerHTML='<div class="empty-state"><div style="font-size:2rem">⚠️</div><p>Yükleme hatası. Sayfayı yenileyin.</p></div>';
-  }
-}
+/* ── ÜRÜN ÖNBELLEĞİ ────────────────────────────────────────────
+   Koleksiyon sayfa açılışında BİR KEZ indirilir. Marka, kategori,
+   arama ve sayfa geçişleri bellekten yapılır; Firestore'a tekrar
+   gidilmez. Ürün eklenip silindiğinde refreshProducts() tazeler. */
+let allDocsCache = null;
 
-async function updateAllCounts(){
-  try{
-    const snap=await getDocs(collection(db,PAGE_COL));
-    brandCounts={};
-    snap.docs.forEach(d=>{const br=d.data().brand;brandCounts[br]=(brandCounts[br]||0)+1;});
-  }catch(e){brandCounts={};}
+function recountBrands(){
+  brandCounts = {};
+  (allDocsCache || []).forEach(d => { brandCounts[d.brand] = (brandCounts[d.brand] || 0) + 1; });
   renderSidebar(brands);
 }
 
+function applyFromCache(){
+  recountBrands();
+  allProducts = activeBrand
+    ? allDocsCache.filter(d => d.brand === activeBrand.slug)
+    : allDocsCache;
+  applyFilters();
+}
 
+// Marka seçimi artık ağa çıkmıyor
+function loadProducts(){
+  if(allDocsCache){ applyFromCache(); return Promise.resolve(); }
+  return loadAllProducts();
+}
+
+function updateAllCounts(){
+  recountBrands();
+  return Promise.resolve();
+}
+
+// Yazma işlemlerinden sonra önbelleği bırakıp yeniden indir
+function refreshProducts(){
+  allDocsCache = null;
+  return loadAllProducts();
+}
+
+
+
+/* ── MARKA YÖNETİMİ ──────────────────────────────────────────────
+   Sayfadaki sabit marka listesine, Firestore'daki 'markalar'
+   koleksiyonundan gelen markalar eklenir. Böylece yeni bir marka
+   için kodu değiştirmeye gerek kalmaz. */
+const BRAND_PREFIX = 'f-';
+
+// "Caesar Guerini" -> "caesar-guerini" (Türkçe harfler sadeleştirilir)
+function brandSlugify(name){
+  return String(name || '').trim().toLocaleLowerCase('tr')
+    .replace(/ı/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g')
+    .replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+
+// "TR" gibi iki harfli ülke kodunu bayrak simgesine çevirir.
+// Böylece elle yazılan kod da diğer bayraklarla aynı boyutta görünür.
+function normFlag(v){
+  const t = String(v || '').trim();
+  if(/^[A-Za-z]{2}$/.test(t)){
+    return String.fromCodePoint(...[...t.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+  }
+  return t;
+}
+
+async function loadCustomBrands(){
+  try{
+    const snap = await getDocs(query(collection(db,'markalar'), where('col','==',PAGE_COL)));
+    snap.docs.forEach(d => {
+      const b = d.data();
+      if(!b.slug) return;
+      const mevcut = brands.find(x => x.slug === b.slug);
+      if(b.hidden){
+        // Sabit listedeki bir marka gizlenmiş
+        if(mevcut){ mevcut.hidden = true; mevcut.hideId = d.id; }
+        return;
+      }
+      if(mevcut) return;
+      brands.push({ name:b.name, flag:b.flag || '', slug:b.slug, docId:d.id });
+    });
+    brands.sort((a,b) => a.name.localeCompare(b.name,'tr'));
+    renderSidebar(brands);
+  }catch(e){ console.warn('Markalar yüklenemedi:', e); }
+}
+
+function openBrandModal(){
+  if(!isAdmin()) return;
+  document.getElementById('brandNameInput').value = '';
+  document.getElementById('brandFlagInput').value = '';
+  document.getElementById('brandHint').textContent = '';
+  document.getElementById('brandModal').classList.add('open');
+  document.getElementById('brandNameInput').focus();
+}
+
+async function saveBrand(){
+  if(!isAdmin()) return;
+  const name = document.getElementById('brandNameInput').value.trim();
+  const flag = normFlag(document.getElementById('brandFlagInput').value);
+  const hint = document.getElementById('brandHint');
+  if(!name){ hint.textContent = 'Marka adı boş olamaz.'; return; }
+
+  const slug = BRAND_PREFIX + brandSlugify(name);
+  if(slug === BRAND_PREFIX){ hint.textContent = 'Geçerli bir marka adı yazın.'; return; }
+  if(brands.some(b => b.slug === slug)){ hint.textContent = 'Bu marka zaten listede var.'; return; }
+
+  const btn = document.getElementById('brandSaveBtn');
+  btn.disabled = true; btn.textContent = 'Ekleniyor…';
+  try{
+    const ref = await addDoc(collection(db,'markalar'), {
+      col: PAGE_COL, name, flag, slug, createdAt: new Date().toISOString()
+    });
+    brands.push({ name, flag, slug, docId: ref.id });
+    brands.sort((a,b) => a.name.localeCompare(b.name,'tr'));
+    renderSidebar(brands);
+    closeModal('brandModal');
+    selectBrand(slug);
+  }catch(e){
+    // İzin hatasını anlaşılır anlat: 'markalar' koleksiyonu için Firestore
+    // güvenlik kuralı tanımlı değilse yazma reddedilir.
+    if(e.code === 'permission-denied' || /insufficient permissions/i.test(e.message||'')){
+      hint.innerHTML = 'Firebase izin vermedi. Firestore kurallarına şu satır eklenmeli:<br>' +
+        '<code>match /markalar/{id} { allow read: if true; allow write: if admin(); }</code>';
+    } else {
+      hint.textContent = 'Eklenemedi (' + (e.code || 'hata') + '): ' + e.message;
+    }
+    console.error('Marka eklenemedi:', e);
+  }finally{
+    btn.disabled = false; btn.textContent = 'Markayı Ekle';
+  }
+}
+
+// Yalnızca sonradan eklenen markalar silinebilir; sabit liste korunur
+// Sonradan eklenen marka tamamen silinir.
+// Sayfada sabit gelen marka silinemez, bunun yerine "gizlendi" işaretlenir;
+// yönetici solgun olarak görmeye devam eder ve ↺ ile geri getirebilir.
+async function deleteBrand(slug, ev){
+  if(ev) ev.stopPropagation();
+  if(!isAdmin()) return;
+  const b = brands.find(x => x.slug === slug);
+  if(!b) return;
+  const adet = brandCounts[slug] || 0;
+  if(adet > 0){
+    alert(b.name + ' markasında ' + adet + ' ürün var. Önce ürünleri silin veya başka markaya taşıyın.');
+    return;
+  }
+  if(!confirm(b.name + ' markası listeden kaldırılsın mı?')) return;
+  try{
+    if(b.docId){
+      await deleteDoc(doc(db,'markalar', b.docId));
+      const i = brands.findIndex(x => x.slug === slug);
+      if(i >= 0) brands.splice(i,1);
+    } else {
+      const ref = await addDoc(collection(db,'markalar'), {
+        col: PAGE_COL, slug, name: b.name, hidden: true, createdAt: new Date().toISOString()
+      });
+      b.hidden = true; b.hideId = ref.id;
+    }
+    if(activeBrand && activeBrand.slug === slug) selectBrand(slug);
+    else renderSidebar(brands);
+  }catch(e){ alert('Kaldırılamadı: ' + e.message); }
+}
+
+// Gizlenen sabit markayı geri getirir
+async function restoreBrand(slug, ev){
+  if(ev) ev.stopPropagation();
+  if(!isAdmin()) return;
+  const b = brands.find(x => x.slug === slug);
+  if(!b || !b.hideId) return;
+  try{
+    await deleteDoc(doc(db,'markalar', b.hideId));
+    delete b.hidden; delete b.hideId;
+    renderSidebar(brands);
+  }catch(e){ alert('Geri getirilemedi: ' + e.message); }
+}
 
 function renderSidebar(list){
-  document.getElementById('brandListEl').innerHTML=list.map(b=>`
-    <div class="brand-item ${activeBrand&&activeBrand.slug===b.slug?'active':''}" onclick="selectBrand('${b.slug}')">
+  // Gizlenen markalar müşteriye hiç gösterilmez; yönetici solgun görür
+  const görünür = list.filter(b => !b.hidden || isAdmin());
+  document.getElementById('brandListEl').innerHTML=görünür.map(b=>`
+    <div class="brand-item ${activeBrand&&activeBrand.slug===b.slug?'active':''} ${b.hidden?'brand-hidden':''}" onclick="selectBrand('${b.slug}')">
       <input type="radio" name="brand" ${activeBrand&&activeBrand.slug===b.slug?'checked':''} readonly/>
-      <label>${b.flag} ${b.name}</label>
+      <label><span class="brand-flag">${normFlag(b.flag)}</span>${b.name}</label>
       <span class="brand-count">${brandCounts[b.slug]||0}</span>
+      ${b.hidden
+        ? `<button class="brand-restore ${isAdmin()?'visible':''}" title="Markayı geri getir" onclick="restoreBrand('${b.slug}',event)">↺</button>`
+        : `<button class="brand-del ${isAdmin()?'visible':''}" title="Markayı kaldır" onclick="deleteBrand('${b.slug}',event)">✕</button>`}
     </div>`).join('');
 }
 
@@ -996,7 +1379,7 @@ function selectBrand(slug){
     const headerSearch=document.getElementById('headerSearch'); if(headerSearch) headerSearch.value='';
     const sortSelect=document.getElementById('sortSelect'); if(sortSelect) sortSelect.value='';
     renderSidebar(brands);
-    loadAllProducts();
+    loadProducts();
     return;
   }
   activeBrand=brands.find(b=>b.slug===slug);
@@ -1069,6 +1452,18 @@ function normText(s){
 
 // Arama + sıralama, aktif kategori/fiyat filtrelerinden geçmiş listeye uygulanır
 // (marka seçili olmasa da çalışır; değerler doğrudan alanlardan okunur)
+/* ── STOK DURUMU ─────────────────────────────────────────────
+   Panelde stok girilmemiş ürünler "tükendi" sayılmaz; yalnızca
+   stoğu açıkça 0 (veya altı) olanlar tükendi kabul edilir. */
+function isOutOfStock(p){
+  if(p.stokMap && typeof p.stokMap === 'object'){
+    const değerler = Object.values(p.stokMap).filter(v => typeof v === 'number');
+    if(değerler.length) return değerler.reduce((a,b) => a + b, 0) <= 0;
+  }
+  if(typeof p.stok === 'number') return p.stok <= 0;
+  return false;
+}
+
 function applySearchAndSort(list){
   const input=document.getElementById('headerSearch');
   const q=normText(input?input.value:'').trim();
@@ -1083,6 +1478,8 @@ function applySearchAndSort(list){
   if(v==='price-asc') list.sort((a,b)=>parsePrice(a.price)-parsePrice(b.price));
   if(v==='price-desc') list.sort((a,b)=>parsePrice(b.price)-parsePrice(a.price));
   if(v==='name-asc') list.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'tr'));
+  // Tükenenler her zaman en sona; kendi aralarındaki sıra korunur
+  list.sort((a,b)=>(isOutOfStock(a)?1:0)-(isOutOfStock(b)?1:0));
   return list;
 }
 
@@ -1175,12 +1572,13 @@ function renderProductCards(list, totalMatched){
     const isSecond=p.cat==='İkinci El';
     const brandName=activeBrand?activeBrand.name:(brands.find(b=>b.slug===p.brand)||{name:p.brand||''}).name;
     return `
-    <div class="product-card" style="animation:fadeInUp .3s ease ${Math.min(i,9)*0.04}s both;">
+    <div class="product-card ${isOutOfStock(p)?'is-out':''}" style="animation:fadeInUp .3s ease ${Math.min(i,9)*0.04}s both;">
       <div class="card-badges">
         ${isSecond?'<span class="badge badge-second">İkinci El</span>':'<span class="badge badge-new">'+esc(p.cat)+'</span>'}
       </div>
       <div class="card-img" onclick="location.href='urun-detay.html?col=fisek&id=${p.id}'" style="cursor:pointer;">
         ${p.img?`<img src="${esc(thumbUrl(p.img))}" alt="${esc(p.name)}" loading="lazy" decoding="async"/>`:`<div class="no-img">🔴</div>`}
+        ${isOutOfStock(p)?'<span class="out-badge">Tükendi</span>':''}
       </div>
       <div class="card-body">
         <div class="card-brand">${esc(brandName)}</div>
@@ -1277,7 +1675,7 @@ async function saveProduct(){
       });
     }
     closeAddModal();
-    if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
+    await refreshProducts();
   }catch(e){alert('Hata: '+e.message);}
   finally{btn.textContent='Ürünü Kaydet';btn.disabled=false;}
 }
@@ -1287,7 +1685,7 @@ async function deleteProduct(docId){
   if(!confirm('Bu ürünü silmek istediğinize emin misiniz?'))return;
   try{
     await deleteDoc(doc(db,PAGE_COL,docId));
-    if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
+    await refreshProducts();
   }catch(e){alert('Silme hatası: '+e.message);}
 }
 
@@ -1446,7 +1844,7 @@ async function bulkRun(){
 
   bulkLog(`\nBitti. Eklenen: ${ok}${fail?'  ·  Hata: '+fail:''}`);
   btn.disabled=false; btn.textContent='Seçilenleri Aktar';
-  if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
+  await refreshProducts();
 }
 
 window.openBulkModal=openBulkModal;window.closeBulkModal=closeBulkModal;
@@ -1459,6 +1857,7 @@ window.closeAddModal=closeAddModal;window.previewImg=previewImg;window.saveProdu
 window.deleteProduct=deleteProduct;window.openContact=openContact;window.openLightbox=openLightbox;
 window.closeLightbox=closeLightbox;window.closeModal=closeModal;window.logoutAdmin=logoutAdmin;
 window.openEditModal=openEditModal;
+window.openBrandModal=openBrandModal;window.saveBrand=saveBrand;window.deleteBrand=deleteBrand;window.restoreBrand=restoreBrand;
 window.toggleMenu=toggleMenu;window.toggleSidebar=toggleSidebar;window.openAdminModal=openAdminModal;
 function setAdminUI(on){
   document.getElementById('adminLock').style.display=on?'none':'flex';
@@ -1467,29 +1866,51 @@ function setAdminUI(on){
   document.getElementById('bulkBtn').classList.toggle('visible',on);
   document.querySelectorAll('.btn-del').forEach(b=>b.classList.toggle('visible',on));
   document.querySelectorAll('.btn-edit').forEach(b=>b.classList.toggle('visible',on));
+  document.getElementById('brandAddRow').classList.toggle('visible',on);
+  document.querySelectorAll('.brand-del').forEach(b=>b.classList.toggle('visible',on));
 }
 onAuthStateChanged(auth,(user)=>{setAdminUI(!!user);});
 
 // ── SAYFA AÇILINCA TÜM ÜRÜNLERİ YÜKLEYİP GÖSTER ──
+// Önce tarayıcı önbelleğinden anında boyar, ardından sunucudan tazeler.
 async function loadAllProducts() {
   const grid = document.getElementById('productGrid');
-  // Skeleton loader - yükleniyor yerine shimmer'lı iskelet kartlar göster
-  grid.innerHTML = skeletonGridHtml(6);
+  let painted = false;
+  let lastSig = '';
+
+  // Sunucudan gelen veri önbellektekiyle aynıysa ekranı YENİDEN ÇİZME.
+  // Yoksa ürünler bir kez önbellekten, hemen ardından sunucudan gelip
+  // animasyon iki kere oynuyordu.
+  const paint = docs => {
+    const sig = JSON.stringify(docs);
+    if(painted && sig === lastSig) return;
+    lastSig = sig;
+    allDocsCache = docs;
+    applyFromCache();
+    painted = true;
+  };
+
+  // Sunucu isteği HEMEN başlasın; önbellek okuması onu bekletmesin
+  const serverPromise = getDocs(collection(db, PAGE_COL));
+  serverPromise.catch(() => {}); // aşağıda yakalanıyor, ara pencerede uyarı basmasın
+
+  // 1) Daha önce açılmışsa: diskteki kopyadan anında göster
+  try{
+    const cached = await getDocsFromCache(collection(db, PAGE_COL));
+    if(!cached.empty && !painted) paint(cached.docs.map(d => ({ id: d.id, ...d.data() })));
+  }catch(e){ /* önbellek yok — sorun değil */ }
+
+  // 2) Sunucudan güncelini al
   try {
-    const snap = await getDocs(collection(db, PAGE_COL));
-    const allDocs = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    brandCounts = {};
-    allDocs.forEach(d => {
-      brandCounts[d.brand] = (brandCounts[d.brand] || 0) + 1;
-    });
-    renderSidebar(brands);
-    allProducts = activeBrand
-      ? allDocs.filter(d => d.brand === activeBrand.slug)
-      : allDocs;
-    applyFilters();
+    const snap = await serverPromise;
+    const savedPage = currentPage;
+    const sigBefore = lastSig;
+    paint(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    // gerçekten değiştiyse ve kullanıcı ilerideki bir sayfadaysa onu koru
+    if(lastSig !== sigBefore && savedPage > 1){ currentPage = savedPage; renderProducts(filteredCache); }
   } catch(e) {
     console.error('Firebase yükleme hatası:', e);
-    grid.innerHTML = '<div class="empty-state"><div style="font-size:2rem">⚠️</div><p>Bağlantı hatası. Sayfayı yenileyin.</p></div>';
+    if(!painted) grid.innerHTML = '<div class="empty-state"><div style="font-size:2rem">⚠️</div><p>Bağlantı hatası. Sayfayı yenileyin.</p></div>';
   }
 }
 
@@ -1509,6 +1930,7 @@ if(autoSlug) {
 
 // Her zaman tüm ürünleri yükle (marka seçili olsa da olmasa da)
 loadAllProducts();
+loadCustomBrands();
 
 // ── SCROLL REVEAL ──
 const revealObserver = new IntersectionObserver(entries => {

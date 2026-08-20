@@ -11,6 +11,13 @@
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="tr_TR" />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<!-- Firebase sunucularına erken bağlan ve SDK'yı sayfa çözümlenirken indirmeye başla -->
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://res.cloudinary.com"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"/>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -151,6 +158,23 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
   mix-blend-mode:multiply;
 }
 .card-img:hover img{transform:scale(1.06);}
+
+/* ── TÜKENEN ÜRÜNLER ── */
+.out-badge{
+  position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+  background:rgba(58,58,58,.84);color:#fff;
+  font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;text-align:center;
+  padding:6px 0;z-index:3;pointer-events:none;
+}
+.product-card.is-out .card-img img{filter:grayscale(.7);opacity:.5;}
+.product-card.is-out .card-img:hover img{transform:none;}
+.product-card.is-out .card-name{color:var(--grey2);}
+.product-card.is-out .card-price{color:var(--grey2);}
+@media(max-width:600px){
+  .out-badge{font-size:.58rem;letter-spacing:.12em;padding:5px 0;}
+}
+
 .card-img .no-img{font-size:3rem;opacity:.15;}
 .zoom-btn{
   position:absolute;bottom:8px;right:8px;
@@ -480,6 +504,8 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 /* ── SCROLL REVEAL ── */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+/* Kenar çubuğu ve ürün alanı ekranın üstünde: JS yüklenmesini beklemeden görünsün */
+.sidebar.reveal, .main.reveal { opacity: 1; transform: none; }
 
 /* ── SKELETON LOADER ── */
 @keyframes skelShimmer { 0%{background-position:-200% 0;} 100%{background-position:200% 0;} }
@@ -600,9 +626,78 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
     </div>
 
     <div class="product-grid" id="productGrid">
-      <div class="empty-state">
-        <div class="icon">🧥</div>
-        <p>Sol panelden bir kategori seçin</p>
+<!-- Firebase yüklenene kadar görünen iskelet; JS ilk işinde bunu değiştirir -->
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-img skel-shimmer"></div>
+        <div class="card-body">
+          <div class="skel-line w40 skel-shimmer"></div>
+          <div class="skel-line w80 skel-shimmer"></div>
+          <div class="skel-line w60 skel-shimmer"></div>
+        </div>
+        <div class="card-footer"><div class="skel-btn skel-shimmer"></div></div>
       </div>
     </div>
 
@@ -706,7 +801,7 @@ body{font-family:'Lora',serif;background:var(--bg);color:var(--dark);font-size:1
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocsFromCache, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",
@@ -719,7 +814,13 @@ const firebaseConfig = {
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-const db=getFirestore(app);
+// Kalıcı önbellek: ürünler tarayıcıda saklanır, sayfalar arası geçiş anında olur
+let db;
+try{
+  db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+}catch(e){
+  db = getFirestore(app);
+}
 const PAGE_COL='giyim';
 
 const CLD_CLOUD='djo5epyko';
@@ -772,27 +873,41 @@ function skeletonGridHtml(n){
     </div>`).join('');
 }
 
-async function loadProducts(slug){
-  document.getElementById('productGrid').innerHTML = skeletonGridHtml(6);
-  try{
-    const q=query(collection(db,PAGE_COL),where('brand','==',slug));
-    const snap=await getDocs(q);
-    allProducts=snap.docs.map(d=>({id:d.id,...d.data()}));
-    applyFilters();
-    await updateAllCounts();
-  }catch(e){
-    console.error(e);
-    document.getElementById('productGrid').innerHTML='<div class="empty-state"><div style="font-size:2rem">⚠️</div><p>Yükleme hatası. Sayfayı yenileyin.</p></div>';
-  }
+/* ── ÜRÜN ÖNBELLEĞİ ────────────────────────────────────────────
+   Koleksiyon sayfa açılışında BİR KEZ indirilir. Marka, kategori,
+   arama ve sayfa geçişleri bellekten yapılır; Firestore'a tekrar
+   gidilmez. Ürün eklenip silindiğinde refreshProducts() tazeler. */
+let allDocsCache = null;
+
+function recountBrands(){
+  brandCounts = {};
+  (allDocsCache || []).forEach(d => { brandCounts[d.brand] = (brandCounts[d.brand] || 0) + 1; });
+  renderSidebar(brands);
 }
 
-async function updateAllCounts(){
-  try{
-    const snap=await getDocs(collection(db,PAGE_COL));
-    brandCounts={};
-    snap.docs.forEach(d=>{const br=d.data().brand;brandCounts[br]=(brandCounts[br]||0)+1;});
-  }catch(e){brandCounts={};}
-  renderSidebar(brands);
+function applyFromCache(){
+  recountBrands();
+  allProducts = activeBrand
+    ? allDocsCache.filter(d => d.brand === activeBrand.slug)
+    : allDocsCache;
+  applyFilters();
+}
+
+// Marka seçimi artık ağa çıkmıyor
+function loadProducts(){
+  if(allDocsCache){ applyFromCache(); return Promise.resolve(); }
+  return loadAllProducts();
+}
+
+function updateAllCounts(){
+  recountBrands();
+  return Promise.resolve();
+}
+
+// Yazma işlemlerinden sonra önbelleği bırakıp yeniden indir
+function refreshProducts(){
+  allDocsCache = null;
+  return loadAllProducts();
 }
 
 
@@ -821,7 +936,7 @@ function selectBrand(slug){
     const headerSearch=document.getElementById('headerSearch'); if(headerSearch) headerSearch.value='';
     const sortSelect=document.getElementById('sortSelect'); if(sortSelect) sortSelect.value='';
     renderSidebar(brands);
-    loadAllProducts();
+    loadProducts();
     return;
   }
   activeBrand=brands.find(b=>b.slug===slug);
@@ -877,6 +992,18 @@ function normText(s){
 
 // Arama + sıralama, aktif kategori/fiyat filtrelerinden geçmiş listeye uygulanır
 // (marka seçili olmasa da çalışır; değerler doğrudan alanlardan okunur)
+/* ── STOK DURUMU ─────────────────────────────────────────────
+   Panelde stok girilmemiş ürünler "tükendi" sayılmaz; yalnızca
+   stoğu açıkça 0 (veya altı) olanlar tükendi kabul edilir. */
+function isOutOfStock(p){
+  if(p.stokMap && typeof p.stokMap === 'object'){
+    const değerler = Object.values(p.stokMap).filter(v => typeof v === 'number');
+    if(değerler.length) return değerler.reduce((a,b) => a + b, 0) <= 0;
+  }
+  if(typeof p.stok === 'number') return p.stok <= 0;
+  return false;
+}
+
 function applySearchAndSort(list){
   const input=document.getElementById('headerSearch');
   const q=normText(input?input.value:'').trim();
@@ -891,6 +1018,8 @@ function applySearchAndSort(list){
   if(v==='price-asc') list.sort((a,b)=>parsePrice(a.price)-parsePrice(b.price));
   if(v==='price-desc') list.sort((a,b)=>parsePrice(b.price)-parsePrice(a.price));
   if(v==='name-asc') list.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'tr'));
+  // Tükenenler her zaman en sona; kendi aralarındaki sıra korunur
+  list.sort((a,b)=>(isOutOfStock(a)?1:0)-(isOutOfStock(b)?1:0));
   return list;
 }
 
@@ -983,12 +1112,13 @@ function renderProductCards(list, totalMatched){
     const isSecond=p.cat==='İkinci El';
     const brandName=activeBrand?activeBrand.name:(brands.find(b=>b.slug===p.brand)||{name:p.brand||''}).name;
     return `
-    <div class="product-card" style="animation:fadeInUp .3s ease ${Math.min(i,9)*0.04}s both;">
+    <div class="product-card ${isOutOfStock(p)?'is-out':''}" style="animation:fadeInUp .3s ease ${Math.min(i,9)*0.04}s both;">
       <div class="card-badges">
         ${isSecond?'<span class="badge badge-second">İkinci El</span>':'<span class="badge badge-new">'+esc(p.cat)+'</span>'}
       </div>
       <div class="card-img" onclick="location.href='urun-detay.html?col=giyim&id=${p.id}'" style="cursor:pointer;">
         ${p.img?`<img src="${esc(thumbUrl(p.img))}" alt="${esc(p.name)}" loading="lazy" decoding="async"/>`:`<div class="no-img">🧥</div>`}
+        ${isOutOfStock(p)?'<span class="out-badge">Tükendi</span>':''}
       </div>
       <div class="card-body">
         <div class="card-brand">${esc(brandName)}</div>
@@ -1081,7 +1211,7 @@ async function saveProduct(){
       });
     }
     closeAddModal();
-    if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
+    await refreshProducts();
   }catch(e){alert('Hata: '+e.message);}
   finally{btn.textContent='Ürünü Kaydet';btn.disabled=false;}
 }
@@ -1091,7 +1221,7 @@ async function deleteProduct(docId){
   if(!confirm('Bu ürünü silmek istediğinize emin misiniz?'))return;
   try{
     await deleteDoc(doc(db,PAGE_COL,docId));
-    if(activeBrand) await loadProducts(activeBrand.slug); else await loadAllProducts();
+    await refreshProducts();
   }catch(e){alert('Silme hatası: '+e.message);}
 }
 
@@ -1137,25 +1267,45 @@ function setAdminUI(on){
 onAuthStateChanged(auth,(user)=>{setAdminUI(!!user);});
 
 // ── SAYFA AÇILINCA TÜM ÜRÜNLERİ YÜKLEYİP GÖSTER ──
+// Önce tarayıcı önbelleğinden anında boyar, ardından sunucudan tazeler.
 async function loadAllProducts() {
   const grid = document.getElementById('productGrid');
-  // Skeleton loader - yükleniyor yerine shimmer'lı iskelet kartlar göster
-  grid.innerHTML = skeletonGridHtml(6);
+  let painted = false;
+  let lastSig = '';
+
+  // Sunucudan gelen veri önbellektekiyle aynıysa ekranı YENİDEN ÇİZME.
+  // Yoksa ürünler bir kez önbellekten, hemen ardından sunucudan gelip
+  // animasyon iki kere oynuyordu.
+  const paint = docs => {
+    const sig = JSON.stringify(docs);
+    if(painted && sig === lastSig) return;
+    lastSig = sig;
+    allDocsCache = docs;
+    applyFromCache();
+    painted = true;
+  };
+
+  // Sunucu isteği HEMEN başlasın; önbellek okuması onu bekletmesin
+  const serverPromise = getDocs(collection(db, PAGE_COL));
+  serverPromise.catch(() => {}); // aşağıda yakalanıyor, ara pencerede uyarı basmasın
+
+  // 1) Daha önce açılmışsa: diskteki kopyadan anında göster
+  try{
+    const cached = await getDocsFromCache(collection(db, PAGE_COL));
+    if(!cached.empty && !painted) paint(cached.docs.map(d => ({ id: d.id, ...d.data() })));
+  }catch(e){ /* önbellek yok — sorun değil */ }
+
+  // 2) Sunucudan güncelini al
   try {
-    const snap = await getDocs(collection(db, PAGE_COL));
-    const allDocs = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    brandCounts = {};
-    allDocs.forEach(d => {
-      brandCounts[d.brand] = (brandCounts[d.brand] || 0) + 1;
-    });
-    renderSidebar(brands);
-    allProducts = activeBrand
-      ? allDocs.filter(d => d.brand === activeBrand.slug)
-      : allDocs;
-    applyFilters();
+    const snap = await serverPromise;
+    const savedPage = currentPage;
+    const sigBefore = lastSig;
+    paint(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    // gerçekten değiştiyse ve kullanıcı ilerideki bir sayfadaysa onu koru
+    if(lastSig !== sigBefore && savedPage > 1){ currentPage = savedPage; renderProducts(filteredCache); }
   } catch(e) {
     console.error('Firebase yükleme hatası:', e);
-    grid.innerHTML = '<div class="empty-state"><div style="font-size:2rem">⚠️</div><p>Bağlantı hatası. Sayfayı yenileyin.</p></div>';
+    if(!painted) grid.innerHTML = '<div class="empty-state"><div style="font-size:2rem">⚠️</div><p>Bağlantı hatası. Sayfayı yenileyin.</p></div>';
   }
 }
 
