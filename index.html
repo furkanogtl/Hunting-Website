@@ -23,6 +23,54 @@
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
   <style>
+
+/* ── ÜST DUYURU ŞERİDİ ── */
+.ann-bar{
+  position:fixed;bottom:0;left:0;right:0;height:34px;z-index:320;
+  background:#142f0c;
+  border-top:1px solid rgba(200,168,50,.32);
+  box-shadow:0 -3px 14px rgba(0,0,0,.18);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+/* Şerit altta olduğu için yüzen düğmeler onun üstüne kaldırılır */
+#adminLock, #adminLogout, #indexAdminLock, #indexAdminLogout,
+.wa-float, .wa-btn { margin-bottom:34px; }
+@media(max-width:600px){
+  #adminLock, #adminLogout, #indexAdminLock, #indexAdminLogout,
+  .wa-float, .wa-btn { margin-bottom:30px; }
+}
+/* Ince altin parilti: soldan saga yavasca gecer, serit tek duze durmasin */
+.ann-bar::after{
+  content:'';position:absolute;top:0;bottom:0;width:38%;
+  background:linear-gradient(90deg,transparent,rgba(200,168,50,.10),transparent);
+  animation:annSheen 9s linear infinite;pointer-events:none;
+}
+@keyframes annSheen{ 0%{left:-40%} 100%{left:100%} }
+.ann-bar span{
+  position:absolute;white-space:nowrap;padding:0 14px;
+  font-family:'Cinzel',serif;font-size:.63rem;font-weight:700;
+  color:#e4eeda;letter-spacing:.16em;text-transform:uppercase;
+  opacity:0;animation:annCycle 10s infinite;
+}
+.ann-bar b{color:#d9bf55;font-weight:700;}
+
+.ann-bar span:nth-of-type(2){animation-delay:5s;}
+@keyframes annCycle{
+  0%       { opacity:0; transform:translateY(9px); }
+  4%,46%   { opacity:1; transform:none; }
+  50%,100% { opacity:0; transform:translateY(-9px); }
+}
+@media(max-width:600px){
+  .ann-bar{height:30px;}
+  .ann-bar span{font-size:.68rem;padding:0 8px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .ann-bar{gap:22px;}
+  .ann-bar::after{display:none;}
+  .ann-bar span{position:static;opacity:1;animation:none;transform:none;}
+  .ann-bar span:nth-of-type(2){display:none;}
+}
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -41,11 +89,14 @@
     html { scroll-behavior: smooth; }
 
     body {
+      padding-bottom: 34px;
       font-family: 'Lora', serif;
       background-color: var(--milk);
       color: var(--deep);
       overflow-x: hidden;
     }
+
+    @media(max-width:600px){ body{ padding-bottom:30px; } }
 
     /* ── NAV ── */
     nav {
@@ -835,6 +886,12 @@
   </style>
 </head>
 <body>
+<!-- Üstte dönen duyuru şeridi -->
+<div class="ann-bar">
+  <span><b>2.000 TL</b> ÜZERİ KARGO BEDAVA</span>
+  <span>PEŞİN FİYATINA <b>6 TAKSİTE</b> KADAR TAKSİT FIRSATI</span>
+
+</div>
 
 <!-- NAV -->
 <nav>

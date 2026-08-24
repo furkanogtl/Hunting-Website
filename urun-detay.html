@@ -17,7 +17,57 @@
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
+
+/* ── ÜST DUYURU ŞERİDİ ── */
+.ann-bar{
+  position:fixed;bottom:0;left:0;right:0;height:34px;z-index:320;
+  background:#142f0c;
+  border-top:1px solid rgba(200,168,50,.32);
+  box-shadow:0 -3px 14px rgba(0,0,0,.18);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+/* Şerit altta olduğu için yüzen düğmeler onun üstüne kaldırılır */
+#adminLock, #adminLogout, #indexAdminLock, #indexAdminLogout,
+.wa-float, .wa-btn { margin-bottom:34px; }
+@media(max-width:600px){
+  #adminLock, #adminLogout, #indexAdminLock, #indexAdminLogout,
+  .wa-float, .wa-btn { margin-bottom:30px; }
+}
+/* Ince altin parilti: soldan saga yavasca gecer, serit tek duze durmasin */
+.ann-bar::after{
+  content:'';position:absolute;top:0;bottom:0;width:38%;
+  background:linear-gradient(90deg,transparent,rgba(200,168,50,.10),transparent);
+  animation:annSheen 9s linear infinite;pointer-events:none;
+}
+@keyframes annSheen{ 0%{left:-40%} 100%{left:100%} }
+.ann-bar span{
+  position:absolute;white-space:nowrap;padding:0 14px;
+  font-family:'Cinzel',serif;font-size:.63rem;font-weight:700;
+  color:#e4eeda;letter-spacing:.16em;text-transform:uppercase;
+  opacity:0;animation:annCycle 10s infinite;
+}
+.ann-bar b{color:#d9bf55;font-weight:700;}
+
+.ann-bar span:nth-of-type(2){animation-delay:5s;}
+@keyframes annCycle{
+  0%       { opacity:0; transform:translateY(9px); }
+  4%,46%   { opacity:1; transform:none; }
+  50%,100% { opacity:0; transform:translateY(-9px); }
+}
+@media(max-width:600px){
+  .ann-bar{height:30px;}
+  .ann-bar span{font-size:.68rem;padding:0 8px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .ann-bar{gap:22px;}
+  .ann-bar::after{display:none;}
+  .ann-bar span{position:static;opacity:1;animation:none;transform:none;}
+  .ann-bar span:nth-of-type(2){display:none;}
+}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{padding-bottom:34px;}
+@media(max-width:600px){body{padding-bottom:30px;}}
 :root{
   --white:#ffffff;
   --milk:#f8faf5;
@@ -245,6 +295,28 @@ body{
   font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
   font-size:2.25rem;font-weight:500;letter-spacing:-.015em;
   color:#fff;line-height:1;position:relative;
+}
+.price-band-old{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  font-size:1.05rem;color:rgba(255,255,255,.6);
+  text-decoration:line-through;text-decoration-thickness:1.5px;
+  line-height:1;position:relative;margin-bottom:6px;
+}
+.price-band-disc{
+  position:relative;margin-top:10px;padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.18);
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;
+}
+.price-band-disc-label{
+  font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;
+  color:rgba(255,255,255,.62);letter-spacing:.16em;text-transform:uppercase;
+  width:100%;
+}
+.price-band-badge{
+  display:inline-block;background:#c0392b;color:#fff;
+  font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;
+  letter-spacing:.1em;padding:4px 10px;border-radius:999px;
+  position:relative;top:-2px;
 }
 .price-band-note{font-family:'Lora',serif;font-size:.82rem;color:rgba(255,255,255,.8);margin-top:4px;line-height:1.5;position:relative;}
 
@@ -640,7 +712,7 @@ footer{background:#18350f;padding:28px 48px;display:flex;flex-wrap:wrap;gap:14px
   width: 100%;
   height: 100%;
 }
-body > *:not(.page-bg-pattern):not(.main-nav):not(.mobile-menu):not(.modal-overlay):not(#lightbox):not(.wa-float) {
+body > *:not(.ann-bar):not(.page-bg-pattern):not(.main-nav):not(.mobile-menu):not(.modal-overlay):not(#lightbox):not(.wa-float) {
   position: relative;
   z-index: 1;
 }
@@ -656,6 +728,12 @@ body > *:not(.page-bg-pattern):not(.main-nav):not(.mobile-menu):not(.modal-overl
 </style>
 </head>
 <body>
+<!-- Üstte dönen duyuru şeridi -->
+<div class="ann-bar">
+  <span><b>2.000 TL</b> ÜZERİ KARGO BEDAVA</span>
+  <span>PEŞİN FİYATINA <b>6 TAKSİTE</b> KADAR TAKSİT FIRSATI</span>
+
+</div>
 <div class="page-bg-pattern" aria-hidden="true">
 <svg viewBox="0 0 1080 990" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
 <g transform="translate(90,47) rotate(25) scale(1.14)" opacity="0.048"><path d="M2,22 L26,22 M26,22 L34,18 M26,22 L34,26 M20,22 L20,19 L23,19 L23,22 M6,22 L6,25 L9,25 L9,22 M14,20 L14,24" fill="none" stroke="#3a6030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
@@ -971,10 +1049,19 @@ async function load(){
           <!-- FİYAT -->
           <div class="price-band">
             <div class="price-band-label">Satış Fiyatı</div>
-            ${p.price
-              ?`<div class="price-band-value">${esc(p.price)}</div>`
-              :`<div class="price-band-note">Fiyat bilgisi için bizi arayın veya WhatsApp yazın</div>`
-            }
+            ${(() => {
+              if(!p.price) return `<div class="price-band-note">Fiyat bilgisi için bizi arayın veya WhatsApp yazın</div>`;
+              const h = havaleFiyati(p);
+              if(!h) return `<div class="price-band-value">${esc(p.price)}</div>`;
+              return `
+                <div class="price-band-old">${esc(p.price)}</div>
+                <div class="price-band-value">${fiyatYaz(h.yeni)}</div>
+                <div class="price-band-disc">
+                  <span class="price-band-disc-label">Havale / EFT Fiyatı</span>
+                  <span class="price-band-badge">%${h.oran} indirim</span>
+                  <span class="price-band-note" style="margin:0;">Havale veya EFT ile ödemede geçerlidir.</span>
+                </div>`;
+            })()}
           </div>
 
           <!-- TEMEL ÖZELLİKLER -->
@@ -1128,6 +1215,36 @@ async function load(){
 
 // Kayıttaki slug'ı yazımından farklı olan markalar için görünen ad
 const BRAND_NAME_OVERRIDES={ starling:'Sterling' };
+
+// "85.000 TL" / "12.500,50 ₺" gibi serbest yazılmış fiyatı sayıya çevirir
+function fiyatSayi(str){
+  const t = String(str || '').replace(/[^0-9.,]/g,'');
+  if(!t) return 0;
+  const sonVirgul = t.lastIndexOf(','), sonNokta = t.lastIndexOf('.');
+  let norm;
+  if(sonVirgul > sonNokta){
+    norm = t.split('.').join('').replace(',','.');
+  } else if(sonNokta > sonVirgul){
+    // Noktadan sonra tam 3 hane varsa binlik ayıracıdır ("85.000")
+    norm = (t.length - sonNokta - 1) === 3 ? t.split('.').join('') : t.split(',').join('');
+
+  } else {
+    norm = t;
+  }
+  return parseFloat(norm) || 0;
+}
+
+function fiyatYaz(n){
+  return n.toLocaleString('tr-TR',{maximumFractionDigits:0}) + ' ₺';
+}
+
+// Havale indirimi tanımlıysa indirimli tutarı döndürür
+function havaleFiyati(p){
+  const oran = parseFloat(p.indirim) || 0;
+  const tutar = fiyatSayi(p.price);
+  if(oran <= 0 || oran >= 100 || tutar <= 0) return null;
+  return { oran, eski: tutar, yeni: Math.round(tutar * (100 - oran) / 100) };
+}
 
 function brandLabel(brand){
   let slug=brand||'';
