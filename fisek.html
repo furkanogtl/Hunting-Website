@@ -1171,7 +1171,7 @@ body.legal-open{overflow:hidden;}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocsFromCache, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocsFromCache, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyAgiYxYesyIDJCrFMPSF4UqxWaB4J0_JRo",
@@ -1388,18 +1388,41 @@ async function saveBrand(){
 // Sonradan eklenen marka tamamen silinir.
 // Sayfada sabit gelen marka silinemez, bunun yerine "gizlendi" işaretlenir;
 // yönetici solgun olarak görmeye devam eder ve ↺ ile geri getirebilir.
+// Markaya ait bütün ürünleri siler. Firestore tek seferde en fazla
+// 500 işlem aldığı için 400'lük paketler hâlinde gönderilir.
+async function deleteBrandProducts(slug){
+  const snap = await getDocs(query(collection(db, PAGE_COL), where('brand','==',slug)));
+  const docs = snap.docs;
+  for(let i = 0; i < docs.length; i += 400){
+    const batch = writeBatch(db);
+    docs.slice(i, i + 400).forEach(d => batch.delete(d.ref));
+    await batch.commit();
+  }
+  return docs.length;
+}
+
 async function deleteBrand(slug, ev){
   if(ev) ev.stopPropagation();
   if(!isAdmin()) return;
   const b = brands.find(x => x.slug === slug);
   if(!b) return;
   const adet = brandCounts[slug] || 0;
+
+  // Ürünü olan markada iki aşamalı onay: silme geri alınamaz
   if(adet > 0){
-    alert(b.name + ' markasında ' + adet + ' ürün var. Önce ürünleri silin veya başka markaya taşıyın.');
-    return;
+    if(!confirm(
+      b.name + ' markası kaldırılacak.\n\n' +
+      'Bu markaya ait ' + adet + ' ürün de KALICI olarak silinecek.\n' +
+      'Bu işlem geri alınamaz.\n\nDevam edilsin mi?'
+    )) return;
+    if(!confirm(adet + ' ürün silinmek üzere. Emin misiniz?')) return;
+  } else {
+    if(!confirm(b.name + ' markası listeden kaldırılsın mı?')) return;
   }
-  if(!confirm(b.name + ' markası listeden kaldırılsın mı?')) return;
+
   try{
+    if(adet > 0) await deleteBrandProducts(slug);
+
     if(b.docId){
       await deleteDoc(doc(db,'markalar', b.docId));
       const i = brands.findIndex(x => x.slug === slug);
@@ -1410,8 +1433,15 @@ async function deleteBrand(slug, ev){
       });
       b.hidden = true; b.hideId = ref.id;
     }
-    if(activeBrand && activeBrand.slug === slug) selectBrand(slug);
-    else renderSidebar(brands);
+
+    if(activeBrand && activeBrand.slug === slug){
+      activeBrand = null;
+      const bcBrand = document.getElementById('bcBrand'); if(bcBrand) bcBrand.textContent = '';
+      const toolbarTitle = document.getElementById('toolbarTitle');
+      if(toolbarTitle) toolbarTitle.textContent = defaultToolbarTitle;
+    }
+    await refreshProducts();   // sayaçlar ve liste tazelensin
+    renderSidebar(brands);
   }catch(e){ alert('Kaldırılamadı: ' + e.message); }
 }
 
